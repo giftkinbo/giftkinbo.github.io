@@ -112,6 +112,59 @@
                 margin: 0.5rem 0;
             }
         }
+
+        /* Auth Button Styles */
+        .auth-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .auth-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--white);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .auth-button:hover {
+            background-color: var(--light-bg);
+        }
+
+        .auth-button img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-profile img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        @media screen and (max-width: 768px) {
+            .auth-container {
+                margin-top: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -130,6 +183,16 @@
                 <a href="#trust">আমাদের সম্পর্কে</a>
                 <a href="#order">অর্ডার করুন</a>
                 <a href="#contact">যোগাযোগ</a>
+                <div class="auth-container">
+                    <button id="signInButton" class="auth-button">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                        <span>সাইন ইন করুন</span>
+                    </button>
+                    <div id="userProfile" class="user-profile" style="display: none;">
+                        <img id="userPhoto" src="" alt="User Photo">
+                        <span id="userName" class="user-name"></span>
+                    </div>
+                </div>
             </div>
         </nav>
     </header>
@@ -304,49 +367,149 @@
     </footer>
 
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
-    <script>
-        // Firebase configuration
+        // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyCSyXJeftEfkwQ_FoQlg1sEZ3PZv9xjkLI",
+            authDomain: "gift-kinbo-bd.firebaseapp.com",
+            projectId: "gift-kinbo-bd",
+            storageBucket: "gift-kinbo-bd.firebasestorage.app",
+            messagingSenderId: "896761493540",
+            appId: "1:896761493540:web:21e49df2ca453fb80180b1",
+            measurementId: "G-ZVXSHQT95M"
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-    </script>
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
 
-    <script src="script.js"></script>
-    <script>
+        // Auth state observer
+        onAuthStateChanged(auth, (user) => {
+            const signInButton = document.getElementById('signInButton');
+            const userProfile = document.getElementById('userProfile');
+            const userPhoto = document.getElementById('userPhoto');
+            const userName = document.getElementById('userName');
+
+            if (user) {
+                // User is signed in
+                signInButton.style.display = 'none';
+                userProfile.style.display = 'flex';
+                userPhoto.src = user.photoURL;
+                userName.textContent = user.displayName;
+            } else {
+                // User is signed out
+                signInButton.style.display = 'flex';
+                userProfile.style.display = 'none';
+            }
+        });
+
+        // Sign in with Google
+        document.getElementById('signInButton').addEventListener('click', async () => {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                console.log('Successfully signed in:', result.user);
+            } catch (error) {
+                console.error('Error signing in:', error);
+                alert('দুঃখিত, সাইন ইন করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+            }
+        });
+
+        // Sign out
+        document.getElementById('userProfile').addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                console.log('Successfully signed out');
+            } catch (error) {
+                console.error('Error signing out:', error);
+                alert('দুঃখিত, সাইন আউট করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+            }
+        });
+
         // Mobile Menu Toggle
         document.addEventListener('DOMContentLoaded', function() {
             const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
             const navLinks = document.querySelector('.nav-links');
+            const orderForm = document.getElementById('orderForm');
 
+            // Mobile menu functionality
             mobileMenuBtn.addEventListener('click', function() {
                 navLinks.classList.toggle('active');
             });
 
-            // Close menu when clicking outside
             document.addEventListener('click', function(event) {
                 if (!event.target.closest('nav')) {
                     navLinks.classList.remove('active');
                 }
             });
 
-            // Close menu when clicking on a link
             navLinks.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', () => {
                     navLinks.classList.remove('active');
                 });
+            });
+
+            // Form submission handling
+            orderForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                // Check if user is signed in
+                if (!auth.currentUser) {
+                    alert('অনুগ্রহ করে প্রথমে সাইন ইন করুন।');
+                    return;
+                }
+
+                // Show loading state
+                const submitButton = orderForm.querySelector('.submit-button');
+                const originalButtonText = submitButton.textContent;
+                submitButton.textContent = 'অর্ডার সাবমিট হচ্ছে...';
+                submitButton.disabled = true;
+
+                try {
+                    // Get form data
+                    const formData = {
+                        recipientName: document.getElementById('recipientName').value,
+                        recipientPhone: document.getElementById('recipientPhone').value,
+                        recipientGender: document.getElementById('recipientGender').value,
+                        relationship: document.getElementById('relationship').value,
+                        recipientAge: document.getElementById('recipientAge').value,
+                        budget: document.getElementById('budget').value,
+                        preferences: document.getElementById('preferences').value,
+                        senderName: document.getElementById('senderName').value,
+                        senderPhone: document.getElementById('senderPhone').value,
+                        deliveryAddress: document.getElementById('deliveryAddress').value,
+                        deliveryPhone: document.getElementById('deliveryPhone').value,
+                        orderDate: new Date(),
+                        status: 'pending',
+                        userId: auth.currentUser.uid,
+                        userEmail: auth.currentUser.email
+                    };
+
+                    // Add to Firestore
+                    await addDoc(collection(db, 'orders'), formData);
+
+                    // Show success message
+                    alert('আপনার অর্ডার সফলভাবে গ্রহণ করা হয়েছে। আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।');
+                    
+                    // Reset form
+                    orderForm.reset();
+
+                } catch (error) {
+                    console.error('Error submitting order:', error);
+                    alert('দুঃখিত, একটি ত্রুটি ঘটেছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+                } finally {
+                    // Reset button state
+                    submitButton.textContent = originalButtonText;
+                    submitButton.disabled = false;
+                }
             });
         });
     </script>
