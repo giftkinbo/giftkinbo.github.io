@@ -512,6 +512,120 @@
                 justify-content: center;
             }
         }
+
+        .filter-section {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-select:hover {
+            border-color: var(--primary-color);
+        }
+
+        .status-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .status-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .status-option:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .status-option i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .status-option span {
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .order-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .detail-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .detail-card:hover {
+            background: #f1f3f5;
+            transform: translateX(5px);
+        }
+
+        .detail-card h3 {
+            color: var(--text-color);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-card h3 i {
+            color: var(--primary-color);
+        }
+
+        .detail-card p {
+            color: #666;
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .detail-card .label {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .detail-card .value {
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .status-options {
+                grid-template-columns: 1fr;
+            }
+
+            .order-details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -560,12 +674,27 @@
                     <div class="number" id="processingOrders">0</div>
                     <div class="label">চলমান অর্ডার</div>
                 </div>
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-check-circle"></i> কমপ্লিট অর্ডার</h3>
+                    <div class="number" id="completedOrders">0</div>
+                    <div class="label">সম্পন্ন অর্ডার</div>
+                </div>
             </div>
 
             <!-- Orders Section -->
             <div class="orders-section">
                 <div class="section-header">
                     <h2><i class="fas fa-list"></i> সব অর্ডার</h2>
+                    <div class="filter-section">
+                        <select id="statusFilter" class="filter-select">
+                            <option value="all">সব স্ট্যাটাস</option>
+                            <option value="pending">পেন্ডিং</option>
+                            <option value="processing">প্রসেসিং</option>
+                            <option value="shipped">শিপড</option>
+                            <option value="delivered">ডেলিভারড</option>
+                            <option value="cancelled">ক্যানসেলড</option>
+                        </select>
+                    </div>
                 </div>
                 <div id="ordersTableContainer">
                     <table class="orders-table">
@@ -584,6 +713,59 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div id="orderDetailsModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeOrderDetailsModal()">&times;</button>
+            <div class="modal-header">
+                <h2>অর্ডার বিস্তারিত</h2>
+            </div>
+            <div class="modal-body" id="orderDetailsContent">
+                <!-- Order details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" onclick="closeOrderDetailsModal()">বন্ধ করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Update Modal -->
+    <div id="statusUpdateModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeStatusUpdateModal()">&times;</button>
+            <div class="modal-header">
+                <h2>স্ট্যাটাস আপডেট</h2>
+            </div>
+            <div class="modal-body">
+                <div class="status-options">
+                    <button class="status-option" onclick="updateOrderStatus('pending')">
+                        <i class="fas fa-clock"></i>
+                        <span>পেন্ডিং</span>
+                    </button>
+                    <button class="status-option" onclick="updateOrderStatus('processing')">
+                        <i class="fas fa-cog"></i>
+                        <span>প্রসেসিং</span>
+                    </button>
+                    <button class="status-option" onclick="updateOrderStatus('shipped')">
+                        <i class="fas fa-truck"></i>
+                        <span>শিপড</span>
+                    </button>
+                    <button class="status-option" onclick="updateOrderStatus('delivered')">
+                        <i class="fas fa-check-circle"></i>
+                        <span>ডেলিভারড</span>
+                    </button>
+                    <button class="status-option" onclick="updateOrderStatus('cancelled')">
+                        <i class="fas fa-times-circle"></i>
+                        <span>ক্যানসেলড</span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" onclick="closeStatusUpdateModal()">বাতিল করুন</button>
             </div>
         </div>
     </div>
@@ -690,39 +872,58 @@
             }
         });
 
-        // Load orders from Firebase
-        function loadOrders() {
+        let currentOrderId = null;
+
+        // Load orders with status filter
+        function loadOrders(status = 'all') {
             const ordersRef = ref(database, 'orders');
             onValue(ordersRef, (snapshot) => {
                 const orders = [];
                 snapshot.forEach((childSnapshot) => {
-                    orders.push({
-                        id: childSnapshot.key,
-                        ...childSnapshot.val()
-                    });
+                    const order = childSnapshot.val();
+                    if (status === 'all' || order.status === status) {
+                        orders.push({
+                            id: childSnapshot.key,
+                            ...order
+                        });
+                    }
                 });
 
-                // Update dashboard numbers
-                document.getElementById('totalOrders').textContent = orders.length;
-                document.getElementById('pendingOrders').textContent = orders.filter(order => order.status === 'pending').length;
-                document.getElementById('processingOrders').textContent = orders.filter(order => order.status === 'processing').length;
+                // Sort orders by date
+                orders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
 
-                // Update orders table
+                // Update dashboard numbers
+                updateDashboardNumbers(orders);
+
+                // Update table
                 const tableBody = document.getElementById('ordersTableBody');
                 tableBody.innerHTML = '';
 
                 orders.forEach(order => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${order.id.slice(-6)}</td>
-                        <td>${order.senderName}</td>
+                        <td>${order.id}</td>
+                        <td>${order.customerName || 'N/A'}</td>
                         <td>${order.recipientName}</td>
-                        <td>${new Date(order.orderDate).toLocaleDateString('bn-BD')}</td>
-                        <td><span class="status-badge ${order.status}">${getStatusText(order.status)}</span></td>
+                        <td>${formatDate(order.orderDate)}</td>
                         <td>
-                            <button class="action-btn delete-btn" onclick="deleteOrder('${order.id}')">
-                                <i class="fas fa-trash"></i> ডিলিট
-                            </button>
+                            <span class="status-badge status-${order.status}">
+                                <i class="fas ${getStatusIcon(order.status)}"></i>
+                                ${getStatusText(order.status)}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="view-btn" onclick="viewOrderDetails('${order.id}')">
+                                    <i class="fas fa-eye"></i> বিস্তারিত
+                                </button>
+                                <button class="update-btn" onclick="openStatusUpdateModal('${order.id}')">
+                                    <i class="fas fa-edit"></i> স্ট্যাটাস
+                                </button>
+                                <button class="delete-btn" onclick="deleteOrder('${order.id}')">
+                                    <i class="fas fa-trash"></i> ডিলিট
+                                </button>
+                            </div>
                         </td>
                     `;
                     tableBody.appendChild(row);
@@ -730,31 +931,140 @@
             });
         }
 
-        // Helper function to get status text
+        // Update dashboard numbers
+        function updateDashboardNumbers(orders) {
+            document.getElementById('totalOrders').textContent = orders.length;
+            document.getElementById('pendingOrders').textContent = orders.filter(o => o.status === 'pending').length;
+            document.getElementById('processingOrders').textContent = orders.filter(o => o.status === 'processing').length;
+            document.getElementById('completedOrders').textContent = orders.filter(o => o.status === 'delivered').length;
+        }
+
+        // View order details
+        window.viewOrderDetails = function(orderId) {
+            const orderRef = ref(database, `orders/${orderId}`);
+            onValue(orderRef, (snapshot) => {
+                const order = snapshot.val();
+                if (order) {
+                    const detailsContent = document.getElementById('orderDetailsContent');
+                    detailsContent.innerHTML = `
+                        <div class="order-details-grid">
+                            <div class="detail-card">
+                                <h3><i class="fas fa-user"></i> গ্রাহকের তথ্য</h3>
+                                <p><span class="label">নাম:</span> <span class="value">${order.customerName || 'N/A'}</span></p>
+                                <p><span class="label">ফোন:</span> <span class="value">${order.customerPhone || 'N/A'}</span></p>
+                                <p><span class="label">ইমেইল:</span> <span class="value">${order.customerEmail || 'N/A'}</span></p>
+                            </div>
+                            <div class="detail-card">
+                                <h3><i class="fas fa-gift"></i> রিসিভারের তথ্য</h3>
+                                <p><span class="label">নাম:</span> <span class="value">${order.recipientName}</span></p>
+                                <p><span class="label">ফোন:</span> <span class="value">${order.recipientPhone}</span></p>
+                                <p><span class="label">ঠিকানা:</span> <span class="value">${order.deliveryAddress}</span></p>
+                            </div>
+                            <div class="detail-card">
+                                <h3><i class="fas fa-shopping-bag"></i> অর্ডার তথ্য</h3>
+                                <p><span class="label">অর্ডার আইডি:</span> <span class="value">${orderId}</span></p>
+                                <p><span class="label">তারিখ:</span> <span class="value">${formatDate(order.orderDate)}</span></p>
+                                <p><span class="label">স্ট্যাটাস:</span> <span class="value">${getStatusText(order.status)}</span></p>
+                                <p><span class="label">বাজেট:</span> <span class="value">৳${order.budget}</span></p>
+                            </div>
+                            <div class="detail-card">
+                                <h3><i class="fas fa-info-circle"></i> অতিরিক্ত তথ্য</h3>
+                                <p><span class="label">মেসেজ:</span> <span class="value">${order.message || 'N/A'}</span></p>
+                                <p><span class="label">পছন্দের গিফট:</span> <span class="value">${order.preferredGift || 'N/A'}</span></p>
+                                <p><span class="label">ডেলিভারি নোট:</span> <span class="value">${order.deliveryNote || 'N/A'}</span></p>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('orderDetailsModal').style.display = 'block';
+                }
+            });
+        };
+
+        // Close order details modal
+        window.closeOrderDetailsModal = function() {
+            document.getElementById('orderDetailsModal').style.display = 'none';
+        };
+
+        // Open status update modal
+        window.openStatusUpdateModal = function(orderId) {
+            currentOrderId = orderId;
+            document.getElementById('statusUpdateModal').style.display = 'block';
+        };
+
+        // Close status update modal
+        window.closeStatusUpdateModal = function() {
+            document.getElementById('statusUpdateModal').style.display = 'none';
+            currentOrderId = null;
+        };
+
+        // Update order status
+        window.updateOrderStatus = function(newStatus) {
+            if (currentOrderId) {
+                const orderRef = ref(database, `orders/${currentOrderId}`);
+                update(orderRef, {
+                    status: newStatus,
+                    lastUpdated: new Date().toISOString()
+                }).then(() => {
+                    alert('স্ট্যাটাস সফলভাবে আপডেট করা হয়েছে!');
+                    closeStatusUpdateModal();
+                }).catch((error) => {
+                    console.error('Error updating status:', error);
+                    alert('স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে।');
+                });
+            }
+        };
+
+        // Delete order
+        window.deleteOrder = function(orderId) {
+            if (confirm('আপনি কি নিশ্চিত যে আপনি এই অর্ডারটি ডিলিট করতে চান?')) {
+                const orderRef = ref(database, `orders/${orderId}`);
+                remove(orderRef).then(() => {
+                    alert('অর্ডার সফলভাবে ডিলিট করা হয়েছে!');
+                }).catch((error) => {
+                    console.error('Error deleting order:', error);
+                    alert('অর্ডার ডিলিট করতে সমস্যা হয়েছে।');
+                });
+            }
+        };
+
+        // Status filter change
+        document.getElementById('statusFilter').addEventListener('change', (e) => {
+            loadOrders(e.target.value);
+        });
+
+        // Helper functions
+        function formatDate(dateString) {
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            return new Date(dateString).toLocaleDateString('bn-BD', options);
+        }
+
         function getStatusText(status) {
             const statusMap = {
                 'pending': 'পেন্ডিং',
                 'processing': 'প্রসেসিং',
                 'shipped': 'শিপড',
                 'delivered': 'ডেলিভারড',
-                'cancelled': 'বাতিল'
+                'cancelled': 'ক্যানসেলড'
             };
             return statusMap[status] || status;
         }
 
-        // Delete order function
-        window.deleteOrder = async function(orderId) {
-            if (confirm('আপনি কি এই অর্ডারটি ডিলিট করতে চান?')) {
-                try {
-                    const orderRef = ref(database, `orders/${orderId}`);
-                    await remove(orderRef);
-                    alert('অর্ডার সফলভাবে ডিলিট করা হয়েছে।');
-                } catch (error) {
-                    console.error('Error deleting order:', error);
-                    alert('দুঃখিত, অর্ডার ডিলিট করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
-                }
-            }
-        };
+        function getStatusIcon(status) {
+            const iconMap = {
+                'pending': 'fa-clock',
+                'processing': 'fa-cog',
+                'shipped': 'fa-truck',
+                'delivered': 'fa-check-circle',
+                'cancelled': 'fa-times-circle'
+            };
+            return iconMap[status] || 'fa-question-circle';
+        }
     </script>
 </body>
 </html> 
