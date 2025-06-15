@@ -331,7 +331,6 @@
             border-top: 1px solid rgba(0, 0, 0, 0.05);
             display: flex;
             justify-content: flex-end;
-            gap: 1rem;
         }
 
         .order-action-btn {
@@ -349,18 +348,6 @@
 
         .order-action-btn i {
             font-size: 1rem;
-        }
-
-        .order-action-btn.update {
-            background: var(--primary-color);
-            color: white;
-            box-shadow: 0 2px 4px rgba(255, 107, 107, 0.2);
-        }
-
-        .order-action-btn.update:hover {
-            background: #ff5252;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
         }
 
         .order-action-btn.delete {
@@ -736,11 +723,8 @@
                                 ${getStatusText(order.status)}
                             </div>
                             <div class="order-actions">
-                                <button class="order-action-btn update" onclick="openStatusModal('${order.id}', '${order.status}')">
-                                    <i class="fas fa-edit"></i> স্ট্যাটাস আপডেট
-                                </button>
                                 <button class="order-action-btn delete" onclick="deleteOrder('${order.id}')">
-                                    <i class="fas fa-trash"></i> ডিলিট
+                                    <i class="fas fa-times-circle"></i> অর্ডার বাতিল করুন
                                 </button>
                             </div>
                         </div>
@@ -896,14 +880,14 @@
         }
 
         async function deleteOrder(orderId) {
-            if (!confirm('আপনি কি নিশ্চিত যে এই অর্ডারটি ডিলিট করতে চান?')) return;
+            if (!confirm('আপনি কি নিশ্চিত যে এই অর্ডারটি বাতিল করতে চান?')) return;
 
             try {
                 const orderRef = ref(database, `orders/${orderId}`);
                 await remove(orderRef);
             } catch (error) {
                 console.error('Error deleting order:', error);
-                alert('অর্ডার ডিলিট করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+                alert('অর্ডার বাতিল করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
             }
         }
     </script>
