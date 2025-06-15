@@ -184,18 +184,6 @@
             transition: var(--transition);
         }
 
-        .profile-link {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .profile-link:hover {
-            text-decoration: none;
-        }
-
         .user-profile:hover {
             background-color: #f8f9fa;
         }
@@ -232,15 +220,14 @@
                 <a href="#trust">আমাদের সম্পর্কে</a>
                 <a href="#order">অর্ডার করুন</a>
                 <a href="#contact">যোগাযোগ</a>
+                <a href="orders.html">আমার অর্ডার</a>
                 <div class="auth-container">
                     <button id="signInButton" class="auth-button">
                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
                     </button>
                     <div id="userProfile" class="user-profile" style="display: none;">
-                        <a href="orders.html" class="profile-link">
-                            <img id="userPhoto" src="" alt="User Photo">
-                            <span id="userName" class="user-name"></span>
-                        </a>
+                        <img id="userPhoto" src="" alt="User Photo">
+                        <span id="userName" class="user-name"></span>
                     </div>
                 </div>
             </div>
