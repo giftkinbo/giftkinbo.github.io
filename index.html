@@ -184,6 +184,18 @@
             transition: var(--transition);
         }
 
+        .profile-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .profile-link:hover {
+            text-decoration: none;
+        }
+
         .user-profile:hover {
             background-color: #f8f9fa;
         }
@@ -225,8 +237,10 @@
                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
                     </button>
                     <div id="userProfile" class="user-profile" style="display: none;">
-                        <img id="userPhoto" src="" alt="User Photo">
-                        <span id="userName" class="user-name"></span>
+                        <a href="profile.html" class="profile-link">
+                            <img id="userPhoto" src="" alt="User Photo">
+                            <span id="userName" class="user-name"></span>
+                        </a>
                     </div>
                 </div>
             </div>
