@@ -446,19 +446,28 @@
                 // User is signed in
                 console.log('User details:', user.email, user.displayName);
                 
-                // Show user profile and hide sign in button
-                document.getElementById('userProfile').style.display = 'flex';
-                document.getElementById('userPhoto').src = user.photoURL;
-                document.getElementById('userName').textContent = user.displayName;
-                signInButton.style.display = 'none';
-                
-                // Show password protection
-                document.getElementById('loadingState').style.display = 'none';
-                document.getElementById('passwordProtection').style.display = 'block';
-                
-                // Check if already verified
-                if (localStorage.getItem('adminVerified') === 'true') {
-                    showAdminContent();
+                // Check if user is authorized admin
+                if (user.email === 'giftkinbobd@gmail.com') {
+                    // Show user profile and hide sign in button
+                    document.getElementById('userProfile').style.display = 'flex';
+                    document.getElementById('userPhoto').src = user.photoURL;
+                    document.getElementById('userName').textContent = user.displayName;
+                    signInButton.style.display = 'none';
+                    
+                    // Show password protection
+                    document.getElementById('loadingState').style.display = 'none';
+                    document.getElementById('passwordProtection').style.display = 'block';
+                    
+                    // Check if already verified
+                    if (localStorage.getItem('adminVerified') === 'true') {
+                        showAdminContent();
+                    }
+                } else {
+                    // Unauthorized user
+                    alert('দুঃখিত, আপনার অ্যাডমিন প্যানেল অ্যাক্সেস করার অনুমতি নেই।');
+                    signOut(auth).then(() => {
+                        window.location.href = 'index.html';
+                    });
                 }
             } else {
                 // User is signed out
