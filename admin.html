@@ -1511,8 +1511,8 @@
                     name: order.recipientName,
                     age: order.recipientAge,
                     gender: order.recipientGender === 'male' ? 'পুরুষ' : 'মহিলা',
-                    relationship: order.relationship,
-                    preferences: order.preferences,
+                    relationship: order.recipientRelation,
+                    preferences: order.recipientPreferences,
                     budget: order.budget
                 };
 
@@ -1565,13 +1565,13 @@
             document.getElementById('recipientName').textContent = order.recipientName || 'N/A';
             document.getElementById('recipientPhone').textContent = order.recipientPhone || 'N/A';
             document.getElementById('recipientGender').textContent = order.recipientGender === 'male' ? 'পুরুষ' : order.recipientGender === 'female' ? 'মহিলা' : 'N/A';
-            document.getElementById('recipientRelation').textContent = order.relationship || 'N/A';
+            document.getElementById('recipientRelation').textContent = order.recipientRelation || 'N/A';
             document.getElementById('recipientAge').textContent = order.recipientAge || 'N/A';
-            document.getElementById('recipientPreferences').textContent = order.preferences || 'N/A';
+            document.getElementById('recipientPreferences').textContent = order.recipientPreferences || 'N/A';
             
             // Set sender information
-            document.getElementById('senderName').textContent = order.senderName || 'N/A';
-            document.getElementById('senderPhone').textContent = order.senderPhone || 'N/A';
+            document.getElementById('senderName').textContent = order.customerName || 'N/A';
+            document.getElementById('senderPhone').textContent = order.customerPhone || 'N/A';
             document.getElementById('userEmail').textContent = order.userEmail || 'N/A';
             
             // Set delivery information
