@@ -378,7 +378,7 @@
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
         import { getDatabase, ref, onValue, remove, update } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -396,18 +396,44 @@
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
         const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
 
         // Show loading state
         document.getElementById('loadingState').style.display = 'block';
         document.getElementById('adminContent').style.display = 'none';
 
+        // Add sign in button to header
+        const navLinks = document.querySelector('.nav-links');
+        const signInButton = document.createElement('button');
+        signInButton.id = 'signInButton';
+        signInButton.className = 'auth-button';
+        signInButton.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">';
+        navLinks.insertBefore(signInButton, navLinks.firstChild);
+
+        // Sign in with Google
+        signInButton.addEventListener('click', async () => {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                console.log('Successfully signed in:', result.user.email);
+            } catch (error) {
+                console.error('Error signing in:', error);
+                alert('দুঃখিত, সাইন ইন করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+            }
+        });
+
         // Check authentication state
         onAuthStateChanged(auth, (user) => {
+            console.log('Auth state changed:', user ? 'User is signed in' : 'User is signed out');
+            
             if (user) {
                 // User is signed in
+                console.log('User details:', user.email, user.displayName);
+                
+                // Show user profile and hide sign in button
                 document.getElementById('userProfile').style.display = 'flex';
                 document.getElementById('userPhoto').src = user.photoURL;
                 document.getElementById('userName').textContent = user.displayName;
+                signInButton.style.display = 'none';
                 
                 // Hide loading state and show admin content
                 document.getElementById('loadingState').style.display = 'none';
@@ -417,8 +443,15 @@
                 loadOrders();
             } else {
                 // User is signed out
-                alert('অনুগ্রহ করে প্রথমে সাইন ইন করুন।');
-                window.location.href = 'index.html';
+                console.log('User is not signed in, showing sign in button');
+                
+                // Show sign in button and hide user profile
+                signInButton.style.display = 'flex';
+                document.getElementById('userProfile').style.display = 'none';
+                
+                // Show loading state and hide admin content
+                document.getElementById('loadingState').style.display = 'block';
+                document.getElementById('adminContent').style.display = 'none';
             }
         });
 
@@ -426,7 +459,7 @@
         document.getElementById('userProfile').addEventListener('click', async () => {
             try {
                 await signOut(auth);
-                window.location.href = 'index.html';
+                console.log('Successfully signed out');
             } catch (error) {
                 console.error('Error signing out:', error);
                 alert('দুঃখিত, সাইন আউট করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
