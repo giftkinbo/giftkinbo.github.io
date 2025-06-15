@@ -875,7 +875,42 @@
                 <h2>অর্ডার বিস্তারিত</h2>
             </div>
             <div class="modal-body" id="orderDetailsContent">
-                <!-- Order details will be loaded here -->
+                <div class="order-details-grid">
+                    <div class="detail-card">
+                        <h3>১. যাকে গিফট দিবেন তার তথ্য</h3>
+                        <div class="personal-info">
+                            <div class="info-group">
+                                <div class="info-item"><i class="fas fa-user"></i><div><strong>নাম:</strong> <span id="recipientName"></span></div></div>
+                                <div class="info-item"><i class="fas fa-phone"></i><div><strong>মোবাইল নম্বর:</strong> <span id="recipientPhone"></span></div></div>
+                                <div class="info-item"><i class="fas fa-venus-mars"></i><div><strong>জেন্ডার:</strong> <span id="recipientGender"></span></div></div>
+                                <div class="info-item"><i class="fas fa-heart"></i><div><strong>সম্পর্ক:</strong> <span id="recipientRelation"></span></div></div>
+                                <div class="info-item"><i class="fas fa-birthday-cake"></i><div><strong>বয়স:</strong> <span id="recipientAge"></span></div></div>
+                                <div class="info-item full-width"><i class="fas fa-heart"></i><div><strong>পছন্দ-অপছন্দ:</strong> <span id="recipientPreferences"></span></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-card">
+                        <h3>২. আপনার তথ্য</h3>
+                        <div class="personal-info">
+                            <div class="info-group">
+                                <div class="info-item"><i class="fas fa-user"></i><div><strong>নাম:</strong> <span id="senderName"></span></div></div>
+                                <div class="info-item"><i class="fas fa-phone"></i><div><strong>মোবাইল নম্বর:</strong> <span id="senderPhone"></span></div></div>
+                                <div class="info-item"><i class="fas fa-envelope"></i><div><strong>ইমেইল:</strong> <span id="senderEmail"></span></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-card">
+                        <h3>৩. কোথায় পাঠাবেন</h3>
+                        <div class="personal-info">
+                            <div class="info-group">
+                                <div class="info-item"><i class="fas fa-map-marker-alt"></i><div><strong>ডেলিভারি ঠিকানা:</strong> <span id="deliveryAddress"></span></div></div>
+                                <div class="info-item"><i class="fas fa-phone"></i><div><strong>ডেলিভারি ফোন:</strong> <span id="deliveryPhone"></span></div></div>
+                                <div class="info-item"><i class="fas fa-money-bill-wave"></i><div><strong>বাজেট:</strong> <span id="recipientBudget"></span> টাকা</div></div>
+                                <div class="info-item full-width"><i class="fas fa-sticky-note"></i><div><strong>নোট/বার্তা:</strong> <span id="deliveryNote"></span></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="cancel-btn" onclick="closeOrderDetailsModal()">বন্ধ করুন</button>
@@ -1103,86 +1138,38 @@
                     detailsContent.innerHTML = `
                         <div class="order-details-grid">
                             <div class="detail-card">
-                                <h3><i class="fas fa-user"></i> প্রেরকের তথ্য</h3>
-                                <p><span class="label">নাম:</span> <span class="value">${order.senderName || 'N/A'}</span></p>
-                                <p><span class="label">ফোন:</span> <span class="value">${order.senderPhone || 'N/A'}</span></p>
-                                <p><span class="label">ইমেইল:</span> <span class="value">${order.userEmail || 'N/A'}</span></p>
-                                <p><span class="label">ইউজার আইডি:</span> <span class="value">${order.userId || 'N/A'}</span></p>
-                            </div>
-                            <div class="detail-card">
-                                <h3>রিসিভারের তথ্য</h3>
+                                <h3>১. যাকে গিফট দিবেন তার তথ্য</h3>
                                 <div class="personal-info">
                                     <div class="info-group">
-                                        <div class="info-item">
-                                            <i class="fas fa-user"></i>
-                                            <div>
-                                                <strong>নাম:</strong>
-                                                <span id="recipientName"></span>
-                                            </div>
-                                        </div>
-                                        <div class="info-item">
-                                            <i class="fas fa-venus-mars"></i>
-                                            <div>
-                                                <strong>জেন্ডার:</strong>
-                                                <span id="recipientGender"></span>
-                                            </div>
-                                        </div>
-                                        <div class="info-item">
-                                            <i class="fas fa-heart"></i>
-                                            <div>
-                                                <strong>সম্পর্ক:</strong>
-                                                <span id="recipientRelation"></span>
-                                            </div>
-                                        </div>
-                                        <div class="info-item">
-                                            <i class="fas fa-birthday-cake"></i>
-                                            <div>
-                                                <strong>বয়স:</strong>
-                                                <span id="recipientAge"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="info-group">
-                                        <div class="info-item">
-                                            <i class="fas fa-phone"></i>
-                                            <div>
-                                                <strong>মোবাইল নম্বর:</strong>
-                                                <span id="recipientPhone"></span>
-                                            </div>
-                                        </div>
-                                        <div class="info-item">
-                                            <i class="fas fa-money-bill-wave"></i>
-                                            <div>
-                                                <strong>বাজেট:</strong>
-                                                <span id="recipientBudget"></span> টাকা
-                                            </div>
-                                        </div>
-                                        <div class="info-item full-width">
-                                            <i class="fas fa-heart"></i>
-                                            <div>
-                                                <strong>পছন্দ-অপছন্দ:</strong>
-                                                <span id="recipientPreferences"></span>
-                                            </div>
-                                        </div>
+                                        <div class="info-item"><i class="fas fa-user"></i><div><strong>নাম:</strong> <span id="recipientName"></span></div></div>
+                                        <div class="info-item"><i class="fas fa-phone"></i><div><strong>মোবাইল নম্বর:</strong> <span id="recipientPhone"></span></div></div>
+                                        <div class="info-item"><i class="fas fa-venus-mars"></i><div><strong>জেন্ডার:</strong> <span id="recipientGender"></span></div></div>
+                                        <div class="info-item"><i class="fas fa-heart"></i><div><strong>সম্পর্ক:</strong> <span id="recipientRelation"></span></div></div>
+                                        <div class="info-item"><i class="fas fa-birthday-cake"></i><div><strong>বয়স:</strong> <span id="recipientAge"></span></div></div>
+                                        <div class="info-item full-width"><i class="fas fa-heart"></i><div><strong>পছন্দ-অপছন্দ:</strong> <span id="recipientPreferences"></span></div></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="detail-card">
-                                <h3><i class="fas fa-shopping-bag"></i> অর্ডার তথ্য</h3>
-                                <p><span class="label">অর্ডার আইডি:</span> <span class="value">${orderId}</span></p>
-                                <p><span class="label">অর্ডার তারিখ:</span> <span class="value">${formatDate(order.orderDate)}</span></p>
-                                <p><span class="label">সর্বশেষ আপডেট:</span> <span class="value">${formatDate(order.lastUpdated)}</span></p>
-                                <p><span class="label">স্ট্যাটাস:</span> <span class="value">${getStatusText(order.status)}</span></p>
-                                <p><span class="label">বাজেট:</span> <span class="value">৳${order.budget || 'N/A'}</span></p>
+                                <h3>২. আপনার তথ্য</h3>
+                                <div class="personal-info">
+                                    <div class="info-group">
+                                        <div class="info-item"><i class="fas fa-user"></i><div><strong>নাম:</strong> <span id="senderName"></span></div></div>
+                                        <div class="info-item"><i class="fas fa-phone"></i><div><strong>মোবাইল নম্বর:</strong> <span id="senderPhone"></span></div></div>
+                                        <div class="info-item"><i class="fas fa-envelope"></i><div><strong>ইমেইল:</strong> <span id="senderEmail"></span></div></div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="detail-card">
-                                <h3><i class="fas fa-info-circle"></i> যোগাযোগ ও ডেলিভারি তথ্য</h3>
-                                <p><span class="label">রিসিভারের ফোন:</span> <span class="value">${order.recipientPhone || 'N/A'}</span></p>
-                                <p><span class="label">ডেলিভারি ফোন:</span> <span class="value">${order.deliveryPhone || 'N/A'}</span></p>
-                                <p><span class="label">ডেলিভারি ঠিকানা:</span> <span class="value">${order.deliveryAddress || 'N/A'}</span></p>
-                                <p><span class="label">মেসেজ:</span> <span class="value">${order.message || 'N/A'}</span></p>
-                                <p><span class="label">পছন্দের গিফট:</span> <span class="value">${order.preferredGift || 'N/A'}</span></p>
-                                <p><span class="label">ডেলিভারি নোট:</span> <span class="value">${order.deliveryNote || 'N/A'}</span></p>
+                                <h3>৩. কোথায় পাঠাবেন</h3>
+                                <div class="personal-info">
+                                    <div class="info-group">
+                                        <div class="info-item"><i class="fas fa-map-marker-alt"></i><div><strong>ডেলিভারি ঠিকানা:</strong> <span id="deliveryAddress"></span></div></div>
+                                        <div class="info-item"><i class="fas fa-phone"></i><div><strong>ডেলিভারি ফোন:</strong> <span id="deliveryPhone"></span></div></div>
+                                        <div class="info-item"><i class="fas fa-money-bill-wave"></i><div><strong>বাজেট:</strong> <span id="recipientBudget"></span> টাকা</div></div>
+                                        <div class="info-item full-width"><i class="fas fa-sticky-note"></i><div><strong>নোট/বার্তা:</strong> <span id="deliveryNote"></span></div></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -1340,12 +1327,18 @@
 
         function showOrderDetails(order) {
             document.getElementById('recipientName').textContent = order.recipientName || 'N/A';
+            document.getElementById('recipientPhone').textContent = order.recipientPhone || 'N/A';
             document.getElementById('recipientGender').textContent = order.recipientGender || 'N/A';
             document.getElementById('recipientRelation').textContent = order.relationship || 'N/A';
             document.getElementById('recipientAge').textContent = order.recipientAge || 'N/A';
-            document.getElementById('recipientPhone').textContent = order.recipientPhone || 'N/A';
-            document.getElementById('recipientBudget').textContent = order.budget || 'N/A';
             document.getElementById('recipientPreferences').textContent = order.preferences || 'N/A';
+            document.getElementById('senderName').textContent = order.customerName || 'N/A';
+            document.getElementById('senderPhone').textContent = order.customerPhone || 'N/A';
+            document.getElementById('senderEmail').textContent = order.customerEmail || 'N/A';
+            document.getElementById('deliveryAddress').textContent = order.deliveryAddress || 'N/A';
+            document.getElementById('deliveryPhone').textContent = order.deliveryPhone || 'N/A';
+            document.getElementById('recipientBudget').textContent = order.budget || 'N/A';
+            document.getElementById('deliveryNote').textContent = order.deliveryNote || order.message || 'N/A';
         }
     </script>
 </body>
