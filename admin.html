@@ -1554,18 +1554,33 @@
         }
 
         function showOrderDetails(order) {
+            // Set order details
+            document.getElementById('orderId').textContent = order.id;
+            document.getElementById('orderDate').textContent = new Date(order.orderDate).toLocaleDateString('bn-BD');
+            document.getElementById('lastUpdated').textContent = new Date(order.lastUpdated).toLocaleDateString('bn-BD');
+            document.getElementById('orderStatus').textContent = getStatusText(order.status);
+            document.getElementById('orderStatus').className = `status-badge status-${order.status.toLowerCase()}`;
+            
+            // Set recipient information
             document.getElementById('recipientName').textContent = order.recipientName || 'N/A';
             document.getElementById('recipientPhone').textContent = order.recipientPhone || 'N/A';
             document.getElementById('recipientGender').textContent = order.recipientGender === 'male' ? 'পুরুষ' : order.recipientGender === 'female' ? 'মহিলা' : 'N/A';
             document.getElementById('recipientRelation').textContent = order.relationship || 'N/A';
             document.getElementById('recipientAge').textContent = order.recipientAge || 'N/A';
             document.getElementById('recipientPreferences').textContent = order.preferences || 'N/A';
-            document.getElementById('senderName').textContent = order.customerName || 'N/A';
-            document.getElementById('senderPhone').textContent = order.customerPhone || 'N/A';
+            
+            // Set sender information
+            document.getElementById('senderName').textContent = order.senderName || 'N/A';
+            document.getElementById('senderPhone').textContent = order.senderPhone || 'N/A';
             document.getElementById('userEmail').textContent = order.userEmail || 'N/A';
+            
+            // Set delivery information
             document.getElementById('deliveryAddress').textContent = order.deliveryAddress || 'N/A';
             document.getElementById('deliveryPhone').textContent = order.deliveryPhone || 'N/A';
             document.getElementById('budget').textContent = order.budget || 'N/A';
+            
+            // Show modal
+            document.getElementById('orderDetailsModal').style.display = 'block';
         }
 
         function copyText(elementId) {
