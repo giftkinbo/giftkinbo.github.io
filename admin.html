@@ -259,6 +259,11 @@
             color: #856404;
         }
 
+        .status-confirmed {
+            background: #e3f2fd;
+            color: #0d47a1;
+        }
+
         .status-processing {
             background: #cce5ff;
             color: #004085;
@@ -689,6 +694,7 @@
                         <select id="statusFilter" class="filter-select">
                             <option value="all">সব স্ট্যাটাস</option>
                             <option value="pending">পেন্ডিং</option>
+                            <option value="confirmed">অর্ডার কনফার্মড</option>
                             <option value="processing">প্রসেসিং</option>
                             <option value="shipped">শিপড</option>
                             <option value="delivered">ডেলিভারড</option>
@@ -745,6 +751,10 @@
                     <button class="status-option" onclick="updateOrderStatus('pending')">
                         <i class="fas fa-clock"></i>
                         <span>পেন্ডিং</span>
+                    </button>
+                    <button class="status-option" onclick="updateOrderStatus('confirmed')">
+                        <i class="fas fa-check"></i>
+                        <span>অর্ডার কনফার্মড</span>
                     </button>
                     <button class="status-option" onclick="updateOrderStatus('processing')">
                         <i class="fas fa-cog"></i>
@@ -949,29 +959,36 @@
                     detailsContent.innerHTML = `
                         <div class="order-details-grid">
                             <div class="detail-card">
-                                <h3><i class="fas fa-user"></i> গ্রাহকের তথ্য</h3>
-                                <p><span class="label">নাম:</span> <span class="value">${order.customerName || 'N/A'}</span></p>
-                                <p><span class="label">ফোন:</span> <span class="value">${order.customerPhone || 'N/A'}</span></p>
-                                <p><span class="label">ইমেইল:</span> <span class="value">${order.customerEmail || 'N/A'}</span></p>
+                                <h3><i class="fas fa-user"></i> প্রেরকের তথ্য</h3>
+                                <p><span class="label">নাম:</span> <span class="value">${order.senderName || 'N/A'}</span></p>
+                                <p><span class="label">ফোন:</span> <span class="value">${order.senderPhone || 'N/A'}</span></p>
+                                <p><span class="label">ইমেইল:</span> <span class="value">${order.userEmail || 'N/A'}</span></p>
+                                <p><span class="label">ইউজার আইডি:</span> <span class="value">${order.userId || 'N/A'}</span></p>
                             </div>
                             <div class="detail-card">
                                 <h3><i class="fas fa-gift"></i> রিসিভারের তথ্য</h3>
-                                <p><span class="label">নাম:</span> <span class="value">${order.recipientName}</span></p>
-                                <p><span class="label">ফোন:</span> <span class="value">${order.recipientPhone}</span></p>
-                                <p><span class="label">ঠিকানা:</span> <span class="value">${order.deliveryAddress}</span></p>
+                                <p><span class="label">নাম:</span> <span class="value">${order.recipientName || 'N/A'}</span></p>
+                                <p><span class="label">ফোন:</span> <span class="value">${order.recipientPhone || 'N/A'}</span></p>
+                                <p><span class="label">ডেলিভারি ফোন:</span> <span class="value">${order.deliveryPhone || 'N/A'}</span></p>
+                                <p><span class="label">বয়স:</span> <span class="value">${order.recipientAge || 'N/A'}</span></p>
+                                <p><span class="label">লিঙ্গ:</span> <span class="value">${order.recipientGender === 'male' ? 'পুরুষ' : order.recipientGender === 'female' ? 'মহিলা' : 'N/A'}</span></p>
+                                <p><span class="label">সম্পর্ক:</span> <span class="value">${order.relationship || 'N/A'}</span></p>
                             </div>
                             <div class="detail-card">
                                 <h3><i class="fas fa-shopping-bag"></i> অর্ডার তথ্য</h3>
                                 <p><span class="label">অর্ডার আইডি:</span> <span class="value">${orderId}</span></p>
-                                <p><span class="label">তারিখ:</span> <span class="value">${formatDate(order.orderDate)}</span></p>
+                                <p><span class="label">অর্ডার তারিখ:</span> <span class="value">${formatDate(order.orderDate)}</span></p>
+                                <p><span class="label">সর্বশেষ আপডেট:</span> <span class="value">${formatDate(order.lastUpdated)}</span></p>
                                 <p><span class="label">স্ট্যাটাস:</span> <span class="value">${getStatusText(order.status)}</span></p>
-                                <p><span class="label">বাজেট:</span> <span class="value">৳${order.budget}</span></p>
+                                <p><span class="label">বাজেট:</span> <span class="value">৳${order.budget || 'N/A'}</span></p>
                             </div>
                             <div class="detail-card">
                                 <h3><i class="fas fa-info-circle"></i> অতিরিক্ত তথ্য</h3>
+                                <p><span class="label">পছন্দ:</span> <span class="value">${order.preferences || 'N/A'}</span></p>
                                 <p><span class="label">মেসেজ:</span> <span class="value">${order.message || 'N/A'}</span></p>
                                 <p><span class="label">পছন্দের গিফট:</span> <span class="value">${order.preferredGift || 'N/A'}</span></p>
                                 <p><span class="label">ডেলিভারি নোট:</span> <span class="value">${order.deliveryNote || 'N/A'}</span></p>
+                                <p><span class="label">ডেলিভারি ঠিকানা:</span> <span class="value">${order.deliveryAddress || 'N/A'}</span></p>
                             </div>
                         </div>
                     `;
@@ -1047,6 +1064,7 @@
         function getStatusText(status) {
             const statusMap = {
                 'pending': 'পেন্ডিং',
+                'confirmed': 'অর্ডার কনফার্মড',
                 'processing': 'প্রসেসিং',
                 'shipped': 'শিপড',
                 'delivered': 'ডেলিভারড',
@@ -1058,6 +1076,7 @@
         function getStatusIcon(status) {
             const iconMap = {
                 'pending': 'fa-clock',
+                'confirmed': 'fa-check',
                 'processing': 'fa-cog',
                 'shipped': 'fa-truck',
                 'delivered': 'fa-check-circle',
