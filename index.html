@@ -117,25 +117,52 @@
         .auth-container {
             display: flex;
             align-items: center;
-            gap: 1rem;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
         }
 
         .auth-button {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 4px;
+            justify-content: center;
+            padding: 0.6rem;
+            border: 1px solid #dadce0;
+            border-radius: 50%;
             background-color: var(--white);
-            color: var(--text-color);
+            color: #3c4043;
             cursor: pointer;
             transition: var(--transition);
-            box-shadow: var(--shadow);
+            box-shadow: 0 1px 3px rgba(60,64,67,.08);
+            text-decoration: none;
+            font-family: 'Google Sans', 'Kalpurush', sans-serif;
+            width: 40px;
+            height: 40px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .auth-container {
+                margin-top: 0.5rem;
+            }
         }
 
         .auth-button:hover {
-            background-color: var(--light-bg);
+            background-color: #f8f9fa;
+            box-shadow: 0 1px 3px rgba(60,64,67,.12);
+        }
+
+        .auth-button:active {
+            background-color: #f1f3f4;
+            box-shadow: 0 1px 2px rgba(60,64,67,.3);
         }
 
         .auth-button img {
@@ -143,27 +170,37 @@
             height: 20px;
         }
 
+        .auth-button span {
+            white-space: nowrap;
+        }
+
         .user-profile {
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-profile:hover {
+            background-color: #f8f9fa;
         }
 
         .user-profile img {
             width: 32px;
             height: 32px;
             border-radius: 50%;
+            border: 2px solid var(--white);
+            box-shadow: 0 1px 3px rgba(60,64,67,.08);
         }
 
         .user-name {
-            font-size: 0.9rem;
-            color: var(--text-color);
-        }
-
-        @media screen and (max-width: 768px) {
-            .auth-container {
-                margin-top: 1rem;
-            }
+            font-size: 14px;
+            color: #3c4043;
+            font-weight: 500;
+            font-family: 'Google Sans', 'Kalpurush', sans-serif;
         }
     </style>
 </head>
@@ -186,7 +223,6 @@
                 <div class="auth-container">
                     <button id="signInButton" class="auth-button">
                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-                        <span>সাইন ইন করুন</span>
                     </button>
                     <div id="userProfile" class="user-profile" style="display: none;">
                         <img id="userPhoto" src="" alt="User Photo">
@@ -371,7 +407,7 @@
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+        import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
         // Your web app's Firebase configuration
@@ -382,13 +418,14 @@
             storageBucket: "gift-kinbo-bd.firebasestorage.app",
             messagingSenderId: "896761493540",
             appId: "1:896761493540:web:21e49df2ca453fb80180b1",
-            measurementId: "G-ZVXSHQT95M"
+            measurementId: "G-ZVXSHQT95M",
+            databaseURL: "https://gift-kinbo-bd-default-rtdb.firebaseio.com"
         };
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
-        const db = getFirestore(app);
+        const database = getDatabase(app);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
@@ -487,14 +524,18 @@
                         senderPhone: document.getElementById('senderPhone').value,
                         deliveryAddress: document.getElementById('deliveryAddress').value,
                         deliveryPhone: document.getElementById('deliveryPhone').value,
-                        orderDate: new Date(),
+                        orderDate: new Date().toISOString(),
                         status: 'pending',
                         userId: auth.currentUser.uid,
                         userEmail: auth.currentUser.email
                     };
 
-                    // Add to Firestore
-                    await addDoc(collection(db, 'orders'), formData);
+                    // Create a new order reference
+                    const ordersRef = ref(database, 'orders');
+                    const newOrderRef = push(ordersRef);
+                    
+                    // Save the order data
+                    await set(newOrderRef, formData);
 
                     // Show success message
                     alert('আপনার অর্ডার সফলভাবে গ্রহণ করা হয়েছে। আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।');
