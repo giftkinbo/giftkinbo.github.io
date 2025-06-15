@@ -638,6 +638,54 @@
             background: white;
             border-radius: 6px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .info-item:hover .copy-btn {
+            opacity: 1;
+        }
+
+        .copy-btn:hover {
+            background: #f0f0f0;
+            color: #45a049;
+        }
+
+        .copy-btn.copied {
+            color: #4CAF50;
+        }
+
+        .copy-tooltip {
+            position: absolute;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #333;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .copy-tooltip.show {
+            opacity: 1;
         }
 
         .info-item.full-width {
@@ -880,12 +928,42 @@
                         <h3>১. যাকে গিফট দিবেন তার তথ্য</h3>
                         <div class="personal-info">
                             <div class="info-group">
-                                <div class="info-item"><i class="fas fa-user"></i><div><strong>নাম:</strong> <span id="recipientName"></span></div></div>
-                                <div class="info-item"><i class="fas fa-phone"></i><div><strong>মোবাইল নম্বর:</strong> <span id="recipientPhone"></span></div></div>
-                                <div class="info-item"><i class="fas fa-venus-mars"></i><div><strong>জেন্ডার:</strong> <span id="recipientGender"></span></div></div>
-                                <div class="info-item"><i class="fas fa-heart"></i><div><strong>সম্পর্ক:</strong> <span id="recipientRelation"></span></div></div>
-                                <div class="info-item"><i class="fas fa-birthday-cake"></i><div><strong>বয়স:</strong> <span id="recipientAge"></span></div></div>
-                                <div class="info-item full-width"><i class="fas fa-heart"></i><div><strong>পছন্দ-অপছন্দ:</strong> <span id="recipientPreferences"></span></div></div>
+                                <div class="info-item">
+                                    <i class="fas fa-user"></i>
+                                    <div><strong>নাম:</strong> <span id="recipientName"></span></div>
+                                    <button class="copy-btn" onclick="copyText('recipientName')"><i class="fas fa-copy"></i></button>
+                                    <span class="copy-tooltip">কপি করুন</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-phone"></i>
+                                    <div><strong>মোবাইল নম্বর:</strong> <span id="recipientPhone"></span></div>
+                                    <button class="copy-btn" onclick="copyText('recipientPhone')"><i class="fas fa-copy"></i></button>
+                                    <span class="copy-tooltip">কপি করুন</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-venus-mars"></i>
+                                    <div><strong>জেন্ডার:</strong> <span id="recipientGender"></span></div>
+                                    <button class="copy-btn" onclick="copyText('recipientGender')"><i class="fas fa-copy"></i></button>
+                                    <span class="copy-tooltip">কপি করুন</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-heart"></i>
+                                    <div><strong>সম্পর্ক:</strong> <span id="recipientRelation"></span></div>
+                                    <button class="copy-btn" onclick="copyText('recipientRelation')"><i class="fas fa-copy"></i></button>
+                                    <span class="copy-tooltip">কপি করুন</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-birthday-cake"></i>
+                                    <div><strong>বয়স:</strong> <span id="recipientAge"></span></div>
+                                    <button class="copy-btn" onclick="copyText('recipientAge')"><i class="fas fa-copy"></i></button>
+                                    <span class="copy-tooltip">কপি করুন</span>
+                                </div>
+                                <div class="info-item full-width">
+                                    <i class="fas fa-heart"></i>
+                                    <div><strong>পছন্দ-অপছন্দ:</strong> <span id="recipientPreferences"></span></div>
+                                    <button class="copy-btn" onclick="copyText('recipientPreferences')"><i class="fas fa-copy"></i></button>
+                                    <span class="copy-tooltip">কপি করুন</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -893,9 +971,24 @@
                         <h3>২. আপনার তথ্য</h3>
                         <div class="personal-info">
                             <div class="info-group">
-                                <div class="info-item"><i class="fas fa-user"></i><div><strong>নাম:</strong> <span id="senderName"></span></div></div>
-                                <div class="info-item"><i class="fas fa-phone"></i><div><strong>মোবাইল নম্বর:</strong> <span id="senderPhone"></span></div></div>
-                                <div class="info-item"><i class="fas fa-envelope"></i><div><strong>ইমেইল:</strong> <span id="senderEmail"></span></div></div>
+                                <div class="info-item">
+                                    <i class="fas fa-user"></i>
+                                    <div><strong>নাম:</strong> <span id="senderName"></span></div>
+                                    <button class="copy-btn" onclick="copyText('senderName')"><i class="fas fa-copy"></i></button>
+                                    <span class="copy-tooltip">কপি করুন</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-phone"></i>
+                                    <div><strong>মোবাইল নম্বর:</strong> <span id="senderPhone"></span></div>
+                                    <button class="copy-btn" onclick="copyText('senderPhone')"><i class="fas fa-copy"></i></button>
+                                    <span class="copy-tooltip">কপি করুন</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <div><strong>ইমেইল:</strong> <span id="userEmail"></span></div>
+                                    <button class="copy-btn" onclick="copyText('userEmail')"><i class="fas fa-copy"></i></button>
+                                    <span class="copy-tooltip">কপি করুন</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -903,10 +996,24 @@
                         <h3>৩. কোথায় পাঠাবেন</h3>
                         <div class="personal-info">
                             <div class="info-group">
-                                <div class="info-item"><i class="fas fa-map-marker-alt"></i><div><strong>ডেলিভারি ঠিকানা:</strong> <span id="deliveryAddress"></span></div></div>
-                                <div class="info-item"><i class="fas fa-phone"></i><div><strong>ডেলিভারি ফোন:</strong> <span id="deliveryPhone"></span></div></div>
-                                <div class="info-item"><i class="fas fa-money-bill-wave"></i><div><strong>বাজেট:</strong> <span id="recipientBudget"></span> টাকা</div></div>
-                                <div class="info-item full-width"><i class="fas fa-sticky-note"></i><div><strong>নোট/বার্তা:</strong> <span id="deliveryNote"></span></div></div>
+                                <div class="info-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <div><strong>ডেলিভারি ঠিকানা:</strong> <span id="deliveryAddress"></span></div>
+                                    <button class="copy-btn" onclick="copyText('deliveryAddress')"><i class="fas fa-copy"></i></button>
+                                    <span class="copy-tooltip">কপি করুন</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-phone"></i>
+                                    <div><strong>ডেলিভারি ফোন:</strong> <span id="deliveryPhone"></span></div>
+                                    <button class="copy-btn" onclick="copyText('deliveryPhone')"><i class="fas fa-copy"></i></button>
+                                    <span class="copy-tooltip">কপি করুন</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <div><strong>বাজেট:</strong> <span id="budget"></span> টাকা</div>
+                                    <button class="copy-btn" onclick="copyText('budget')"><i class="fas fa-copy"></i></button>
+                                    <span class="copy-tooltip">কপি করুন</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1141,12 +1248,42 @@
                                 <h3>১. যাকে গিফট দিবেন তার তথ্য</h3>
                                 <div class="personal-info">
                                     <div class="info-group">
-                                        <div class="info-item"><i class="fas fa-user"></i><div><strong>নাম:</strong> <span id="recipientName"></span></div></div>
-                                        <div class="info-item"><i class="fas fa-phone"></i><div><strong>মোবাইল নম্বর:</strong> <span id="recipientPhone"></span></div></div>
-                                        <div class="info-item"><i class="fas fa-venus-mars"></i><div><strong>জেন্ডার:</strong> <span id="recipientGender"></span></div></div>
-                                        <div class="info-item"><i class="fas fa-heart"></i><div><strong>সম্পর্ক:</strong> <span id="recipientRelation"></span></div></div>
-                                        <div class="info-item"><i class="fas fa-birthday-cake"></i><div><strong>বয়স:</strong> <span id="recipientAge"></span></div></div>
-                                        <div class="info-item full-width"><i class="fas fa-heart"></i><div><strong>পছন্দ-অপছন্দ:</strong> <span id="recipientPreferences"></span></div></div>
+                                        <div class="info-item">
+                                            <i class="fas fa-user"></i>
+                                            <div><strong>নাম:</strong> <span id="recipientName"></span></div>
+                                            <button class="copy-btn" onclick="copyText('recipientName')"><i class="fas fa-copy"></i></button>
+                                            <span class="copy-tooltip">কপি করুন</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <i class="fas fa-phone"></i>
+                                            <div><strong>মোবাইল নম্বর:</strong> <span id="recipientPhone"></span></div>
+                                            <button class="copy-btn" onclick="copyText('recipientPhone')"><i class="fas fa-copy"></i></button>
+                                            <span class="copy-tooltip">কপি করুন</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <i class="fas fa-venus-mars"></i>
+                                            <div><strong>জেন্ডার:</strong> <span id="recipientGender"></span></div>
+                                            <button class="copy-btn" onclick="copyText('recipientGender')"><i class="fas fa-copy"></i></button>
+                                            <span class="copy-tooltip">কপি করুন</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <i class="fas fa-heart"></i>
+                                            <div><strong>সম্পর্ক:</strong> <span id="recipientRelation"></span></div>
+                                            <button class="copy-btn" onclick="copyText('recipientRelation')"><i class="fas fa-copy"></i></button>
+                                            <span class="copy-tooltip">কপি করুন</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <i class="fas fa-birthday-cake"></i>
+                                            <div><strong>বয়স:</strong> <span id="recipientAge"></span></div>
+                                            <button class="copy-btn" onclick="copyText('recipientAge')"><i class="fas fa-copy"></i></button>
+                                            <span class="copy-tooltip">কপি করুন</span>
+                                        </div>
+                                        <div class="info-item full-width">
+                                            <i class="fas fa-heart"></i>
+                                            <div><strong>পছন্দ-অপছন্দ:</strong> <span id="recipientPreferences"></span></div>
+                                            <button class="copy-btn" onclick="copyText('recipientPreferences')"><i class="fas fa-copy"></i></button>
+                                            <span class="copy-tooltip">কপি করুন</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1154,9 +1291,24 @@
                                 <h3>২. আপনার তথ্য</h3>
                                 <div class="personal-info">
                                     <div class="info-group">
-                                        <div class="info-item"><i class="fas fa-user"></i><div><strong>নাম:</strong> <span id="senderName"></span></div></div>
-                                        <div class="info-item"><i class="fas fa-phone"></i><div><strong>মোবাইল নম্বর:</strong> <span id="senderPhone"></span></div></div>
-                                        <div class="info-item"><i class="fas fa-envelope"></i><div><strong>ইমেইল:</strong> <span id="senderEmail"></span></div></div>
+                                        <div class="info-item">
+                                            <i class="fas fa-user"></i>
+                                            <div><strong>নাম:</strong> <span id="senderName"></span></div>
+                                            <button class="copy-btn" onclick="copyText('senderName')"><i class="fas fa-copy"></i></button>
+                                            <span class="copy-tooltip">কপি করুন</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <i class="fas fa-phone"></i>
+                                            <div><strong>মোবাইল নম্বর:</strong> <span id="senderPhone"></span></div>
+                                            <button class="copy-btn" onclick="copyText('senderPhone')"><i class="fas fa-copy"></i></button>
+                                            <span class="copy-tooltip">কপি করুন</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <i class="fas fa-envelope"></i>
+                                            <div><strong>ইমেইল:</strong> <span id="userEmail"></span></div>
+                                            <button class="copy-btn" onclick="copyText('userEmail')"><i class="fas fa-copy"></i></button>
+                                            <span class="copy-tooltip">কপি করুন</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1164,10 +1316,24 @@
                                 <h3>৩. কোথায় পাঠাবেন</h3>
                                 <div class="personal-info">
                                     <div class="info-group">
-                                        <div class="info-item"><i class="fas fa-map-marker-alt"></i><div><strong>ডেলিভারি ঠিকানা:</strong> <span id="deliveryAddress"></span></div></div>
-                                        <div class="info-item"><i class="fas fa-phone"></i><div><strong>ডেলিভারি ফোন:</strong> <span id="deliveryPhone"></span></div></div>
-                                        <div class="info-item"><i class="fas fa-money-bill-wave"></i><div><strong>বাজেট:</strong> <span id="recipientBudget"></span> টাকা</div></div>
-                                        <div class="info-item full-width"><i class="fas fa-sticky-note"></i><div><strong>নোট/বার্তা:</strong> <span id="deliveryNote"></span></div></div>
+                                        <div class="info-item">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <div><strong>ডেলিভারি ঠিকানা:</strong> <span id="deliveryAddress"></span></div>
+                                            <button class="copy-btn" onclick="copyText('deliveryAddress')"><i class="fas fa-copy"></i></button>
+                                            <span class="copy-tooltip">কপি করুন</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <i class="fas fa-phone"></i>
+                                            <div><strong>ডেলিভারি ফোন:</strong> <span id="deliveryPhone"></span></div>
+                                            <button class="copy-btn" onclick="copyText('deliveryPhone')"><i class="fas fa-copy"></i></button>
+                                            <span class="copy-tooltip">কপি করুন</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <i class="fas fa-money-bill-wave"></i>
+                                            <div><strong>বাজেট:</strong> <span id="budget"></span> টাকা</div>
+                                            <button class="copy-btn" onclick="copyText('budget')"><i class="fas fa-copy"></i></button>
+                                            <span class="copy-tooltip">কপি করুন</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1328,17 +1494,48 @@
         function showOrderDetails(order) {
             document.getElementById('recipientName').textContent = order.recipientName || 'N/A';
             document.getElementById('recipientPhone').textContent = order.recipientPhone || 'N/A';
-            document.getElementById('recipientGender').textContent = order.recipientGender || 'N/A';
+            document.getElementById('recipientGender').textContent = order.recipientGender === 'male' ? 'পুরুষ' : order.recipientGender === 'female' ? 'মহিলা' : 'N/A';
             document.getElementById('recipientRelation').textContent = order.relationship || 'N/A';
             document.getElementById('recipientAge').textContent = order.recipientAge || 'N/A';
             document.getElementById('recipientPreferences').textContent = order.preferences || 'N/A';
             document.getElementById('senderName').textContent = order.customerName || 'N/A';
             document.getElementById('senderPhone').textContent = order.customerPhone || 'N/A';
-            document.getElementById('senderEmail').textContent = order.customerEmail || 'N/A';
+            document.getElementById('userEmail').textContent = order.userEmail || 'N/A';
             document.getElementById('deliveryAddress').textContent = order.deliveryAddress || 'N/A';
             document.getElementById('deliveryPhone').textContent = order.deliveryPhone || 'N/A';
-            document.getElementById('recipientBudget').textContent = order.budget || 'N/A';
-            document.getElementById('deliveryNote').textContent = order.deliveryNote || order.message || 'N/A';
+            document.getElementById('budget').textContent = order.budget || 'N/A';
+        }
+
+        function copyText(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            const tooltip = element.parentElement.querySelector('.copy-tooltip');
+            const copyBtn = element.parentElement.querySelector('.copy-btn');
+            
+            navigator.clipboard.writeText(text).then(() => {
+                // Show copied tooltip
+                tooltip.textContent = 'কপি করা হয়েছে!';
+                tooltip.classList.add('show');
+                
+                // Change button icon
+                copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                copyBtn.classList.add('copied');
+                
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    tooltip.textContent = 'কপি করুন';
+                    tooltip.classList.remove('show');
+                    copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+                tooltip.textContent = 'কপি করতে ব্যর্থ!';
+                tooltip.classList.add('show');
+                setTimeout(() => {
+                    tooltip.classList.remove('show');
+                }, 2000);
+            });
         }
     </script>
 </body>
