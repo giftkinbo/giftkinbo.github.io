@@ -631,6 +631,123 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Add new styles */
+        .personal-info {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .gift-suggestion {
+            background: #e3f2fd;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .gift-suggestion h4 {
+            color: #0d47a1;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .suggest-btn {
+            background: #0d47a1;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            width: 100%;
+            justify-content: center;
+        }
+
+        .suggest-btn:hover {
+            background: #1565c0;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .suggestion-content {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .suggestion-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .personal-info {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .info-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .info-item.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .info-item i {
+            color: var(--primary-color);
+            font-size: 1.2em;
+            margin-top: 3px;
+        }
+
+        .info-item div {
+            flex: 1;
+        }
+
+        .info-item strong {
+            display: block;
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 4px;
+        }
+
+        .info-item span {
+            color: #333;
+            font-size: 1.1em;
+        }
     </style>
 </head>
 <body>
@@ -784,7 +901,7 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-        import { getDatabase, ref, onValue, remove, update } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+        import { getDatabase, ref, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
         import { getAuth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
         // Your web app's Firebase configuration
@@ -966,13 +1083,62 @@
                                 <p><span class="label">ইউজার আইডি:</span> <span class="value">${order.userId || 'N/A'}</span></p>
                             </div>
                             <div class="detail-card">
-                                <h3><i class="fas fa-gift"></i> রিসিভারের তথ্য</h3>
-                                <p><span class="label">নাম:</span> <span class="value">${order.recipientName || 'N/A'}</span></p>
-                                <p><span class="label">ফোন:</span> <span class="value">${order.recipientPhone || 'N/A'}</span></p>
-                                <p><span class="label">ডেলিভারি ফোন:</span> <span class="value">${order.deliveryPhone || 'N/A'}</span></p>
-                                <p><span class="label">বয়স:</span> <span class="value">${order.recipientAge || 'N/A'}</span></p>
-                                <p><span class="label">লিঙ্গ:</span> <span class="value">${order.recipientGender === 'male' ? 'পুরুষ' : order.recipientGender === 'female' ? 'মহিলা' : 'N/A'}</span></p>
-                                <p><span class="label">সম্পর্ক:</span> <span class="value">${order.relationship || 'N/A'}</span></p>
+                                <h3>রিসিভারের তথ্য</h3>
+                                <div class="personal-info">
+                                    <div class="info-group">
+                                        <div class="info-item">
+                                            <i class="fas fa-user"></i>
+                                            <div>
+                                                <strong>নাম:</strong>
+                                                <span id="recipientName"></span>
+                                            </div>
+                                        </div>
+                                        <div class="info-item">
+                                            <i class="fas fa-venus-mars"></i>
+                                            <div>
+                                                <strong>জেন্ডার:</strong>
+                                                <span id="recipientGender"></span>
+                                            </div>
+                                        </div>
+                                        <div class="info-item">
+                                            <i class="fas fa-heart"></i>
+                                            <div>
+                                                <strong>সম্পর্ক:</strong>
+                                                <span id="recipientRelation"></span>
+                                            </div>
+                                        </div>
+                                        <div class="info-item">
+                                            <i class="fas fa-birthday-cake"></i>
+                                            <div>
+                                                <strong>বয়স:</strong>
+                                                <span id="recipientAge"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="info-group">
+                                        <div class="info-item">
+                                            <i class="fas fa-phone"></i>
+                                            <div>
+                                                <strong>মোবাইল নম্বর:</strong>
+                                                <span id="recipientPhone"></span>
+                                            </div>
+                                        </div>
+                                        <div class="info-item">
+                                            <i class="fas fa-money-bill-wave"></i>
+                                            <div>
+                                                <strong>বাজেট:</strong>
+                                                <span id="recipientBudget"></span> টাকা
+                                            </div>
+                                        </div>
+                                        <div class="info-item full-width">
+                                            <i class="fas fa-heart"></i>
+                                            <div>
+                                                <strong>পছন্দ-অপছন্দ:</strong>
+                                                <span id="recipientPreferences"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="detail-card">
                                 <h3><i class="fas fa-shopping-bag"></i> অর্ডার তথ্য</h3>
@@ -983,16 +1149,18 @@
                                 <p><span class="label">বাজেট:</span> <span class="value">৳${order.budget || 'N/A'}</span></p>
                             </div>
                             <div class="detail-card">
-                                <h3><i class="fas fa-info-circle"></i> অতিরিক্ত তথ্য</h3>
-                                <p><span class="label">পছন্দ:</span> <span class="value">${order.preferences || 'N/A'}</span></p>
+                                <h3><i class="fas fa-info-circle"></i> যোগাযোগ ও ডেলিভারি তথ্য</h3>
+                                <p><span class="label">রিসিভারের ফোন:</span> <span class="value">${order.recipientPhone || 'N/A'}</span></p>
+                                <p><span class="label">ডেলিভারি ফোন:</span> <span class="value">${order.deliveryPhone || 'N/A'}</span></p>
+                                <p><span class="label">ডেলিভারি ঠিকানা:</span> <span class="value">${order.deliveryAddress || 'N/A'}</span></p>
                                 <p><span class="label">মেসেজ:</span> <span class="value">${order.message || 'N/A'}</span></p>
                                 <p><span class="label">পছন্দের গিফট:</span> <span class="value">${order.preferredGift || 'N/A'}</span></p>
                                 <p><span class="label">ডেলিভারি নোট:</span> <span class="value">${order.deliveryNote || 'N/A'}</span></p>
-                                <p><span class="label">ডেলিভারি ঠিকানা:</span> <span class="value">${order.deliveryAddress || 'N/A'}</span></p>
                             </div>
                         </div>
                     `;
                     document.getElementById('orderDetailsModal').style.display = 'block';
+                    showOrderDetails(order);
                 }
             });
         };
@@ -1083,6 +1251,74 @@
                 'cancelled': 'fa-times-circle'
             };
             return iconMap[status] || 'fa-question-circle';
+        }
+
+        // Add new function for gift suggestion
+        window.getGiftSuggestion = async function(orderId) {
+            const orderRef = ref(database, `orders/${orderId}`);
+            const snapshot = await get(orderRef);
+            const order = snapshot.val();
+            
+            if (order) {
+                const suggestionContent = document.getElementById(`giftSuggestion-${orderId}`);
+                suggestionContent.innerHTML = '<div class="loading">লোড হচ্ছে...</div>';
+                suggestionContent.classList.add('active');
+
+                // Prepare data for ChatGPT
+                const recipientInfo = {
+                    name: order.recipientName,
+                    age: order.recipientAge,
+                    gender: order.recipientGender === 'male' ? 'পুরুষ' : 'মহিলা',
+                    relationship: order.relationship,
+                    preferences: order.preferences,
+                    budget: order.budget
+                };
+
+                try {
+                    // Here you would make the API call to ChatGPT
+                    // For now, we'll show a placeholder message
+                    const suggestion = await generateGiftSuggestion(recipientInfo);
+                    suggestionContent.innerHTML = `
+                        <div class="suggestion-result">
+                            <h5>প্রস্তাবিত গিফটসমূহ:</h5>
+                            <div class="suggestion-list">
+                                ${suggestion}
+                            </div>
+                        </div>
+                    `;
+                } catch (error) {
+                    suggestionContent.innerHTML = `
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-circle"></i>
+                            গিফট সাজেশন লোড করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।
+                        </div>
+                    `;
+                }
+            }
+        };
+
+        // Placeholder function for ChatGPT integration
+        async function generateGiftSuggestion(recipientInfo) {
+            // This is where you would integrate with ChatGPT API
+            // For now, returning a placeholder suggestion
+            return `
+                <ul>
+                    <li>বয়স এবং লিঙ্গ অনুযায়ী উপযুক্ত গিফট আইডিয়া</li>
+                    <li>সম্পর্ক অনুযায়ী পার্সোনালাইজড গিফট</li>
+                    <li>পছন্দ অনুযায়ী কাস্টমাইজড আইডিয়া</li>
+                    <li>বাজেট অনুযায়ী সাজেশন</li>
+                </ul>
+            `;
+        }
+
+        function showOrderDetails(order) {
+            document.getElementById('recipientName').textContent = order.recipientName || 'N/A';
+            document.getElementById('recipientGender').textContent = order.recipientGender || 'N/A';
+            document.getElementById('recipientRelation').textContent = order.relationship || 'N/A';
+            document.getElementById('recipientAge').textContent = order.recipientAge || 'N/A';
+            document.getElementById('recipientPhone').textContent = order.recipientPhone || 'N/A';
+            document.getElementById('recipientBudget').textContent = order.budget || 'N/A';
+            document.getElementById('recipientPreferences').textContent = order.preferences || 'N/A';
         }
     </script>
 </body>
