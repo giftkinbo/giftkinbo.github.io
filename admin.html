@@ -1486,7 +1486,7 @@
             document.getElementById('deliveryAddress').textContent = order.deliveryAddress || 'N/A';
             document.getElementById('deliveryArea').textContent = order.deliveryArea === 'inside' ? 'ঢাকার ভিতরে' : order.deliveryArea === 'outside' ? 'ঢাকার বাইরে' : 'N/A';
             document.getElementById('deliveryContact').textContent = order.deliveryContact || 'N/A';
-            document.getElementById('budget').textContent = order.budget ? order.budget + ' টাকা' : 'N/A';
+            document.getElementById('budget').textContent = order.budget || 'N/A';
 
             // Payment Information
             document.getElementById('paymentMethod').textContent = order.paymentMethod === 'cod' ? 'ক্যাশ অন ডেলিভারি (COD)' :
