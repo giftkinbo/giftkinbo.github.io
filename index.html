@@ -1122,6 +1122,136 @@
             background: rgba(0, 0, 0, 0.1);
             margin: 0.5rem 0;
         }
+
+        /* Login Modal Styles */
+        .login-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-modal.active {
+            display: flex;
+        }
+
+        .login-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .login-btn img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .login-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .login-divider::before,
+        .login-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .login-divider span {
+            padding: 0 1rem;
+            color: #666;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .login-form input {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .login-form button {
+            padding: 0.75rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-form button:hover {
+            background: var(--primary-dark);
+        }
+
+        /* User Profile Styles */
+        .user-profile {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .user-profile:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .user-photo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -1142,11 +1272,12 @@
                 <a href="#contact">যোগাযোগ</a>
                 <a href="orders.html">আমার অর্ডার</a>
                 <div class="auth-container">
-                    <button id="signInButton" class="auth-button">
-                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                    <button id="loginBtn" class="auth-button">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>লগইন করুন</span>
                     </button>
                     <div id="userProfile" class="user-profile" style="display: none;">
-                        <img id="userPhoto" src="" alt="User Photo">
+                        <img id="userPhoto" class="user-photo" src="" alt="User Photo">
                         <span id="userName" class="user-name"></span>
                     </div>
                 </div>
@@ -1226,135 +1357,120 @@
         <div class="payment-notice">
 গিফট হাতে নিয়ে টাকা দিন
         </div>
-        <div class="container">
-            <form id="giftForm" class="gift-form">
-                <div class="form-section">
-                    <h3>ব্যক্তিগত তথ্য</h3>
-                    <div class="form-group">
-                        <label for="name">নাম</label>
-                        <input type="text" id="name" name="name" class="form-control" required>
+        <form id="orderForm">
+            <div class="form-section">
+                <h3>যাকে গিফট দিবেন তার তথ্য</h3>
+                <div class="form-group">
+                    <label for="recipientName">যার জন্য গিফট</label>
+                    <input type="text" id="recipientName" name="recipientName" placeholder="যেমন: সাবরিনা আক্তার" required>
+                </div>
+                <div class="form-group">
+                    <label for="recipientPhone">মোবাইল নম্বর</label>
+                    <input type="tel" id="recipientPhone" name="recipientPhone" placeholder="যেমন: 01745897322" required>
+                </div>
+                <div class="form-group">
+                    <label for="recipientGender">জেন্ডার</label>
+                    <select id="recipientGender" name="recipientGender" required>
+                        <option value="">জেন্ডার বাছাই করুন</option>
+                        <option value="male">পুরুষ</option>
+                        <option value="female">মহিলা</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="relationship">আপনার সাথে সম্পর্ক</label>
+                    <input type="text" id="relationship" name="relationship" placeholder="যেমন: বাবা, মা, ভাই, বোন, বন্ধু, সহকর্মী" required>
+                </div>
+                <div class="form-group">
+                    <label for="recipientAge">বয়স</label>
+                    <input type="number" id="recipientAge" name="recipientAge" placeholder="যেমন: 25" required>
+                </div>
+                <div class="form-group">
+                    <label for="budget">বাজেট</label>
+                    <input type="number" id="budget" name="budget" min="0" step="1" class="form-control" placeholder="যেমন: 499" required>
+                </div>
+                <div class="form-group">
+                    <label for="preferences">পছন্দ-অপছন্দ</label>
+                    <textarea id="preferences" name="preferences" placeholder="যেমন: চকলেট পছন্দ করেন, ফুলের গন্ধে অ্যালার্জি আছে ইত্যাদি" rows="2"></textarea>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>আপনার তথ্য</h3>
+                <div class="form-group">
+                    <label for="senderName">আপনার নাম</label>
+                    <input type="text" id="senderName" name="senderName" placeholder="যেমন: সাজিদুল ইসলাম" required>
+                </div>
+                <div class="form-group">
+                    <label for="senderPhone">মোবাইল নম্বর</label>
+                    <input type="tel" id="senderPhone" name="senderPhone" placeholder="যেমন: 01745897322" required>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>কোথায় পাঠাবেন</h3>
+                <div class="form-group">
+                    <label for="deliveryArea">ডেলিভারি এরিয়া</label>
+                    <select id="deliveryArea" name="deliveryArea" class="form-control" required>
+                        <option value="">সিলেক্ট করুন</option>
+                        <option value="inside">ঢাকার ভিতরে</option>
+                        <option value="outside">ঢাকার বাইরে</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="deliveryAddress">বিস্তারিত ঠিকানা</label>
+                    <textarea id="deliveryAddress" name="deliveryAddress" class="form-control" rows="3" required></textarea>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>মোট টাকার পরিমাণ</h3>
+                <div class="cost-breakdown">
+                    <div class="cost-item">
+                        <span class="cost-label">বাজেট:</span>
+                        <span class="cost-value" id="budgetAmount">০ টাকা</span>
                     </div>
-                    <div class="form-group">
-                        <label for="phone">ফোন নাম্বার</label>
-                        <input type="tel" id="phone" name="phone" class="form-control" required>
+                    <div class="cost-item">
+                        <span class="cost-label">ডেলিভারি চার্জ:</span>
+                        <span class="cost-value" id="deliveryAmount">০ টাকা</span>
                     </div>
-                    <div class="form-group">
-                        <label for="email">ইমেইল</label>
-                        <input type="email" id="email" name="email" class="form-control" required>
+                    <div class="cost-divider"></div>
+                    <div class="cost-item total">
+                        <span class="cost-label">মোট টাকার পরিমাণ:</span>
+                        <span class="cost-value" id="totalAmount">০ টাকা</span>
                     </div>
                 </div>
+            </div>
 
-                <div class="form-section">
-                    <h3>গিফটের তথ্য</h3>
-                    <div class="form-group">
-                        <label for="occasion">অনুষ্ঠান</label>
-                        <select id="occasion" name="occasion" class="form-control" required>
-                            <option value="">অনুষ্ঠান নির্বাচন করুন</option>
-                            <option value="birthday">জন্মদিন</option>
-                            <option value="anniversary">বিবাহ বার্ষিকী</option>
-                            <option value="wedding">বিবাহ</option>
-                            <option value="graduation">স্নাতক</option>
-                            <option value="other">অন্যান্য</option>
+            <div class="form-section">
+                <h3>পেমেন্ট মেথড</h3>
+                <div class="payment-methods">
+                    <div class="payment-method">
+                        <select id="paymentMethod" name="paymentMethod" class="payment-select">
+                            <option value="cod" selected>ক্যাশ অন ডেলিভারি (COD)</option>
+                            <option value="bkash">বিকাশ</option>
+                            <option value="rocket">রকেট</option>
+                            <option value="nagad">নগদ</option>
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="recipient">প্রাপক</label>
-                        <input type="text" id="recipient" name="recipient" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="relationship">সম্পর্ক</label>
-                        <select id="relationship" name="relationship" class="form-control" required>
-                            <option value="">সম্পর্ক নির্বাচন করুন</option>
-                            <option value="family">পরিবার</option>
-                            <option value="friend">বন্ধু</option>
-                            <option value="colleague">সহকর্মী</option>
-                            <option value="other">অন্যান্য</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="budget">বাজেট</label>
-                        <input type="number" id="budget" name="budget" class="form-control" required min="0">
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>ডেলিভারি তথ্য</h3>
-                    <div class="form-group">
-                        <label for="deliveryArea">ডেলিভারি এরিয়া</label>
-                        <select id="deliveryArea" name="deliveryArea" class="form-control" required>
-                            <option value="">এরিয়া নির্বাচন করুন</option>
-                            <option value="dhaka">ঢাকা</option>
-                            <option value="chittagong">চট্টগ্রাম</option>
-                            <option value="rajshahi">রাজশাহী</option>
-                            <option value="khulna">খুলনা</option>
-                            <option value="barishal">বরিশাল</option>
-                            <option value="sylhet">সিলেট</option>
-                            <option value="rangpur">রংপুর</option>
-                            <option value="mymensingh">ময়মনসিংহ</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="deliveryAddress">ডেলিভারি ঠিকানা</label>
-                        <textarea id="deliveryAddress" name="deliveryAddress" class="form-control" required></textarea>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>মোট টাকার পরিমাণ</h3>
-                    <div class="cost-breakdown">
-                        <div class="cost-item">
-                            <span class="cost-label">বাজেট:</span>
-                            <span class="cost-value" id="budgetAmount">০ টাকা</span>
-                        </div>
-                        <div class="cost-item">
-                            <span class="cost-label">ডেলিভারি চার্জ:</span>
-                            <span class="cost-value" id="deliveryAmount">০ টাকা</span>
-                        </div>
-                        <div class="cost-divider"></div>
-                        <div class="cost-item total">
-                            <span class="cost-label">মোট টাকার পরিমাণ:</span>
-                            <span class="cost-value" id="totalAmount">০ টাকা</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>পেমেন্ট মেথড</h3>
-                    <div class="payment-methods">
-                        <div class="payment-method">
-                            <select id="paymentMethod" name="paymentMethod" class="payment-select">
-                                <option value="cod" selected>ক্যাশ অন ডেলিভারি (COD)</option>
-                                <option value="bkash">বিকাশ</option>
-                                <option value="rocket">রকেট</option>
-                                <option value="nagad">নগদ</option>
-                            </select>
-                            <div id="paymentNumberDisplay" class="payment-number-display" style="display: none;">
-                                <div class="payment-number-box">
-                                    <span class="payment-label">পেমেন্ট নাম্বার:</span>
-                                    <span class="payment-number" id="paymentNumber"></span>
-                                    <button class="copy-number-btn" onclick="copyPaymentNumber()">
-                                        <i class="fas fa-copy"></i> কপি করুন
-                                    </button>
-                                </div>
+                        <div id="paymentNumberDisplay" class="payment-number-display" style="display: none;">
+                            <div class="payment-number-box">
+                                <span class="payment-label">পেমেন্ট নাম্বার:</span>
+                                <span class="payment-number" id="paymentNumber"></span>
+                                <button class="copy-number-btn" onclick="copyPaymentNumber()">
+                                    <i class="fas fa-copy"></i> কপি করুন
+                                </button>
                             </div>
-                            <p class="payment-description" id="paymentDescription"></p>
                         </div>
+                        <p class="payment-description" id="paymentDescription"></p>
                     </div>
                 </div>
+            </div>
 
-                <div class="form-section">
-                    <h3>মেসেজ</h3>
-                    <div class="form-group">
-                        <label for="message">অতিরিক্ত কিছু বলতে চান?</label>
-                        <textarea id="message" name="message" class="form-control" rows="3" placeholder="আপনার মেসেজ লিখুন"></textarea>
-                    </div>
-                </div>
-
-                <button type="submit" class="submit-btn" id="submitBtn">
-                    <i class="fas fa-paper-plane"></i> অর্ডার করুন
-                </button>
-            </form>
-        </div>
+            <div class="payment-info">
+                <i class="fas fa-money-bill-wave"></i>
+                <p>গিফট হাতে নিয়ে তারপরে টাকা দিবেন</p>
+            </div>
+            <button type="submit" class="submit-button">অর্ডার কনফার্ম করুন</button>
+        </form>
     </section>
 
     <!-- Contact Section -->
@@ -1387,26 +1503,202 @@
         </a>
     </footer>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <!-- Login Modal -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-content">
+            <div class="login-header">
+                <h2>লগইন করুন</h2>
+            </div>
+            <div class="login-options">
+                <button id="googleLogin" class="login-btn">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                    <span>গুগল দিয়ে লগইন করুন</span>
+                </button>
+                <div class="login-divider">
+                    <span>অথবা</span>
+                </div>
+                <form class="login-form">
+                    <input type="email" id="loginEmail" placeholder="ইমেইল" required>
+                    <input type="password" id="loginPassword" placeholder="পাসওয়ার্ড" required>
+                    <button type="button" id="emailLogin">লগইন করুন</button>
+                </form>
+            </div>
+        </div>
+    </div>
 
+    <!-- Login Button -->
+    <button id="loginBtn" class="login-btn" style="display: none;">
+        <i class="fas fa-sign-in-alt"></i>
+        <span>লগইন করুন</span>
+    </button>
+
+    <!-- User Profile -->
+    <div id="userProfile" class="user-profile" style="display: none;">
+        <img id="userPhoto" class="user-photo" src="" alt="User Photo">
+        <span id="userName" class="user-name"></span>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
     <script>
         // Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyDxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXx",
-            authDomain: "giftkinbo.firebaseapp.com",
-            projectId: "giftkinbo",
-            storageBucket: "giftkinbo.appspot.com",
-            messagingSenderId: "123456789012",
-            appId: "1:123456789012:web:1234567890123456789012"
+            apiKey: "AIzaSyCSyXJeftEfkwQ_FoQlg1sEZ3PZv9xjkLI",
+            authDomain: "gift-kinbo-bd.firebaseapp.com",
+            databaseURL: "https://gift-kinbo-bd-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "gift-kinbo-bd",
+            storageBucket: "gift-kinbo-bd.firebasestorage.app",
+            messagingSenderId: "896761493540",
+            appId: "1:896761493540:web:21e49df2ca453fb80180b1",
+            measurementId: "G-ZVXSHQT95M"
         };
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+        const analytics = firebase.analytics();
         const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // Show login modal when login button is clicked
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            document.getElementById('loginModal').classList.add('active');
+        });
+
+        // Close login modal when clicking outside
+        document.getElementById('loginModal').addEventListener('click', (e) => {
+            if (e.target.id === 'loginModal') {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // Auth state observer
+        auth.onAuthStateChanged((user) => {
+            const loginBtn = document.getElementById('loginBtn');
+            const userProfile = document.getElementById('userProfile');
+            const userPhoto = document.getElementById('userPhoto');
+            const userName = document.getElementById('userName');
+            const orderForm = document.getElementById('giftForm');
+            const loginModal = document.getElementById('loginModal');
+
+            if (user) {
+                // User is signed in
+                loginBtn.style.display = 'none';
+                userProfile.style.display = 'flex';
+                userPhoto.src = user.photoURL || 'https://via.placeholder.com/40';
+                userName.textContent = user.displayName || user.email;
+                orderForm.style.display = 'block';
+                loginModal.classList.remove('active');
+                
+                // Log login event
+                analytics.logEvent('login', {
+                    method: user.providerData[0].providerId
+                });
+            } else {
+                // User is signed out
+                loginBtn.style.display = 'flex';
+                userProfile.style.display = 'none';
+                orderForm.style.display = 'none';
+            }
+        });
+
+        // Login with Google
+        document.getElementById('googleLogin').addEventListener('click', async () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                await auth.signInWithPopup(provider);
+            } catch (error) {
+                console.error('Error signing in with Google:', error);
+                alert('দুঃখিত, গুগল দিয়ে লগইন করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+            }
+        });
+
+        // Login with Email
+        document.getElementById('emailLogin').addEventListener('click', () => {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                alert('দয়া করে ইমেইল এবং পাসওয়ার্ড দিন');
+                return;
+            }
+
+            auth.signInWithEmailAndPassword(email, password)
+                .catch((error) => {
+                    console.error('Error signing in with email:', error);
+                    alert('দুঃখিত, লগইন করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+                });
+        });
+
+        // Sign out
+        document.getElementById('userProfile').addEventListener('click', () => {
+            auth.signOut()
+                .catch((error) => {
+                    console.error('Error signing out:', error);
+                    alert('দুঃখিত, লগআউট করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+                });
+        });
+
+        // Handle form submission
+        document.getElementById('giftForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            try {
+                submitBtn.disabled = true;
+                loadingSpinner.style.display = 'block';
+                errorMessage.style.display = 'none';
+                
+                const formData = {
+                    name: document.getElementById('name').value,
+                    phone: document.getElementById('phone').value,
+                    budget: parseInt(document.getElementById('budget').value) || 0,
+                    deliveryArea: document.getElementById('deliveryArea').value,
+                    deliveryAddress: document.getElementById('deliveryAddress').value,
+                    deliveryPhone: document.getElementById('deliveryPhone').value,
+                    occasion: document.getElementById('occasion').value,
+                    recipient: document.getElementById('recipient').value,
+                    relationship: document.getElementById('relationship').value,
+                    age: document.getElementById('age').value,
+                    gender: document.getElementById('gender').value,
+                    interests: document.getElementById('interests').value,
+                    message: document.getElementById('message').value,
+                    paymentMethod: document.getElementById('paymentMethod').value,
+                    deliveryCharge: calculateDeliveryCharge(document.getElementById('deliveryArea').value),
+                    totalAmount: (parseInt(document.getElementById('budget').value) || 0) + calculateDeliveryCharge(document.getElementById('deliveryArea').value),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    userId: auth.currentUser.uid,
+                    userEmail: auth.currentUser.email
+                };
+                
+                await db.collection('orders').add(formData);
+                
+                loadingSpinner.style.display = 'none';
+                successMessage.style.display = 'block';
+                this.reset();
+                
+                // Reset cost display
+                updateCostDisplay();
+                
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                loadingSpinner.style.display = 'none';
+                errorMessage.style.display = 'block';
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Function to calculate delivery charge
+        function calculateDeliveryCharge(area) {
+            if (!area) return 0;
+            return area === 'inside' ? 59 : 99;
+        }
     </script>
 
     <!-- Payment Method Script -->
@@ -1459,7 +1751,7 @@
                 budgetAmount.textContent = budget + ' টাকা';
                 deliveryAmount.textContent = deliveryCharge + ' টাকা';
                 totalAmount.textContent = total + ' টাকা';
-            }
+                }
 
             // Function to update payment display
             function updatePaymentDisplay(method) {
@@ -1497,18 +1789,18 @@
             });
         };
 
-        // Copy payment number function
-        function copyPaymentNumber() {
-            const paymentNumber = document.getElementById('paymentNumber').textContent;
-            navigator.clipboard.writeText(paymentNumber).then(() => {
-                const copyBtn = document.querySelector('.copy-number-btn');
-                const originalText = copyBtn.innerHTML;
-                copyBtn.innerHTML = '<i class="fas fa-check"></i> কপি করা হয়েছে';
-                setTimeout(() => {
-                    copyBtn.innerHTML = originalText;
-                }, 2000);
-            });
-        }
+            // Copy payment number function
+            function copyPaymentNumber() {
+                const paymentNumber = document.getElementById('paymentNumber').textContent;
+                navigator.clipboard.writeText(paymentNumber).then(() => {
+                    const copyBtn = document.querySelector('.copy-number-btn');
+                    const originalText = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i> কপি করা হয়েছে';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalText;
+                    }, 2000);
+                });
+            }
     </script>
 </body>
 </html> 
