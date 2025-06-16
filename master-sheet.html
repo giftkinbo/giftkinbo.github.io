@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>মাস্টার শীট - Gift Kinbo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FF4B8B;
+            --secondary-color: #FF6B9C;
+            --accent-color: #FFD700;
+            --text-color: #2C3E50;
+            --light-text: #7F8C8D;
+            --white: #FFFFFF;
+            --light-bg: #FFF5F8;
+            --success-color: #27AE60;
+            --warning-color: #F39C12;
+            --error-color: #E74C3C;
+            --shadow: 0 2px 15px rgba(255, 75, 139, 0.1);
+            --hover-shadow: 0 5px 20px rgba(255, 75, 139, 0.2);
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --gradient-success: linear-gradient(135deg, #27AE60, #2ECC71);
+            --gradient-warning: linear-gradient(135deg, #F39C12, #F1C40F);
+            --gradient-info: linear-gradient(135deg, #3498DB, #2980B9);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+
+        body {
+            background-color: #F8F9FA;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: var(--white);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            position: fixed;
+            height: 100vh;
+            width: 280px;
+            border-right: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--light-bg);
+        }
+
+        .sidebar-header h1 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header p {
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.8rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.2rem;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: var(--gradient-primary);
+            color: var(--white);
+            transform: translateX(5px);
+        }
+
+        .sidebar-menu i {
+            width: 20px;
+            font-size: 1.1rem;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding: 2.5rem;
+            margin-left: 280px;
+            background: #F8F9FA;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--light-bg);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: var(--text-color);
+            font-weight: 700;
+            position: relative;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -1.5rem;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: 3px;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .stat-card:nth-child(2)::before {
+            background: var(--gradient-success);
+        }
+
+        .stat-card:nth-child(3)::before {
+            background: var(--gradient-warning);
+        }
+
+        .stat-card:nth-child(4)::before {
+            background: var(--gradient-info);
+        }
+
+        .stat-card h3 {
+            color: var(--light-text);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .trend {
+            font-size: 0.9rem;
+            color: var(--success-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Data Table */
+        .data-table {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .data-table:hover {
+            box-shadow: var(--hover-shadow);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 2px solid var(--light-bg);
+            background: var(--white);
+        }
+
+        .table-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(255, 75, 139, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 75, 139, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        th, td {
+            padding: 1.2rem 2rem;
+            text-align: left;
+        }
+
+        th {
+            background: var(--light-bg);
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            border-bottom: 1px solid var(--light-bg);
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+
+        tr:hover td {
+            background: var(--light-bg);
+        }
+
+        .status {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .status.success {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+        }
+
+        .status.pending {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning-color);
+        }
+
+        .status.cancelled {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--error-color);
+        }
+
+        /* Form Modal */
+        .form-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+        }
+
+        .form-modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--light-bg);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 75, 139, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .form-actions .btn {
+            flex: 1;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 1000;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .table-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .table-actions {
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            th, td {
+                padding: 1rem;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--light-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Gift Kinbo</h1>
+                <p>মাস্টার শীট</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active"><i class="fas fa-home"></i> ড্যাশবোর্ড</a></li>
+                <li><a href="#"><i class="fas fa-shopping-cart"></i> অর্ডার</a></li>
+                <li><a href="#"><i class="fas fa-users"></i> কাস্টমার</a></li>
+                <li><a href="#"><i class="fas fa-box"></i> প্রোডাক্ট</a></li>
+                <li><a href="#"><i class="fas fa-money-bill-wave"></i> আয়</a></li>
+                <li><a href="#"><i class="fas fa-chart-line"></i> রিপোর্ট</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> সেটিংস</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h2 class="page-title">ড্যাশবোর্ড</h2>
+                <button class="btn btn-primary" onclick="openModal()">
+                    <i class="fas fa-plus"></i> নতুন এন্ট্রি
+                </button>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>মোট বিক্রয়</h3>
+                    <div class="value">৳ ১৫০,০০০</div>
+                </div>
+                <div class="stat-card">
+                    <h3>মোট অর্ডার</h3>
+                    <div class="value">১২৫</div>
+                </div>
+                <div class="stat-card">
+                    <h3>মোট কাস্টমার</h3>
+                    <div class="value">৮৫</div>
+                </div>
+                <div class="stat-card">
+                    <h3>মোট লাভ</h3>
+                    <div class="value">৳ ৪৫,০০০</div>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="data-table">
+                <div class="table-header">
+                    <h3 class="table-title">সকল লেনদেন</h3>
+                    <div class="table-actions">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download"></i> এক্সপোর্ট
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>তারিখ</th>
+                                <th>অর্ডার আইডি</th>
+                                <th>কাস্টমার</th>
+                                <th>প্রোডাক্ট</th>
+                                <th>পরিমাণ</th>
+                                <th>মূল্য</th>
+                                <th>স্ট্যাটাস</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>২০২৪-০৩-১৫</td>
+                                <td>#GK-001</td>
+                                <td>রহিম আলী</td>
+                                <td>ব্রাইডাল সেট</td>
+                                <td>১</td>
+                                <td>৳ ১২,০০০</td>
+                                <td><span class="status success">সম্পন্ন</span></td>
+                            </tr>
+                            <!-- More rows will be added dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Entry Modal -->
+    <div class="form-modal" id="entryModal">
+        <div class="modal-content">
+            <h2>নতুন এন্ট্রি যোগ করুন</h2>
+            <form id="entryForm">
+                <div class="form-group">
+                    <label for="date">তারিখ</label>
+                    <input type="date" id="date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer">কাস্টমার</label>
+                    <input type="text" id="customer" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="product">প্রোডাক্ট</label>
+                    <input type="text" id="product" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">পরিমাণ</label>
+                    <input type="number" id="quantity" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="price">মূল্য</label>
+                    <input type="number" id="price" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="status">স্ট্যাটাস</label>
+                    <select id="status" class="form-control" required>
+                        <option value="pending">অপেক্ষমান</option>
+                        <option value="completed">সম্পন্ন</option>
+                        <option value="cancelled">বাতিল</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">সেভ করুন</button>
+                    <button type="button" class="btn" onclick="closeModal()">বাতিল</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Modal Functions
+        function openModal() {
+            document.getElementById('entryModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('entryModal').classList.remove('active');
+        }
+
+        // Form Submission
+        document.getElementById('entryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Add your form submission logic here
+            closeModal();
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('entryModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html> 

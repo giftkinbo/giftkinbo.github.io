@@ -644,10 +644,10 @@
         }
 
         label {
-            display: block;
+                display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
-            color: var(--text-color);
+                color: var(--text-color);
         }
 
         input, select, textarea {
@@ -749,10 +749,10 @@
 
         footer::before {
             content: '';
-            position: absolute;
+                position: absolute;
             top: 0;
-            left: 0;
-            right: 0;
+                left: 0;
+                right: 0;
             height: 5px;
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
         }
@@ -886,7 +886,7 @@
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
-            display: flex;
+                display: flex;
             align-items: center;
             gap: 0.5rem;
             transition: all 0.3s ease;
@@ -938,6 +938,190 @@
                 margin: 0.5rem 0;
             }
         }
+
+        .payment-methods {
+            margin: 1rem 0;
+        }
+
+        .payment-method {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .payment-select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            background: white;
+            color: var(--text-color);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232C3E50'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.5em;
+            box-shadow: var(--shadow);
+        }
+
+        .payment-select:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .payment-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+
+        .payment-select option {
+            background: white;
+            color: var(--text-color);
+            padding: 1rem;
+        }
+
+        .payment-description {
+            margin: 1rem 0 0 0;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            line-height: 1.4;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        .payment-number-display {
+            margin-top: 0.5rem;
+            padding: 1rem;
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .payment-number-box {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .payment-label {
+            font-weight: 500;
+            color: var(--text-color);
+            white-space: nowrap;
+        }
+
+        .payment-number {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            letter-spacing: 0.5px;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .copy-number-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .copy-number-btn:hover {
+            background: #388E3C;
+            transform: translateY(-1px);
+        }
+
+        .copy-number-btn i {
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .payment-number-box {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+            
+            .payment-number {
+                text-align: center;
+            }
+            
+            .copy-number-btn {
+                justify-content: center;
+            }
+        }
+
+        .payment-amount-display {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            border-radius: 8px;
+        }
+
+        .cost-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            border-radius: 8px;
+        }
+
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .cost-item.total {
+            background: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .cost-label {
+            font-weight: 500;
+        }
+
+        .cost-value {
+            font-weight: 600;
+        }
+
+        .cost-divider {
+            height: 1px;
+            background: rgba(0, 0, 0, 0.1);
+            margin: 0.5rem 0;
+        }
     </style>
 </head>
 <body>
@@ -978,7 +1162,7 @@
                 <span>আগে গিফট নিন, পরে টাকা দিন</span>
             </div>
             <h1>আপনার প্রিয়জনদের জন্য সেরা উপহার</h1>
-            <p>আমরা আপনার প্রিয়জনদের জন্য সুন্দর গিফট বক্স তৈরি করে দেই। আপনি শুধু অর্ডার করুন, বাকি কাজ আমাদের। গিফট পেয়ে তারপর টাকা দিবেন।</p>
+            <p style="background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); padding: 1rem; border-radius: 8px; margin: 1rem 0; color: white;">আমরা আপনার প্রিয়জনদের জন্য সুন্দর গিফট বক্স তৈরি করে দেই। আপনি শুধু অর্ডার করুন, বাকি কাজ আমাদের। গিফট পেয়ে তারপর টাকা দিবেন।</p>
             <a href="#order" class="cta-button">এখনই অর্ডার করুন</a>
         </div>
     </section>
@@ -1031,7 +1215,6 @@
             <ul>
                 <li><i class="fas fa-check-circle"></i> গিফট হাতে নিয়ে তারপরে টাকা দিবেন</li>
                 <li><i class="fas fa-check-circle"></i> আগে থেকে কোন টাকা দিতে হবে না</li>
-                <li><i class="fas fa-check-circle"></i> গিফট না পেলে টাকা দিতে হবে না</li>
                 <li><i class="fas fa-check-circle"></i> 100% নিরাপদ এবং সহজ</li>
             </ul>
         </div>
@@ -1072,7 +1255,7 @@
                 </div>
                 <div class="form-group">
                     <label for="budget">বাজেট</label>
-                    <input type="number" id="budget" name="budget" placeholder="যেমন: 499" required>
+                    <input type="number" id="budget" name="budget" min="0" step="1" class="form-control" placeholder="যেমন: 499" required>
                 </div>
                 <div class="form-group">
                     <label for="preferences">পছন্দ-অপছন্দ</label>
@@ -1095,12 +1278,59 @@
             <div class="form-section">
                 <h3>কোথায় পাঠাবেন</h3>
                 <div class="form-group">
-                    <label for="deliveryAddress">ঠিকানা</label>
-                    <textarea id="deliveryAddress" name="deliveryAddress" placeholder="আপনার ঠিকানা বিস্তারিত ভাবে লিখুন" required></textarea>
+                    <label for="deliveryArea">ডেলিভারি এরিয়া</label>
+                    <select id="deliveryArea" name="deliveryArea" class="form-control" required>
+                        <option value="">সিলেক্ট করুন</option>
+                        <option value="inside">ঢাকার ভিতরে</option>
+                        <option value="outside">ঢাকার বাইরে</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label for="deliveryPhone">ডেলিভারি কন্টাক্ট নাম্বার</label>
-                    <input type="tel" id="deliveryPhone" name="deliveryPhone" placeholder="যেমন: 01745897322" required>
+                    <label for="deliveryAddress">বিস্তারিত ঠিকানা</label>
+                    <textarea id="deliveryAddress" name="deliveryAddress" class="form-control" rows="3" required></textarea>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>মোট টাকার পরিমাণ</h3>
+                <div class="cost-breakdown">
+                    <div class="cost-item">
+                        <span class="cost-label">বাজেট:</span>
+                        <span class="cost-value" id="budgetAmount">০ টাকা</span>
+                    </div>
+                    <div class="cost-item">
+                        <span class="cost-label">ডেলিভারি চার্জ:</span>
+                        <span class="cost-value" id="deliveryAmount">০ টাকা</span>
+                    </div>
+                    <div class="cost-divider"></div>
+                    <div class="cost-item total">
+                        <span class="cost-label">মোট টাকার পরিমাণ:</span>
+                        <span class="cost-value" id="totalAmount">০ টাকা</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>পেমেন্ট মেথড</h3>
+                <div class="payment-methods">
+                    <div class="payment-method">
+                        <select id="paymentMethod" name="paymentMethod" class="payment-select">
+                            <option value="cod" selected>ক্যাশ অন ডেলিভারি (COD)</option>
+                            <option value="bkash">বিকাশ</option>
+                            <option value="rocket">রকেট</option>
+                            <option value="nagad">নগদ</option>
+                        </select>
+                        <div id="paymentNumberDisplay" class="payment-number-display" style="display: none;">
+                            <div class="payment-number-box">
+                                <span class="payment-label">পেমেন্ট নাম্বার:</span>
+                                <span class="payment-number" id="paymentNumber"></span>
+                                <button class="copy-number-btn" onclick="copyPaymentNumber()">
+                                    <i class="fas fa-copy"></i> কপি করুন
+                                </button>
+                            </div>
+                        </div>
+                        <p class="payment-description" id="paymentDescription"></p>
+                    </div>
                 </div>
             </div>
 
@@ -1136,7 +1366,7 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 গিফট কিনবো। সর্বস্বত্ব সংরক্ষিত।</p>
+        <p>&copy; 2025 গিফট কিনবো। সর্বস্বত্ব সংরক্ষিত।</p>
         <a href="admin.html" style="color: var(--primary-color); text-decoration: none; margin-top: 0.5rem; display: inline-block; padding: 0.5rem 1rem; border: 1px solid var(--primary-color); border-radius: 4px; transition: all 0.3s ease;">
             <i class="fas fa-user-shield"></i> অ্যাডমিন প্যানেল
         </a>
@@ -1419,6 +1649,108 @@
                 });
             });
         });
+    </script>
+
+    <!-- Payment Method Script -->
+    <script>
+        // Wait for the page to load
+        window.onload = function() {
+            // Get all required elements
+            const paymentMethod = document.getElementById('paymentMethod');
+            const paymentDescription = document.getElementById('paymentDescription');
+            const paymentNumberDisplay = document.getElementById('paymentNumberDisplay');
+            const paymentNumber = document.getElementById('paymentNumber');
+            const budgetAmount = document.getElementById('budgetAmount');
+            const deliveryAmount = document.getElementById('deliveryAmount');
+            const totalAmount = document.getElementById('totalAmount');
+            const budgetInput = document.getElementById('budget');
+            const deliveryArea = document.getElementById('deliveryArea');
+
+            // Payment information
+            const paymentInfo = {
+                'cod': {
+                    description: 'গিফট হাতে পেয়ে তারপর টাকা দিবেন',
+                    number: ''
+                },
+                'bkash': {
+                    description: 'অর্ডার কনফার্ম করার পর 01745897322 এই বিকাশ নাম্বারে টাকা পাঠাবেন',
+                    number: '01745897322'
+                },
+                'rocket': {
+                    description: 'অর্ডার কনফার্ম করার পর এই রকেট নাম্বারে টাকা পাঠাবেন',
+                    number: '017458973220'
+                },
+                'nagad': {
+                    description: 'অর্ডার কনফার্ম করার পর এই নগদ নাম্বারে টাকা পাঠাবেন',
+                    number: '01745897322'
+                }
+            };
+
+            // Function to calculate delivery charge
+            function calculateDeliveryCharge(area) {
+                if (!area) return 0;
+                return area === 'inside' ? 59 : 99;
+            }
+
+            // Function to update cost display
+            function updateCostDisplay() {
+                const budget = parseInt(budgetInput.value) || 0;
+                const deliveryCharge = calculateDeliveryCharge(deliveryArea.value);
+                const total = budget + deliveryCharge;
+
+                budgetAmount.textContent = budget + ' টাকা';
+                deliveryAmount.textContent = deliveryCharge + ' টাকা';
+                totalAmount.textContent = total + ' টাকা';
+            }
+
+            // Function to update payment display
+            function updatePaymentDisplay(method) {
+                const info = paymentInfo[method];
+                paymentDescription.textContent = info.description;
+                
+                if (method === 'cod') {
+                    paymentNumberDisplay.style.display = 'none';
+                } else {
+                    paymentNumber.textContent = info.number;
+                    paymentNumberDisplay.style.display = 'block';
+                }
+            }
+
+            // Set initial display
+            updateCostDisplay();
+            updatePaymentDisplay(paymentMethod.value);
+
+            // Handle payment method change
+            paymentMethod.addEventListener('change', function() {
+                updatePaymentDisplay(this.value);
+            });
+
+            // Update when budget or delivery area changes
+            budgetInput.addEventListener('input', function() {
+                // Ensure value is not negative
+                if (this.value < 0) {
+                    this.value = 0;
+                }
+                updateCostDisplay();
+            });
+
+            deliveryArea.addEventListener('change', function() {
+                updateCostDisplay();
+            });
+        };
+
+        // Copy payment number function
+        function copyPaymentNumber() {
+            const paymentNumber = document.getElementById('paymentNumber').textContent;
+            navigator.clipboard.writeText(paymentNumber).then(() => {
+                const copyBtn = document.querySelector('.copy-number-btn');
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> কপি করা হয়েছে';
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                }, 2000);
+            });
+        }
     </script>
 </body>
 </html> 
