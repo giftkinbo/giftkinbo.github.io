@@ -7,6 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Kalpurush&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css" rel="stylesheet">
     <style>
         :root {
             --primary-color: #4CAF50;
@@ -871,82 +874,52 @@
 </head>
 <body>
     <div class="admin-container">
-        <div class="admin-header">
-            <h1>অর্ডার ম্যানেজমেন্ট</h1>
-            <div class="admin-actions">
-                <button onclick="window.location.href='index.html'" class="back-btn">
-                    <i class="fas fa-arrow-left"></i> বাড়ি ফিরে যান
+        <!-- Login Form -->
+        <div id="loginForm" class="login-container">
+            <h2 class="text-center mb-4">এডমিন লগইন</h2>
+            <form>
+                <div class="mb-3">
+                    <label for="email" class="form-label">ইমেইল</label>
+                    <input type="email" class="form-control" id="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">পাসওয়ার্ড</label>
+                    <input type="password" class="form-control" id="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">লগইন</button>
+            </form>
+        </div>
+
+        <!-- Admin Content -->
+        <div id="adminContent" style="display: none;">
+            <div class="admin-header">
+                <h2>এডমিন প্যানেল</h2>
+                <button id="logoutBtn" class="btn btn-light">
+                    <i class="fas fa-sign-out-alt"></i> লগআউট
                 </button>
             </div>
-        </div>
-        <div class="dashboard">
-            <div id="loadingState" style="text-align: center; padding: 2rem;">
-                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-color);"></i>
-                <p style="margin-top: 1rem;">লোড হচ্ছে...</p>
-            </div>
-            <div id="adminContent" style="display: none;">
-                <div class="admin-header">
-                    <h1>অ্যাডমিন প্যানেল</h1>
-                    <p>আপনার অর্ডারগুলো ম্যানেজ করুন</p>
-                </div>
-
-                <!-- Admin Dashboard -->
-                <div class="admin-dashboard">
-                    <div class="dashboard-card">
-                        <h3><i class="fas fa-shopping-cart"></i> মোট অর্ডার</h3>
-                        <div class="number" id="totalOrders">0</div>
-                        <div class="label">সব অর্ডারের সংখ্যা</div>
-                    </div>
-                    <div class="dashboard-card">
-                        <h3><i class="fas fa-clock"></i> পেন্ডিং অর্ডার</h3>
-                        <div class="number" id="pendingOrders">0</div>
-                        <div class="label">অপেক্ষমান অর্ডার</div>
-                    </div>
-                    <div class="dashboard-card">
-                        <h3><i class="fas fa-truck"></i> প্রসেসিং অর্ডার</h3>
-                        <div class="number" id="processingOrders">0</div>
-                        <div class="label">চলমান অর্ডার</div>
-                    </div>
-                    <div class="dashboard-card">
-                        <h3><i class="fas fa-check-circle"></i> কমপ্লিট অর্ডার</h3>
-                        <div class="number" id="completedOrders">0</div>
-                        <div class="label">সম্পন্ন অর্ডার</div>
-                    </div>
-                </div>
-
-                <!-- Orders Section -->
-                <div class="orders-section">
-                    <div class="section-header">
-                        <h2><i class="fas fa-list"></i> সব অর্ডার</h2>
-                        <div class="filter-section">
-                            <select id="statusFilter" class="filter-select">
-                                <option value="all">সব স্ট্যাটাস</option>
-                                <option value="pending">পেন্ডিং</option>
-                                <option value="confirmed">অর্ডার কনফার্মড</option>
-                                <option value="processing">প্রসেসিং</option>
-                                <option value="shipped">শিপড</option>
-                                <option value="delivered">ডেলিভারড</option>
-                                <option value="cancelled">ক্যানসেলড</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="ordersTableContainer">
-                        <table class="orders-table">
-                            <thead>
-                                <tr>
-                                    <th>অর্ডার আইডি</th>
-                                    <th>গ্রাহকের নাম</th>
-                                    <th>রিসিভারের নাম</th>
-                                    <th>তারিখ</th>
-                                    <th>স্ট্যাটাস</th>
-                                    <th>অ্যাকশন</th>
-                                </tr>
-                            </thead>
-                            <tbody id="ordersTableBody">
-                                <!-- Orders will be loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="admin-content">
+                <div class="table-responsive">
+                    <table id="ordersTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>নাম</th>
+                                <th>ফোন</th>
+                                <th>ইমেইল</th>
+                                <th>উপলক্ষ</th>
+                                <th>প্রাপক</th>
+                                <th>সম্পর্ক</th>
+                                <th>বাজেট</th>
+                                <th>ডেলিভারি এরিয়া</th>
+                                <th>ঠিকানা</th>
+                                <th>পেমেন্ট</th>
+                                <th>মেসেজ</th>
+                                <th>তারিখ</th>
+                                <th>অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -1122,539 +1095,159 @@
     </div>
 
     <!-- Firebase SDK -->
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-        import { getDatabase, ref, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
-        import { getAuth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
 
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCSyXJeftEfkwQ_FoQlg1sEZ3PZv9xjkLI",
-            authDomain: "gift-kinbo-bd.firebaseapp.com",
-            projectId: "gift-kinbo-bd",
-            storageBucket: "gift-kinbo-bd.firebasestorage.app",
-            messagingSenderId: "896761493540",
-            appId: "1:896761493540:web:21e49df2ca453fb80180b1",
-            measurementId: "G-ZVXSHQT95M",
-            databaseURL: "https://gift-kinbo-bd-default-rtdb.asia-southeast1.firebasedatabase.app"
-        };
-
+    <script>
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
+        const firebaseConfig = {
+            apiKey: "AIzaSyDxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXx",
+            authDomain: "gift-kinbo.firebaseapp.com",
+            projectId: "gift-kinbo",
+            storageBucket: "gift-kinbo.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:123456789"
+        };
+        firebase.initializeApp(firebaseConfig);
 
-        // Show loading state
-        document.getElementById('loadingState').style.display = 'block';
-        document.getElementById('adminContent').style.display = 'none';
-
-        // Add sign in button to header
-        const navLinks = document.querySelector('.nav-links');
-        const signInButton = document.createElement('button');
-        signInButton.id = 'signInButton';
-        signInButton.className = 'auth-button';
-        signInButton.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">';
-        navLinks.insertBefore(signInButton, navLinks.firstChild);
-
-        // Sign in with Google
-        signInButton.addEventListener('click', async () => {
-            try {
-                const result = await signInWithPopup(auth, provider);
-                console.log('Successfully signed in:', result.user.email);
-            } catch (error) {
-                console.error('Error signing in:', error);
-                alert('দুঃখিত, সাইন ইন করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
-            }
-        });
+        // Get Firestore instance
+        const db = firebase.firestore();
 
         // Check authentication state
-        onAuthStateChanged(auth, (user) => {
-            console.log('Auth state changed:', user ? 'User is signed in' : 'User is signed out');
-            
+        firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
-                // User is signed in
-                console.log('User details:', user.email, user.displayName);
-                
-                // Check if user is authorized admin
-                if (user.email === 'giftkinbobd@gmail.com') {
-                    // Show user profile and hide sign in button
-                    document.getElementById('userProfile').style.display = 'flex';
-                    document.getElementById('userPhoto').src = user.photoURL;
-                    document.getElementById('userName').textContent = user.displayName;
-                    signInButton.style.display = 'none';
-                    
+                // Check if the user's email is sajidtechsolutions@gmail.com
+                if (user.email === 'sajidtechsolutions@gmail.com') {
                     // Show admin content
-                    document.getElementById('loadingState').style.display = 'none';
                     document.getElementById('adminContent').style.display = 'block';
-                    
-                    // Load orders
+                    document.getElementById('loginForm').style.display = 'none';
                     loadOrders();
                 } else {
-                    // Unauthorized user
-                    alert('দুঃখিত, আপনার অ্যাডমিন প্যানেল অ্যাক্সেস করার অনুমতি নেই।');
-                    signOut(auth).then(() => {
+                    // If not the authorized email, sign out and show error
+                    firebase.auth().signOut();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'অননুমোদিত অ্যাক্সেস',
+                        text: 'আপনার এই পেজে অ্যাক্সেস করার অনুমতি নেই।',
+                        confirmButtonText: 'ঠিক আছে'
+                    }).then(() => {
                         window.location.href = 'index.html';
                     });
                 }
             } else {
-                // User is signed out
-                console.log('User is not signed in, showing sign in button');
-                
-                // Show sign in button and hide user profile
-                signInButton.style.display = 'flex';
-                document.getElementById('userProfile').style.display = 'none';
-                
-                // Show loading state and hide admin content
-                document.getElementById('loadingState').style.display = 'block';
+                // Show login form
                 document.getElementById('adminContent').style.display = 'none';
+                document.getElementById('loginForm').style.display = 'block';
             }
         });
 
-        // Sign out functionality
-        document.getElementById('userProfile').addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                console.log('Successfully signed out');
-            } catch (error) {
-                console.error('Error signing out:', error);
-                alert('দুঃখিত, সাইন আউট করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
-            }
-        });
+        // Handle login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-        let currentOrderId = null;
-
-        // Load orders with status filter
-        function loadOrders(status = 'all') {
-            const ordersRef = ref(database, 'orders');
-            onValue(ordersRef, (snapshot) => {
-                const orders = [];
-                snapshot.forEach((childSnapshot) => {
-                    const order = childSnapshot.val();
-                    if (status === 'all' || order.status === status) {
-                        orders.push({
-                            id: childSnapshot.key,
-                            ...order
-                        });
-                    }
+            // Check if the email is sajidtechsolutions@gmail.com
+            if (email !== 'sajidtechsolutions@gmail.com') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'অননুমোদিত ইমেইল',
+                    text: 'এই ইমেইল দিয়ে লগইন করা যাবে না।',
+                    confirmButtonText: 'ঠিক আছে'
                 });
+                return;
+            }
 
-                // Sort orders by date
-                orders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .catch(function(error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'লগইন ব্যর্থ',
+                        text: error.message,
+                        confirmButtonText: 'ঠিক আছে'
+                    });
+                });
+        });
 
-                // Update dashboard numbers
-                updateDashboardNumbers(orders);
+        // Handle logout
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            firebase.auth().signOut().then(function() {
+                window.location.href = 'index.html';
+            });
+        });
 
-                // Update table
-                const tableBody = document.getElementById('ordersTableBody');
-                tableBody.innerHTML = '';
+        // Load orders function
+        function loadOrders() {
+            const ordersTable = document.getElementById('ordersTable');
+            const tbody = ordersTable.querySelector('tbody');
+            tbody.innerHTML = '';
 
-                orders.forEach(order => {
+            db.collection('orders').orderBy('timestamp', 'desc').onSnapshot(function(snapshot) {
+                snapshot.forEach(function(doc) {
+                    const order = doc.data();
                     const row = document.createElement('tr');
+                    
+                    // Format timestamp
+                    const date = order.timestamp ? order.timestamp.toDate() : new Date();
+                    const formattedDate = date.toLocaleString('bn-BD');
+
                     row.innerHTML = `
-                        <td>${order.id}</td>
-                        <td>${order.customerName || 'N/A'}</td>
-                        <td>${order.recipientName}</td>
-                        <td>${formatDate(order.orderDate)}</td>
+                        <td>${order.name}</td>
+                        <td>${order.phone}</td>
+                        <td>${order.email}</td>
+                        <td>${order.occasion}</td>
+                        <td>${order.recipient}</td>
+                        <td>${order.relationship}</td>
+                        <td>${order.budget} টাকা</td>
+                        <td>${order.deliveryArea === 'inside' ? 'ঢাকার ভিতরে' : 'ঢাকার বাইরে'}</td>
+                        <td>${order.deliveryAddress}</td>
+                        <td>${order.paymentMethod}</td>
+                        <td>${order.message}</td>
+                        <td>${formattedDate}</td>
                         <td>
-                            <span class="status-badge status-${order.status}">
-                                <i class="fas ${getStatusIcon(order.status)}"></i>
-                                ${getStatusText(order.status)}
-                            </span>
-                        </td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="view-btn" onclick="viewOrderDetails('${order.id}')">
-                                    <i class="fas fa-eye"></i> বিস্তারিত
-                                </button>
-                                <button class="update-btn" onclick="openStatusUpdateModal('${order.id}')">
-                                    <i class="fas fa-edit"></i> স্ট্যাটাস
-                                </button>
-                                <button class="delete-btn" onclick="deleteOrder('${order.id}')">
-                                    <i class="fas fa-trash"></i> ডিলিট
-                                </button>
-                            </div>
+                            <button class="btn btn-danger btn-sm" onclick="deleteOrder('${doc.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </td>
                     `;
-                    tableBody.appendChild(row);
+                    tbody.appendChild(row);
                 });
             });
         }
 
-        // Update dashboard numbers
-        function updateDashboardNumbers(orders) {
-            document.getElementById('totalOrders').textContent = orders.length;
-            document.getElementById('pendingOrders').textContent = orders.filter(o => o.status === 'pending').length;
-            document.getElementById('processingOrders').textContent = orders.filter(o => o.status === 'processing').length;
-            document.getElementById('completedOrders').textContent = orders.filter(o => o.status === 'delivered').length;
-        }
-
-        // View order details
-        window.viewOrderDetails = function(orderId) {
-            const orderRef = ref(database, `orders/${orderId}`);
-            onValue(orderRef, (snapshot) => {
-                const order = snapshot.val();
-                if (order) {
-                    const detailsContent = document.getElementById('orderDetailsContent');
-                    detailsContent.innerHTML = `
-                        <div class="order-details-grid">
-                            <div class="detail-card">
-                                <h3>১. যাকে গিফট দিবেন তার তথ্য</h3>
-                                <div class="personal-info">
-                                    <div class="info-group">
-                                        <div class="info-item">
-                                            <i class="fas fa-user"></i>
-                                            <div><strong>নাম:</strong> <span id="recipientName"></span></div>
-                                            <button class="copy-btn" onclick="copyText('recipientName')"><i class="fas fa-copy"></i></button>
-                                            <span class="copy-tooltip">কপি করুন</span>
-                                        </div>
-                                        <div class="info-item">
-                                            <i class="fas fa-phone"></i>
-                                            <div><strong>মোবাইল নম্বর:</strong> <span id="recipientPhone"></span></div>
-                                            <button class="copy-btn" onclick="copyText('recipientPhone')"><i class="fas fa-copy"></i></button>
-                                            <span class="copy-tooltip">কপি করুন</span>
-                                        </div>
-                                        <div class="info-item">
-                                            <i class="fas fa-venus-mars"></i>
-                                            <div><strong>জেন্ডার:</strong> <span id="recipientGender"></span></div>
-                                            <button class="copy-btn" onclick="copyText('recipientGender')"><i class="fas fa-copy"></i></button>
-                                            <span class="copy-tooltip">কপি করুন</span>
-                                        </div>
-                                        <div class="info-item">
-                                            <i class="fas fa-heart"></i>
-                                            <div><strong>সম্পর্ক:</strong> <span id="recipientRelation"></span></div>
-                                            <button class="copy-btn" onclick="copyText('recipientRelation')"><i class="fas fa-copy"></i></button>
-                                            <span class="copy-tooltip">কপি করুন</span>
-                                        </div>
-                                        <div class="info-item">
-                                            <i class="fas fa-birthday-cake"></i>
-                                            <div><strong>বয়স:</strong> <span id="recipientAge"></span></div>
-                                            <button class="copy-btn" onclick="copyText('recipientAge')"><i class="fas fa-copy"></i></button>
-                                            <span class="copy-tooltip">কপি করুন</span>
-                                        </div>
-                                        <div class="info-item full-width">
-                                            <i class="fas fa-heart"></i>
-                                            <div><strong>পছন্দ-অপছন্দ:</strong> <span id="recipientPreferences"></span></div>
-                                            <button class="copy-btn" onclick="copyText('recipientPreferences')"><i class="fas fa-copy"></i></button>
-                                            <span class="copy-tooltip">কপি করুন</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="detail-card">
-                                <h3>২. আপনার তথ্য</h3>
-                                <div class="personal-info">
-                                    <div class="info-group">
-                                        <div class="info-item">
-                                            <i class="fas fa-user"></i>
-                                            <div><strong>নাম:</strong> <span id="senderName"></span></div>
-                                            <button class="copy-btn" onclick="copyText('senderName')"><i class="fas fa-copy"></i></button>
-                                            <span class="copy-tooltip">কপি করুন</span>
-                                        </div>
-                                        <div class="info-item">
-                                            <i class="fas fa-phone"></i>
-                                            <div><strong>মোবাইল নম্বর:</strong> <span id="senderPhone"></span></div>
-                                            <button class="copy-btn" onclick="copyText('senderPhone')"><i class="fas fa-copy"></i></button>
-                                            <span class="copy-tooltip">কপি করুন</span>
-                                        </div>
-                                        <div class="info-item">
-                                            <i class="fas fa-envelope"></i>
-                                            <div><strong>ইমেইল:</strong> <span id="userEmail"></span></div>
-                                            <button class="copy-btn" onclick="copyText('userEmail')"><i class="fas fa-copy"></i></button>
-                                            <span class="copy-tooltip">কপি করুন</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="detail-card">
-                                <h3>৩. কোথায় পাঠাবেন</h3>
-                                <div class="personal-info">
-                                    <div class="info-group">
-                                        <div class="info-item">
-                                            <i class="fas fa-map-marker-alt"></i>
-                                            <div><strong>ডেলিভারি ঠিকানা:</strong> <span id="deliveryAddress"></span></div>
-                                            <button class="copy-btn" onclick="copyText('deliveryAddress')"><i class="fas fa-copy"></i></button>
-                                            <span class="copy-tooltip">কপি করুন</span>
-                                        </div>
-                                        <div class="info-item">
-                                            <i class="fas fa-phone"></i>
-                                            <div><strong>ডেলিভারি ফোন:</strong> <span id="deliveryPhone"></span></div>
-                                            <button class="copy-btn" onclick="copyText('deliveryPhone')"><i class="fas fa-copy"></i></button>
-                                            <span class="copy-tooltip">কপি করুন</span>
-                                        </div>
-                                        <div class="info-item">
-                                            <i class="fas fa-money-bill-wave"></i>
-                                            <div><strong>বাজেট:</strong> <span id="budget"></span> টাকা</div>
-                                            <button class="copy-btn" onclick="copyText('budget')"><i class="fas fa-copy"></i></button>
-                                            <span class="copy-tooltip">কপি করুন</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    document.getElementById('orderDetailsModal').style.display = 'block';
-                    showOrderDetails(order);
+        // Delete order function
+        function deleteOrder(orderId) {
+            Swal.fire({
+                title: 'আপনি কি নিশ্চিত?',
+                text: "এই অর্ডারটি মুছে ফেলা হবে!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'হ্যাঁ, মুছে ফেলুন',
+                cancelButtonText: 'না, বাতিল করুন'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    db.collection('orders').doc(orderId).delete()
+                        .then(() => {
+                            Swal.fire(
+                                'মুছে ফেলা হয়েছে!',
+                                'অর্ডারটি সফলভাবে মুছে ফেলা হয়েছে।',
+                                'success'
+                            );
+                        })
+                        .catch((error) => {
+                            Swal.fire(
+                                'ত্রুটি!',
+                                'অর্ডারটি মুছে ফেলতে সমস্যা হয়েছে।',
+                                'error'
+                            );
+                        });
                 }
             });
-        };
-
-        // Close order details modal
-        window.closeOrderDetailsModal = function() {
-            document.getElementById('orderDetailsModal').style.display = 'none';
-        };
-
-        // Open status update modal
-        window.openStatusUpdateModal = function(orderId) {
-            currentOrderId = orderId;
-            document.getElementById('statusUpdateModal').style.display = 'block';
-        };
-
-        // Close status update modal
-        window.closeStatusUpdateModal = function() {
-            document.getElementById('statusUpdateModal').style.display = 'none';
-            currentOrderId = null;
-        };
-
-        // Update order status
-        window.updateOrderStatus = function(newStatus) {
-            if (currentOrderId) {
-                const orderRef = ref(database, `orders/${currentOrderId}`);
-                update(orderRef, {
-                    status: newStatus,
-                    lastUpdated: new Date().toISOString()
-                }).then(() => {
-                    alert('স্ট্যাটাস সফলভাবে আপডেট করা হয়েছে!');
-                    closeStatusUpdateModal();
-                }).catch((error) => {
-                    console.error('Error updating status:', error);
-                    alert('স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে।');
-                });
-            }
-        };
-
-        // Delete order
-        window.deleteOrder = function(orderId) {
-            if (confirm('আপনি কি নিশ্চিত যে আপনি এই অর্ডারটি ডিলিট করতে চান?')) {
-                const orderRef = ref(database, `orders/${orderId}`);
-                remove(orderRef).then(() => {
-                    alert('অর্ডার সফলভাবে ডিলিট করা হয়েছে!');
-                }).catch((error) => {
-                    console.error('Error deleting order:', error);
-                    alert('অর্ডার ডিলিট করতে সমস্যা হয়েছে।');
-                });
-            }
-        };
-
-        // Status filter change
-        document.getElementById('statusFilter').addEventListener('change', (e) => {
-            loadOrders(e.target.value);
-        });
-
-        // Helper functions
-        function formatDate(dateString) {
-            const options = { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            };
-            return new Date(dateString).toLocaleDateString('bn-BD', options);
-        }
-
-        function getStatusText(status) {
-            const statusMap = {
-                'pending': 'পেন্ডিং',
-                'confirmed': 'অর্ডার কনফার্মড',
-                'processing': 'প্রসেসিং',
-                'shipped': 'শিপড',
-                'delivered': 'ডেলিভারড',
-                'cancelled': 'ক্যানসেলড'
-            };
-            return statusMap[status] || status;
-        }
-
-        function getStatusIcon(status) {
-            const iconMap = {
-                'pending': 'fa-clock',
-                'confirmed': 'fa-check',
-                'processing': 'fa-cog',
-                'shipped': 'fa-truck',
-                'delivered': 'fa-check-circle',
-                'cancelled': 'fa-times-circle'
-            };
-            return iconMap[status] || 'fa-question-circle';
-        }
-
-        // Add new function for gift suggestion
-        window.getGiftSuggestion = async function(orderId) {
-            const orderRef = ref(database, `orders/${orderId}`);
-            const snapshot = await get(orderRef);
-            const order = snapshot.val();
-            
-            if (order) {
-                const suggestionContent = document.getElementById(`giftSuggestion-${orderId}`);
-                suggestionContent.innerHTML = '<div class="loading">লোড হচ্ছে...</div>';
-                suggestionContent.classList.add('active');
-
-                // Prepare data for ChatGPT
-                const recipientInfo = {
-                    name: order.recipientName,
-                    age: order.recipientAge,
-                    gender: order.recipientGender === 'male' ? 'পুরুষ' : 'মহিলা',
-                    relationship: order.relationship,
-                    preferences: order.preferences,
-                    budget: order.budget
-                };
-
-                try {
-                    // Here you would make the API call to ChatGPT
-                    // For now, we'll show a placeholder message
-                    const suggestion = await generateGiftSuggestion(recipientInfo);
-                    suggestionContent.innerHTML = `
-                        <div class="suggestion-result">
-                            <h5>প্রস্তাবিত গিফটসমূহ:</h5>
-                            <div class="suggestion-list">
-                                ${suggestion}
-                            </div>
-                        </div>
-                    `;
-                } catch (error) {
-                    suggestionContent.innerHTML = `
-                        <div class="error-message">
-                            <i class="fas fa-exclamation-circle"></i>
-                            গিফট সাজেশন লোড করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।
-                        </div>
-                    `;
-                }
-            }
-        };
-
-        // Placeholder function for ChatGPT integration
-        async function generateGiftSuggestion(recipientInfo) {
-            // This is where you would integrate with ChatGPT API
-            // For now, returning a placeholder suggestion
-            return `
-                <ul>
-                    <li>বয়স এবং লিঙ্গ অনুযায়ী উপযুক্ত গিফট আইডিয়া</li>
-                    <li>সম্পর্ক অনুযায়ী পার্সোনালাইজড গিফট</li>
-                    <li>পছন্দ অনুযায়ী কাস্টমাইজড আইডিয়া</li>
-                    <li>বাজেট অনুযায়ী সাজেশন</li>
-                </ul>
-            `;
-        }
-
-        function showOrderDetails(order) {
-            document.getElementById('recipientName').textContent = order.recipientName || 'N/A';
-            document.getElementById('recipientPhone').textContent = order.recipientPhone || 'N/A';
-            document.getElementById('recipientGender').textContent = order.recipientGender === 'male' ? 'পুরুষ' : order.recipientGender === 'female' ? 'মহিলা' : 'N/A';
-            document.getElementById('recipientRelation').textContent = order.relationship || 'N/A';
-            document.getElementById('recipientAge').textContent = order.recipientAge || 'N/A';
-            document.getElementById('recipientPreferences').textContent = order.preferences || 'N/A';
-            document.getElementById('senderName').textContent = order.customerName || 'N/A';
-            document.getElementById('senderPhone').textContent = order.customerPhone || 'N/A';
-            document.getElementById('userEmail').textContent = order.userEmail || 'N/A';
-            document.getElementById('deliveryAddress').textContent = order.deliveryAddress || 'N/A';
-            document.getElementById('deliveryPhone').textContent = order.deliveryPhone || 'N/A';
-            document.getElementById('budget').textContent = order.budget || 'N/A';
-        }
-
-        function copyText(elementId) {
-            const element = document.getElementById(elementId);
-            const text = element.textContent;
-            const tooltip = element.parentElement.querySelector('.copy-tooltip');
-            const copyBtn = element.parentElement.querySelector('.copy-btn');
-            
-            navigator.clipboard.writeText(text).then(() => {
-                // Show copied tooltip
-                tooltip.textContent = 'কপি করা হয়েছে!';
-                tooltip.classList.add('show');
-                
-                // Change button icon
-                copyBtn.innerHTML = '<i class="fas fa-check"></i>';
-                copyBtn.classList.add('copied');
-                
-                // Reset after 2 seconds
-                setTimeout(() => {
-                    tooltip.textContent = 'কপি করুন';
-                    tooltip.classList.remove('show');
-                    copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
-                    copyBtn.classList.remove('copied');
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
-                tooltip.textContent = 'কপি করতে ব্যর্থ!';
-                tooltip.classList.add('show');
-                setTimeout(() => {
-                    tooltip.classList.remove('show');
-                }, 2000);
-            });
-        }
-
-        function copySection(section) {
-            let text = '';
-            const tooltip = document.querySelector(`.detail-card:nth-child(${getSectionIndex(section)}) .section-tooltip`);
-            const button = document.querySelector(`.detail-card:nth-child(${getSectionIndex(section)}) .copy-section-btn`);
-            
-            switch(section) {
-                case 'recipient':
-                    text = `যাকে গিফট দিবেন তার তথ্য:\n`;
-                    text += `নাম: ${document.getElementById('recipientName').textContent}\n`;
-                    text += `মোবাইল নম্বর: ${document.getElementById('recipientPhone').textContent}\n`;
-                    text += `জেন্ডার: ${document.getElementById('recipientGender').textContent}\n`;
-                    text += `সম্পর্ক: ${document.getElementById('recipientRelation').textContent}\n`;
-                    text += `বয়স: ${document.getElementById('recipientAge').textContent}\n`;
-                    text += `পছন্দ-অপছন্দ: ${document.getElementById('recipientPreferences').textContent}`;
-                    break;
-                case 'sender':
-                    text = `আপনার তথ্য:\n`;
-                    text += `নাম: ${document.getElementById('senderName').textContent}\n`;
-                    text += `মোবাইল নম্বর: ${document.getElementById('senderPhone').textContent}\n`;
-                    text += `ইমেইল: ${document.getElementById('userEmail').textContent}`;
-                    break;
-                case 'delivery':
-                    text = `কোথায় পাঠাবেন:\n`;
-                    text += `ডেলিভারি ঠিকানা: ${document.getElementById('deliveryAddress').textContent}\n`;
-                    text += `ডেলিভারি ফোন: ${document.getElementById('deliveryPhone').textContent}\n`;
-                    text += `বাজেট: ${document.getElementById('budget').textContent} টাকা`;
-                    break;
-            }
-            
-            navigator.clipboard.writeText(text).then(() => {
-                // Show copied tooltip
-                tooltip.textContent = 'সকল তথ্য কপি করা হয়েছে!';
-                tooltip.classList.add('show');
-                
-                // Change button icon
-                button.innerHTML = '<i class="fas fa-check"></i> কপি করা হয়েছে';
-                button.classList.add('copied');
-                
-                // Reset after 2 seconds
-                setTimeout(() => {
-                    tooltip.textContent = 'কপি করুন';
-                    tooltip.classList.remove('show');
-                    button.innerHTML = '<i class="fas fa-copy"></i> সকল তথ্য কপি করুন';
-                    button.classList.remove('copied');
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
-                tooltip.textContent = 'কপি করতে ব্যর্থ!';
-                tooltip.classList.add('show');
-                setTimeout(() => {
-                    tooltip.classList.remove('show');
-                }, 2000);
-            });
-        }
-
-        function getSectionIndex(section) {
-            switch(section) {
-                case 'recipient': return 1;
-                case 'sender': return 2;
-                case 'delivery': return 3;
-                default: return 1;
-            }
         }
     </script>
 </body>
