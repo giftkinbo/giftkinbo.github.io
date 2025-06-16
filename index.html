@@ -1526,7 +1526,7 @@
                         senderName: document.getElementById('senderName').value,
                         senderPhone: document.getElementById('senderPhone').value,
                         deliveryAddress: document.getElementById('deliveryAddress').value,
-                        deliveryPhone: document.getElementById('deliveryPhone').value,
+                        deliveryArea: document.getElementById('deliveryArea').value,
                         paymentMethod: document.getElementById('paymentMethod').value,
                         orderDate: new Date().toISOString(),
                         status: 'pending',
@@ -1537,12 +1537,27 @@
                     // Validate required fields
                     const requiredFields = ['recipientName', 'recipientPhone', 'recipientGender', 'relationship', 
                                          'recipientAge', 'budget', 'senderName', 'senderPhone', 
-                                         'deliveryAddress', 'deliveryPhone'];
+                                         'deliveryAddress', 'deliveryArea'];
                     
                     for (const field of requiredFields) {
                         if (!formData[field]) {
                             throw new Error(`দয়া করে ${field} ফিল্ডটি পূরণ করুন`);
                         }
+                    }
+
+                    // Validate phone numbers
+                    const phoneRegex = /^(\+88|88)?(01[3-9]\d{8})$/;
+                    if (!phoneRegex.test(formData.recipientPhone)) {
+                        throw new Error('দয়া করে সঠিক প্রাপকের মোবাইল নম্বর দিন');
+                    }
+                    if (!phoneRegex.test(formData.senderPhone)) {
+                        throw new Error('দয়া করে সঠিক আপনার মোবাইল নম্বর দিন');
+                    }
+
+                    // Validate budget
+                    const budget = parseInt(formData.budget);
+                    if (isNaN(budget) || budget < 499) {
+                        throw new Error('দয়া করে কমপক্ষে ৳499 বাজেট নির্ধারণ করুন');
                     }
 
                     console.log('Form data collected:', formData);
@@ -1611,13 +1626,15 @@
                 }
             });
 
-            // Phone number validation
-            document.getElementById('senderPhone').addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length > 11) {
-                    value = value.slice(0, 11);
-                }
-                e.target.value = value;
+            // Phone number validation for both recipient and sender
+            ['recipientPhone', 'senderPhone'].forEach(phoneId => {
+                document.getElementById(phoneId).addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 11) {
+                        value = value.slice(0, 11);
+                    }
+                    e.target.value = value;
+                });
             });
 
             // Budget validation
@@ -1627,6 +1644,13 @@
                     value = value.slice(0, 6);
                 }
                 e.target.value = value;
+                
+                // Update validation message
+                if (parseInt(value) < 499) {
+                    this.setCustomValidity('দয়া করে কমপক্ষে ৳499 বাজেট নির্ধারণ করুন');
+                } else {
+                    this.setCustomValidity('');
+                }
             });
 
             // Age validation
@@ -1662,17 +1686,6 @@
             budgetInput.addEventListener('input', function() {
                 if (this.value < 500) {
                     this.setCustomValidity('দয়া করে কমপক্ষে ৳500 বাজেট নির্ধারণ করুন');
-                } else {
-                    this.setCustomValidity('');
-                }
-            });
-
-            // Add phone number validation
-            const phoneInput = document.getElementById('phone');
-            phoneInput.addEventListener('input', function() {
-                const phoneRegex = /^(\+88|88)?(01[3-9]\d{8})$/;
-                if (!phoneRegex.test(this.value)) {
-                    this.setCustomValidity('দয়া করে সঠিক মোবাইল নম্বর দিন');
                 } else {
                     this.setCustomValidity('');
                 }
