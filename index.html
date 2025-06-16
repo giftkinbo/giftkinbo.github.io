@@ -1248,15 +1248,19 @@
                 </div>
                 <div class="form-group">
                     <label for="recipientAge">বয়স</label>
-                    <input type="number" id="recipientAge" name="recipientAge" placeholder="যেমন: 25" required>
+                    <input type="number" id="recipientAge" name="recipientAge" min="1" max="120" required>
                 </div>
                 <div class="form-group">
-                    <label for="budget">বাজেট</label>
-                    <input type="number" id="budget" name="budget" min="0" step="1" class="form-control" placeholder="যেমন: 499" required>
+                    <label for="occasion">উপলক্ষ</label>
+                    <input type="text" id="occasion" name="occasion" placeholder="যেমন: জন্মদিন, বিবাহ বার্ষিকী, বিবাহ, স্নাতক, পদোন্নতি ইত্যাদি" required>
                 </div>
                 <div class="form-group">
                     <label for="preferences">পছন্দ-অপছন্দ</label>
-                    <textarea id="preferences" name="preferences" placeholder="যেমন: চকলেট পছন্দ করেন, ফুলের গন্ধে অ্যালার্জি আছে ইত্যাদি" rows="2"></textarea>
+                    <textarea id="preferences" name="preferences" rows="3" placeholder="যেমন: পছন্দের রঙ, ফুল, খাবার, ইত্যাদি"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="budget">বাজেট</label>
+                    <input type="number" id="budget" name="budget" min="499" step="1" placeholder="যেমন: 499" required>
                 </div>
             </div>
 
@@ -1412,23 +1416,39 @@
             provider = new GoogleAuthProvider();
             console.log('Google provider initialized successfully');
 
-            // Test database connection
-            const testRef = ref(database, 'test');
-            set(testRef, { timestamp: new Date().toISOString() })
-                .then(() => {
-                    console.log('Database connection test successful');
-                    // Remove test data
-                    return remove(testRef);
-                })
-                .then(() => console.log('Test data cleaned up'))
-                .catch(error => {
-                    console.error('Database connection test failed:', error);
-                    alert('ডাটাবেস সংযোগে সমস্যা হয়েছে। অনুগ্রহ করে পেজটি রিফ্রেশ করুন।');
-                });
+            // Test database connection with retry mechanism
+            const testDatabaseConnection = async (retries = 3) => {
+                for (let i = 0; i < retries; i++) {
+                    try {
+                        const testRef = ref(database, 'test');
+                        await set(testRef, { timestamp: new Date().toISOString() });
+                        await remove(testRef);
+                        console.log('Database connection test successful');
+                        return true;
+                    } catch (error) {
+                        console.error(`Database connection test attempt ${i + 1} failed:`, error);
+                        if (i === retries - 1) {
+                            console.error('All database connection attempts failed');
+                            return false;
+                        }
+                        // Wait for 1 second before retrying
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                    }
+                }
+                return false;
+            };
+
+            // Test connection and handle result
+            testDatabaseConnection().then(success => {
+                if (!success) {
+                    console.error('Database connection test failed after all retries');
+                    // Don't show alert immediately, let the app try to function
+                }
+            });
 
         } catch (error) {
             console.error('Firebase initialization error:', error);
-            alert('ফায়ারবেস সেটআপে সমস্যা হয়েছে। অনুগ্রহ করে পেজটি রিফ্রেশ করুন।');
+            // Don't show alert immediately, let the app try to function
         }
 
         // Auth state observer
@@ -1522,7 +1542,7 @@
                         recipientGender: document.getElementById('recipientGender').value,
                         relationship: document.getElementById('relationship').value,
                         recipientAge: document.getElementById('recipientAge').value,
-                        budget: document.getElementById('budget').value,
+                        occasion: document.getElementById('occasion').value,
                         preferences: document.getElementById('preferences').value,
                         senderName: document.getElementById('senderName').value,
                         senderPhone: document.getElementById('senderPhone').value,
@@ -1537,7 +1557,7 @@
 
                     // Validate required fields
                     const requiredFields = ['recipientName', 'recipientPhone', 'recipientGender', 'relationship', 
-                                         'recipientAge', 'budget', 'senderName', 'senderPhone', 
+                                         'recipientAge', 'occasion', 'preferences', 'senderName', 'senderPhone', 
                                          'deliveryAddress', 'deliveryArea'];
                     
                     for (const field of requiredFields) {
