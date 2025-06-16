@@ -963,7 +963,7 @@
                 <div class="order-details-grid">
                     <div class="detail-card">
                         <div style="position: relative;">
-                            <h3>১. যাকে গিফট দিবেন তার তথ্য</h3>
+                            <h3>১. যার জন্য গিফট</h3>
                             <button class="copy-section-btn" onclick="copySection('recipient')">
                                 <i class="fas fa-copy"></i> সকল তথ্য কপি করুন
                             </button>
@@ -973,14 +973,8 @@
                             <div class="info-group">
                                 <div class="info-item">
                                     <i class="fas fa-user"></i>
-                                    <div><strong>নাম:</strong> <span id="recipientName"></span></div>
+                                    <div><strong>যার জন্য গিফট:</strong> <span id="recipientName"></span></div>
                                     <button class="copy-btn" onclick="copyText('recipientName')"><i class="fas fa-copy"></i></button>
-                                    <span class="copy-tooltip">কপি করুন</span>
-                                </div>
-                                <div class="info-item">
-                                    <i class="fas fa-phone"></i>
-                                    <div><strong>মোবাইল নম্বর:</strong> <span id="recipientPhone"></span></div>
-                                    <button class="copy-btn" onclick="copyText('recipientPhone')"><i class="fas fa-copy"></i></button>
                                     <span class="copy-tooltip">কপি করুন</span>
                                 </div>
                                 <div class="info-item">
@@ -1059,8 +1053,8 @@
                                 </div>
                                 <div class="info-item">
                                     <i class="fas fa-phone"></i>
-                                    <div><strong>ডেলিভারি ফোন:</strong> <span id="deliveryPhone"></span></div>
-                                    <button class="copy-btn" onclick="copyText('deliveryPhone')"><i class="fas fa-copy"></i></button>
+                                    <div><strong>রিসিভারের মোবাইল নম্বর:</strong> <span id="recipientPhone"></span></div>
+                                    <button class="copy-btn" onclick="copyText('recipientPhone')"><i class="fas fa-copy"></i></button>
                                     <span class="copy-tooltip">কপি করুন</span>
                                 </div>
                                 <div class="info-item">
@@ -1234,19 +1228,13 @@
                     detailsContent.innerHTML = `
                         <div class="order-details-grid">
                             <div class="detail-card">
-                                <h3>১. যাকে গিফট দিবেন তার তথ্য</h3>
+                                <h3>১. যার জন্য গিফট</h3>
                                 <div class="personal-info">
                                     <div class="info-group">
                                         <div class="info-item">
                                             <i class="fas fa-user"></i>
-                                            <div><strong>নাম:</strong> <span id="recipientName"></span></div>
+                                            <div><strong>যার জন্য গিফট:</strong> <span id="recipientName"></span></div>
                                             <button class="copy-btn" onclick="copyText('recipientName')"><i class="fas fa-copy"></i></button>
-                                            <span class="copy-tooltip">কপি করুন</span>
-                                        </div>
-                                        <div class="info-item">
-                                            <i class="fas fa-phone"></i>
-                                            <div><strong>মোবাইল নম্বর:</strong> <span id="recipientPhone"></span></div>
-                                            <button class="copy-btn" onclick="copyText('recipientPhone')"><i class="fas fa-copy"></i></button>
                                             <span class="copy-tooltip">কপি করুন</span>
                                         </div>
                                         <div class="info-item">
@@ -1313,8 +1301,8 @@
                                         </div>
                                         <div class="info-item">
                                             <i class="fas fa-phone"></i>
-                                            <div><strong>ডেলিভারি ফোন:</strong> <span id="deliveryPhone"></span></div>
-                                            <button class="copy-btn" onclick="copyText('deliveryPhone')"><i class="fas fa-copy"></i></button>
+                                            <div><strong>রিসিভারের মোবাইল নম্বর:</strong> <span id="recipientPhone"></span></div>
+                                            <button class="copy-btn" onclick="copyText('recipientPhone')"><i class="fas fa-copy"></i></button>
                                             <span class="copy-tooltip">কপি করুন</span>
                                         </div>
                                         <div class="info-item">
@@ -1497,6 +1485,7 @@
             // Delivery Information
             document.getElementById('deliveryAddress').textContent = order.deliveryAddress || 'N/A';
             document.getElementById('deliveryArea').textContent = order.deliveryArea === 'inside' ? 'ঢাকার ভিতরে' : order.deliveryArea === 'outside' ? 'ঢাকার বাইরে' : 'N/A';
+            document.getElementById('deliveryContact').textContent = order.deliveryContact || 'N/A';
             document.getElementById('budget').textContent = order.budget ? order.budget + ' টাকা' : 'N/A';
 
             // Payment Information
@@ -1540,14 +1529,10 @@
 
         function copySection(section) {
             let text = '';
-            const tooltip = document.querySelector(`.detail-card:nth-child(${getSectionIndex(section)}) .section-tooltip`);
-            const button = document.querySelector(`.detail-card:nth-child(${getSectionIndex(section)}) .copy-section-btn`);
-            
             switch(section) {
                 case 'recipient':
-                    text = `যাকে গিফট দিবেন তার তথ্য:\n`;
-                    text += `নাম: ${document.getElementById('recipientName').textContent}\n`;
-                    text += `মোবাইল নম্বর: ${document.getElementById('recipientPhone').textContent}\n`;
+                    text = `যার জন্য গিফট:\n`;
+                    text += `যার জন্য গিফট: ${document.getElementById('recipientName').textContent}\n`;
                     text += `জেন্ডার: ${document.getElementById('recipientGender').textContent}\n`;
                     text += `সম্পর্ক: ${document.getElementById('recipientRelation').textContent}\n`;
                     text += `বয়স: ${document.getElementById('recipientAge').textContent}\n`;
@@ -1562,44 +1547,16 @@
                 case 'delivery':
                     text = `কোথায় পাঠাবেন:\n`;
                     text += `ডেলিভারি ঠিকানা: ${document.getElementById('deliveryAddress').textContent}\n`;
-                    text += `ডেলিভারি ফোন: ${document.getElementById('deliveryPhone').textContent}\n`;
-                    text += `বাজেট: ${document.getElementById('budget').textContent} টাকা`;
+                    text += `রিসিভারের মোবাইল নম্বর: ${document.getElementById('recipientPhone').textContent}\n`;
+                    text += `বাজেট: ${document.getElementById('budget').textContent}`;
                     break;
             }
-            
             navigator.clipboard.writeText(text).then(() => {
-                // Show copied tooltip
-                tooltip.textContent = 'সকল তথ্য কপি করা হয়েছে!';
-                tooltip.classList.add('show');
-                
-                // Change button icon
-                button.innerHTML = '<i class="fas fa-check"></i> কপি করা হয়েছে';
-                button.classList.add('copied');
-                
-                // Reset after 2 seconds
-                setTimeout(() => {
-                    tooltip.textContent = 'কপি করুন';
-                    tooltip.classList.remove('show');
-                    button.innerHTML = '<i class="fas fa-copy"></i> সকল তথ্য কপি করুন';
-                    button.classList.remove('copied');
-                }, 2000);
+                alert('তথ্য কপি করা হয়েছে!');
             }).catch(err => {
-                console.error('Failed to copy text: ', err);
-                tooltip.textContent = 'কপি করতে ব্যর্থ!';
-                tooltip.classList.add('show');
-                setTimeout(() => {
-                    tooltip.classList.remove('show');
-                }, 2000);
+                console.error('কপি করতে সমস্যা হয়েছে:', err);
+                alert('কপি করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
             });
-        }
-
-        function getSectionIndex(section) {
-            switch(section) {
-                case 'recipient': return 1;
-                case 'sender': return 2;
-                case 'delivery': return 3;
-                default: return 1;
-            }
         }
     </script>
 </body>

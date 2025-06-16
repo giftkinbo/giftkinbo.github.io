@@ -1230,13 +1230,10 @@
             <div class="form-section">
                 <h3>যাকে গিফট দিবেন তার তথ্য</h3>
                 <div class="form-group">
-                    <label for="recipientName">যার জন্য গিফট</label>
+                    <label for="recipientName">যার জন্য গিফট তার নাম</label>
                     <input type="text" id="recipientName" name="recipientName" placeholder="যেমন: সাবরিনা আক্তার" required>
                 </div>
-                <div class="form-group">
-                    <label for="recipientPhone">মোবাইল নম্বর</label>
-                    <input type="tel" id="recipientPhone" name="recipientPhone" placeholder="যেমন: 01745897322" required>
-                </div>
+                
                 <div class="form-group">
                     <label for="recipientGender">জেন্ডার</label>
                     <select id="recipientGender" name="recipientGender" required>
@@ -1287,7 +1284,11 @@
                 </div>
                 <div class="form-group">
                     <label for="deliveryAddress">বিস্তারিত ঠিকানা</label>
-                    <textarea id="deliveryAddress" name="deliveryAddress" class="form-control" rows="3" required></textarea>
+                    <textarea id="deliveryAddress" name="deliveryAddress" rows="3" placeholder="যেমন: বাড়ি নম্বর, রোড নম্বর, এলাকা, পোস্ট কোড" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="recipientPhone">মোবাইল নম্বর</label>
+                    <input type="tel" id="recipientPhone" name="recipientPhone" placeholder="যেমন: 01745897322" required>
                 </div>
             </div>
 
