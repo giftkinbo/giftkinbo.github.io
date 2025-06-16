@@ -1377,7 +1377,7 @@
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
-        import { getDatabase, ref, push, set, get } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+        import { getDatabase, ref, push, set, get, remove } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
         // Your web app's Firebase configuration
@@ -1414,11 +1414,20 @@
             // Test database connection
             const testRef = ref(database, 'test');
             set(testRef, { timestamp: new Date().toISOString() })
-                .then(() => console.log('Database connection test successful'))
-                .catch(error => console.error('Database connection test failed:', error));
+                .then(() => {
+                    console.log('Database connection test successful');
+                    // Remove test data
+                    return remove(testRef);
+                })
+                .then(() => console.log('Test data cleaned up'))
+                .catch(error => {
+                    console.error('Database connection test failed:', error);
+                    alert('ডাটাবেস সংযোগে সমস্যা হয়েছে। অনুগ্রহ করে পেজটি রিফ্রেশ করুন।');
+                });
 
         } catch (error) {
             console.error('Firebase initialization error:', error);
+            alert('ফায়ারবেস সেটআপে সমস্যা হয়েছে। অনুগ্রহ করে পেজটি রিফ্রেশ করুন।');
         }
 
         // Auth state observer
@@ -1518,11 +1527,23 @@
                         senderPhone: document.getElementById('senderPhone').value,
                         deliveryAddress: document.getElementById('deliveryAddress').value,
                         deliveryPhone: document.getElementById('deliveryPhone').value,
+                        paymentMethod: document.getElementById('paymentMethod').value,
                         orderDate: new Date().toISOString(),
                         status: 'pending',
                         userId: auth.currentUser.uid,
                         userEmail: auth.currentUser.email
                     };
+
+                    // Validate required fields
+                    const requiredFields = ['recipientName', 'recipientPhone', 'recipientGender', 'relationship', 
+                                         'recipientAge', 'budget', 'senderName', 'senderPhone', 
+                                         'deliveryAddress', 'deliveryPhone'];
+                    
+                    for (const field of requiredFields) {
+                        if (!formData[field]) {
+                            throw new Error(`দয়া করে ${field} ফিল্ডটি পূরণ করুন`);
+                        }
+                    }
 
                     console.log('Form data collected:', formData);
 
@@ -1530,12 +1551,31 @@
                     const ordersRef = ref(database, 'orders');
                     console.log('Database reference created');
 
+                    // Test database connection before saving
+                    const testRef = ref(database, 'test');
+                    await set(testRef, { timestamp: new Date().toISOString() });
+                    await remove(testRef);
+                    console.log('Database connection verified');
+
                     const newOrderRef = push(ordersRef);
                     console.log('New order reference created:', newOrderRef.key);
                     
                     // Save the order data
-                    await set(newOrderRef, formData);
-                    console.log('Data saved successfully');
+                    await set(newOrderRef, {
+                        ...formData,
+                        id: newOrderRef.key, // Add the order ID to the data
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    });
+                    console.log('Data saved successfully with ID:', newOrderRef.key);
+
+                    // Verify the data was saved
+                    const savedOrderRef = ref(database, `orders/${newOrderRef.key}`);
+                    const snapshot = await get(savedOrderRef);
+                    if (!snapshot.exists()) {
+                        throw new Error('অর্ডার সেভ করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।');
+                    }
+                    console.log('Data verification successful');
 
                     // Show success message
                     alert('আপনার অর্ডার সফলভাবে গ্রহণ করা হয়েছে। আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।');
@@ -1544,11 +1584,25 @@
                     orderForm.reset();
                     console.log('Form reset completed');
 
+                    // Scroll to budget input section
+                    const budgetInput = document.getElementById('budget');
+                    budgetInput.scrollIntoView({ behavior: 'smooth' });
+                    budgetInput.focus();
+
                 } catch (error) {
                     console.error('Error details:', error);
                     console.error('Error code:', error.code);
                     console.error('Error message:', error.message);
-                    alert('দুঃখিত, একটি ত্রুটি ঘটেছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+                    console.error('Error stack:', error.stack);
+                    
+                    // Show more specific error message
+                    if (error.message.includes('permission-denied')) {
+                        alert('ডাটাবেস অ্যাক্সেসে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+                    } else if (error.message.includes('network')) {
+                        alert('ইন্টারনেট সংযোগে সমস্যা হয়েছে। অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ চেক করুন।');
+                    } else {
+                        alert(error.message || 'দুঃখিত, একটি ত্রুটি ঘটেছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+                    }
                 } finally {
                     // Reset button state
                     submitButton.textContent = originalButtonText;
