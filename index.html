@@ -226,31 +226,32 @@
         .auth-button {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 4px;
+            justify-content: center;
+            padding: 0.5rem;
+            border: 1px solid rgba(255, 75, 139, 0.2);
+            border-radius: 50%;
+            background-color: var(--white);
+            color: var(--text-color);
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: 500;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(255, 75, 139, 0.1);
+            width: 40px;
+            height: 40px;
         }
 
         .auth-button:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            background-color: var(--light-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 75, 139, 0.15);
         }
 
         .auth-button:active {
             transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .auth-button i {
-            font-size: 1.1rem;
+        .auth-button img {
+            width: 20px;
+            height: 20px;
         }
 
         .user-profile {
@@ -937,371 +938,6 @@
                 margin: 0.5rem 0;
             }
         }
-
-        .payment-methods {
-            margin: 1rem 0;
-        }
-
-        .payment-method {
-            background: var(--card-bg);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: var(--border-radius);
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .payment-select {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: var(--border-radius);
-            background: white;
-            color: var(--text-color);
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232C3E50'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 1.5em;
-            box-shadow: var(--shadow);
-        }
-
-        .payment-select:hover {
-            border-color: var(--primary-color);
-            box-shadow: var(--hover-shadow);
-        }
-
-        .payment-select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
-        }
-
-        .payment-select option {
-            background: white;
-            color: var(--text-color);
-            padding: 1rem;
-        }
-
-        .payment-description {
-            margin: 1rem 0 0 0;
-            font-size: 0.9rem;
-            color: var(--text-color);
-            line-height: 1.4;
-            padding: 0.5rem;
-            border-radius: var(--border-radius);
-            background: rgba(0, 0, 0, 0.03);
-        }
-
-        .payment-number-display {
-            margin-top: 0.5rem;
-            padding: 1rem;
-            background: rgba(76, 175, 80, 0.1);
-            border: 1px solid rgba(76, 175, 80, 0.2);
-            border-radius: var(--border-radius);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-        }
-
-        .payment-number-box {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            width: 100%;
-        }
-
-        .payment-label {
-            font-weight: 500;
-            color: var(--text-color);
-            white-space: nowrap;
-        }
-
-        .payment-number {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            letter-spacing: 0.5px;
-            background: white;
-            padding: 0.5rem 1rem;
-            border-radius: var(--border-radius);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .copy-number-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .copy-number-btn:hover {
-            background: #388E3C;
-            transform: translateY(-1px);
-        }
-
-        .copy-number-btn i {
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            .payment-number-box {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0.5rem;
-            }
-            
-            .payment-number {
-                text-align: center;
-            }
-            
-            .copy-number-btn {
-                justify-content: center;
-            }
-        }
-
-        .payment-amount-display {
-            margin-bottom: 1rem;
-            padding: 1rem;
-            background: rgba(76, 175, 80, 0.1);
-            border: 1px solid rgba(76, 175, 80, 0.2);
-            border-radius: 8px;
-        }
-
-        .cost-breakdown {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            padding: 1rem;
-            background: rgba(76, 175, 80, 0.1);
-            border: 1px solid rgba(76, 175, 80, 0.2);
-            border-radius: 8px;
-        }
-
-        .cost-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem;
-            background: white;
-            border-radius: 6px;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .cost-item.total {
-            background: var(--primary-color);
-            color: white;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        .cost-label {
-            font-weight: 500;
-        }
-
-        .cost-value {
-            font-weight: 600;
-        }
-
-        .cost-divider {
-            height: 1px;
-            background: rgba(0, 0, 0, 0.1);
-            margin: 0.5rem 0;
-        }
-
-        /* Login Modal Styles */
-        .login-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(4px);
-        }
-
-        .login-modal.active {
-            display: flex;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .login-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-        }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .login-header h2 {
-            color: var(--primary-color);
-            font-size: 1.5rem;
-            margin: 0;
-        }
-
-        .login-options {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .login-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            padding: 0.875rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .login-btn:hover {
-            background: #f8f8f8;
-            border-color: #ccc;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .login-btn:active {
-            transform: translateY(0);
-            box-shadow: none;
-        }
-
-        .login-btn img {
-            width: 24px;
-            height: 24px;
-        }
-
-        .login-divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 1rem 0;
-            color: #666;
-        }
-
-        .login-divider::before,
-        .login-divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .login-divider span {
-            padding: 0 1rem;
-            font-size: 0.9rem;
-        }
-
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .login-form input {
-            padding: 0.875rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .login-form input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
-        }
-
-        .login-form button {
-            padding: 0.875rem;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            font-size: 1rem;
-        }
-
-        .login-form button:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .login-form button:active {
-            transform: translateY(0);
-            box-shadow: none;
-        }
-
-        /* User Profile Styles */
-        .user-profile {
-            display: none;
-            align-items: center;
-            gap: 0.75rem;
-            cursor: pointer;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .user-profile:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .user-photo {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid white;
-        }
-
-        .user-name {
-            font-weight: 500;
-            color: white;
-        }
     </style>
 </head>
 <body>
@@ -1322,12 +958,11 @@
                 <a href="#contact">যোগাযোগ</a>
                 <a href="orders.html">আমার অর্ডার</a>
                 <div class="auth-container">
-                    <button id="loginBtn" class="auth-button">
-                        <i class="fas fa-sign-in-alt"></i>
-                        <span>লগইন করুন</span>
+                    <button id="signInButton" class="auth-button">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
                     </button>
                     <div id="userProfile" class="user-profile" style="display: none;">
-                        <img id="userPhoto" class="user-photo" src="" alt="User Photo">
+                        <img id="userPhoto" src="" alt="User Photo">
                         <span id="userName" class="user-name"></span>
                     </div>
                 </div>
@@ -1343,7 +978,7 @@
                 <span>আগে গিফট নিন, পরে টাকা দিন</span>
             </div>
             <h1>আপনার প্রিয়জনদের জন্য সেরা উপহার</h1>
-            <p style="background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); padding: 1rem; border-radius: 8px; margin: 1rem 0; color: white;">আমরা আপনার প্রিয়জনদের জন্য সুন্দর গিফট বক্স তৈরি করে দেই। আপনি শুধু অর্ডার করুন, বাকি কাজ আমাদের। গিফট পেয়ে তারপর টাকা দিবেন।</p>
+            <p>আমরা আপনার প্রিয়জনদের জন্য সুন্দর গিফট বক্স তৈরি করে দেই। আপনি শুধু অর্ডার করুন, বাকি কাজ আমাদের। গিফট পেয়ে তারপর টাকা দিবেন।</p>
             <a href="#order" class="cta-button">এখনই অর্ডার করুন</a>
         </div>
     </section>
@@ -1396,6 +1031,7 @@
             <ul>
                 <li><i class="fas fa-check-circle"></i> গিফট হাতে নিয়ে তারপরে টাকা দিবেন</li>
                 <li><i class="fas fa-check-circle"></i> আগে থেকে কোন টাকা দিতে হবে না</li>
+                <li><i class="fas fa-check-circle"></i> গিফট না পেলে টাকা দিতে হবে না</li>
                 <li><i class="fas fa-check-circle"></i> 100% নিরাপদ এবং সহজ</li>
             </ul>
         </div>
@@ -1436,7 +1072,7 @@
                 </div>
                 <div class="form-group">
                     <label for="budget">বাজেট</label>
-                    <input type="number" id="budget" name="budget" min="0" step="1" class="form-control" placeholder="যেমন: 499" required>
+                    <input type="number" id="budget" name="budget" placeholder="যেমন: 499" required>
                 </div>
                 <div class="form-group">
                     <label for="preferences">পছন্দ-অপছন্দ</label>
@@ -1459,59 +1095,12 @@
             <div class="form-section">
                 <h3>কোথায় পাঠাবেন</h3>
                 <div class="form-group">
-                    <label for="deliveryArea">ডেলিভারি এরিয়া</label>
-                    <select id="deliveryArea" name="deliveryArea" class="form-control" required>
-                        <option value="">সিলেক্ট করুন</option>
-                        <option value="inside">ঢাকার ভিতরে</option>
-                        <option value="outside">ঢাকার বাইরে</option>
-                    </select>
+                    <label for="deliveryAddress">ঠিকানা</label>
+                    <textarea id="deliveryAddress" name="deliveryAddress" placeholder="আপনার ঠিকানা বিস্তারিত ভাবে লিখুন" required></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="deliveryAddress">বিস্তারিত ঠিকানা</label>
-                    <textarea id="deliveryAddress" name="deliveryAddress" class="form-control" rows="3" required></textarea>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h3>মোট টাকার পরিমাণ</h3>
-                <div class="cost-breakdown">
-                    <div class="cost-item">
-                        <span class="cost-label">বাজেট:</span>
-                        <span class="cost-value" id="budgetAmount">০ টাকা</span>
-                    </div>
-                    <div class="cost-item">
-                        <span class="cost-label">ডেলিভারি চার্জ:</span>
-                        <span class="cost-value" id="deliveryAmount">০ টাকা</span>
-                    </div>
-                    <div class="cost-divider"></div>
-                    <div class="cost-item total">
-                        <span class="cost-label">মোট টাকার পরিমাণ:</span>
-                        <span class="cost-value" id="totalAmount">০ টাকা</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h3>পেমেন্ট মেথড</h3>
-                <div class="payment-methods">
-                    <div class="payment-method">
-                        <select id="paymentMethod" name="paymentMethod" class="payment-select">
-                            <option value="cod" selected>ক্যাশ অন ডেলিভারি (COD)</option>
-                            <option value="bkash">বিকাশ</option>
-                            <option value="rocket">রকেট</option>
-                            <option value="nagad">নগদ</option>
-                        </select>
-                        <div id="paymentNumberDisplay" class="payment-number-display" style="display: none;">
-                            <div class="payment-number-box">
-                                <span class="payment-label">পেমেন্ট নাম্বার:</span>
-                                <span class="payment-number" id="paymentNumber"></span>
-                                <button class="copy-number-btn" onclick="copyPaymentNumber()">
-                                    <i class="fas fa-copy"></i> কপি করুন
-                                </button>
-                            </div>
-                        </div>
-                        <p class="payment-description" id="paymentDescription"></p>
-                    </div>
+                    <label for="deliveryPhone">ডেলিভারি কন্টাক্ট নাম্বার</label>
+                    <input type="tel" id="deliveryPhone" name="deliveryPhone" placeholder="যেমন: 01745897322" required>
                 </div>
             </div>
 
@@ -1547,358 +1136,289 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2025 গিফট কিনবো। সর্বস্বত্ব সংরক্ষিত।</p>
+        <p>&copy; 2024 গিফট কিনবো। সর্বস্বত্ব সংরক্ষিত।</p>
         <a href="admin.html" style="color: var(--primary-color); text-decoration: none; margin-top: 0.5rem; display: inline-block; padding: 0.5rem 1rem; border: 1px solid var(--primary-color); border-radius: 4px; transition: all 0.3s ease;">
             <i class="fas fa-user-shield"></i> অ্যাডমিন প্যানেল
         </a>
     </footer>
 
-    <!-- Login Modal -->
-    <div id="loginModal" class="login-modal">
-        <div class="login-content">
-            <div class="login-header">
-                <h2>লগইন করুন</h2>
-            </div>
-            <div class="login-options">
-                <button id="googleLogin" class="login-btn">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-                    <span>গুগল দিয়ে লগইন করুন</span>
-                </button>
-                <div class="login-divider">
-                    <span>অথবা</span>
-                </div>
-                <form class="login-form">
-                    <input type="email" id="loginEmail" placeholder="ইমেইল" required>
-                    <input type="password" id="loginPassword" placeholder="পাসওয়ার্ড" required>
-                    <button type="button" id="emailLogin">লগইন করুন</button>
-                </form>
-            </div>
-        </div>
-    </div>
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
+        import { getDatabase, ref, push, set, get } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
-    <!-- Login Button -->
-    <button id="loginBtn" class="login-btn" style="display: none;">
-        <i class="fas fa-sign-in-alt"></i>
-        <span>লগইন করুন</span>
-    </button>
-
-    <!-- User Profile -->
-    <div id="userProfile" class="user-profile" style="display: none;">
-        <img id="userPhoto" class="user-photo" src="" alt="User Photo">
-        <span id="userName" class="user-name"></span>
-    </div>
-
-    <!-- Firebase Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
-    <script>
-        // Firebase configuration
+        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCSyXJeftEfkwQ_FoQlg1sEZ3PZv9xjkLI",
             authDomain: "gift-kinbo-bd.firebaseapp.com",
-            databaseURL: "https://gift-kinbo-bd-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "gift-kinbo-bd",
             storageBucket: "gift-kinbo-bd.firebasestorage.app",
             messagingSenderId: "896761493540",
             appId: "1:896761493540:web:21e49df2ca453fb80180b1",
-            measurementId: "G-ZVXSHQT95M"
+            measurementId: "G-ZVXSHQT95M",
+            databaseURL: "https://gift-kinbo-bd-default-rtdb.asia-southeast1.firebasedatabase.app"
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const analytics = firebase.analytics();
-        const db = firebase.firestore();
-        const auth = firebase.auth();
+        let app;
+        let database;
+        let auth;
+        let provider;
 
-        // Show login modal when login button is clicked
-        document.getElementById('loginBtn').addEventListener('click', () => {
-            document.getElementById('loginModal').classList.add('active');
-        });
+        try {
+            app = initializeApp(firebaseConfig);
+            console.log('Firebase app initialized successfully');
+            
+            database = getDatabase(app);
+            console.log('Database initialized successfully');
+            
+            auth = getAuth(app);
+            console.log('Auth initialized successfully');
+            
+            provider = new GoogleAuthProvider();
+            console.log('Google provider initialized successfully');
 
-        // Close login modal when clicking outside
-        document.getElementById('loginModal').addEventListener('click', (e) => {
-            if (e.target.id === 'loginModal') {
-                e.target.classList.remove('active');
-            }
-        });
+            // Test database connection
+            const testRef = ref(database, 'test');
+            set(testRef, { timestamp: new Date().toISOString() })
+                .then(() => console.log('Database connection test successful'))
+                .catch(error => console.error('Database connection test failed:', error));
+
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
+        }
 
         // Auth state observer
-        auth.onAuthStateChanged((user) => {
-            const loginBtn = document.getElementById('loginBtn');
+        onAuthStateChanged(auth, (user) => {
+            const signInButton = document.getElementById('signInButton');
             const userProfile = document.getElementById('userProfile');
             const userPhoto = document.getElementById('userPhoto');
             const userName = document.getElementById('userName');
-            const orderForm = document.getElementById('giftForm');
-            const loginModal = document.getElementById('loginModal');
 
             if (user) {
-                // User is signed in
-                loginBtn.style.display = 'none';
+                console.log('User is signed in:', user.email);
+                signInButton.style.display = 'none';
                 userProfile.style.display = 'flex';
-                userPhoto.src = user.photoURL || 'https://via.placeholder.com/40';
-                userName.textContent = user.displayName || user.email;
-                orderForm.style.display = 'block';
-                loginModal.classList.remove('active');
-                
-                // Log login event
-                analytics.logEvent('login', {
-                    method: user.providerData[0].providerId
-                });
+                userPhoto.src = user.photoURL;
+                userName.textContent = user.displayName;
             } else {
-                // User is signed out
-                loginBtn.style.display = 'flex';
+                console.log('User is signed out');
+                signInButton.style.display = 'flex';
                 userProfile.style.display = 'none';
-                orderForm.style.display = 'none';
             }
         });
 
-        // Login with Google
-        document.getElementById('googleLogin').addEventListener('click', async () => {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            provider.setCustomParameters({
-                prompt: 'select_account'
-            });
-            
+        // Sign in with Google
+        document.getElementById('signInButton').addEventListener('click', async () => {
             try {
-                const result = await auth.signInWithPopup(provider);
-                // This gives you a Google Access Token
-                const credential = result.credential;
-                const token = credential.accessToken;
-                // The signed-in user info
-                const user = result.user;
-                
-                // Log successful login
-                console.log('Successfully logged in with Google:', user);
+                const result = await signInWithPopup(auth, provider);
+                console.log('Successfully signed in:', result.user.email);
             } catch (error) {
-                console.error('Error signing in with Google:', error);
-                let errorMessage = 'দুঃখিত, গুগল দিয়ে লগইন করতে সমস্যা হয়েছে।';
-                
-                // Handle specific error cases
-                switch (error.code) {
-                    case 'auth/popup-blocked':
-                        errorMessage = 'পপআপ ব্লক করা আছে। অনুগ্রহ করে পপআপ ব্লকার বন্ধ করে আবার চেষ্টা করুন।';
-                        break;
-                    case 'auth/popup-closed-by-user':
-                        errorMessage = 'লগইন পপআপ বন্ধ করা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।';
-                        break;
-                    case 'auth/cancelled-popup-request':
-                        errorMessage = 'লগইন প্রক্রিয়া বাতিল করা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।';
-                        break;
-                    case 'auth/network-request-failed':
-                        errorMessage = 'ইন্টারনেট সংযোগ সমস্যা। অনুগ্রহ করে ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।';
-                        break;
-                }
-                
-                alert(errorMessage);
+                console.error('Error signing in:', error);
+                alert('দুঃখিত, সাইন ইন করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
             }
-        });
-
-        // Login with Email
-        document.getElementById('emailLogin').addEventListener('click', () => {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-
-            if (!email || !password) {
-                alert('দয়া করে ইমেইল এবং পাসওয়ার্ড দিন');
-                return;
-            }
-
-            auth.signInWithEmailAndPassword(email, password)
-                .catch((error) => {
-                    console.error('Error signing in with email:', error);
-                    let errorMessage = 'দুঃখিত, লগইন করতে সমস্যা হয়েছে।';
-                    
-                    // Handle specific error cases
-                    switch (error.code) {
-                        case 'auth/user-not-found':
-                            errorMessage = 'এই ইমেইল দিয়ে কোন অ্যাকাউন্ট পাওয়া যায়নি।';
-                            break;
-                        case 'auth/wrong-password':
-                            errorMessage = 'ভুল পাসওয়ার্ড। অনুগ্রহ করে আবার চেষ্টা করুন।';
-                            break;
-                        case 'auth/invalid-email':
-                            errorMessage = 'অবৈধ ইমেইল ঠিকানা।';
-                            break;
-                        case 'auth/network-request-failed':
-                            errorMessage = 'ইন্টারনেট সংযোগ সমস্যা। অনুগ্রহ করে ইন্টারনেট সংযোগ চেক করে আবার চেষ্টা করুন।';
-                            break;
-                    }
-                    
-                    alert(errorMessage);
-                });
         });
 
         // Sign out
-        document.getElementById('userProfile').addEventListener('click', () => {
-            auth.signOut()
-                .catch((error) => {
-                    console.error('Error signing out:', error);
-                    alert('দুঃখিত, লগআউট করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
-                });
+        document.getElementById('userProfile').addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                console.log('Successfully signed out');
+            } catch (error) {
+                console.error('Error signing out:', error);
+                alert('দুঃখিত, সাইন আউট করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+            }
         });
 
-        // Handle form submission
-        document.getElementById('giftForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const loadingSpinner = document.getElementById('loadingSpinner');
-            const successMessage = document.getElementById('successMessage');
-            const errorMessage = document.getElementById('errorMessage');
-            
-            try {
-                submitBtn.disabled = true;
-                loadingSpinner.style.display = 'block';
-                errorMessage.style.display = 'none';
-                
-                const formData = {
-                    name: document.getElementById('name').value,
-                    phone: document.getElementById('phone').value,
-                    budget: parseInt(document.getElementById('budget').value) || 0,
-                    deliveryArea: document.getElementById('deliveryArea').value,
-                    deliveryAddress: document.getElementById('deliveryAddress').value,
-                    deliveryPhone: document.getElementById('deliveryPhone').value,
-                    occasion: document.getElementById('occasion').value,
-                    recipient: document.getElementById('recipient').value,
-                    relationship: document.getElementById('relationship').value,
-                    age: document.getElementById('age').value,
-                    gender: document.getElementById('gender').value,
-                    interests: document.getElementById('interests').value,
-                    message: document.getElementById('message').value,
-                    paymentMethod: document.getElementById('paymentMethod').value,
-                    deliveryCharge: calculateDeliveryCharge(document.getElementById('deliveryArea').value),
-                    totalAmount: (parseInt(document.getElementById('budget').value) || 0) + calculateDeliveryCharge(document.getElementById('deliveryArea').value),
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    userId: auth.currentUser.uid,
-                    userEmail: auth.currentUser.email
+        // Mobile Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+            const orderForm = document.getElementById('orderForm');
+
+            // Mobile menu functionality
+            mobileMenuBtn.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('nav')) {
+                    navLinks.classList.remove('active');
+                }
+            });
+
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                });
+            });
+
+            // Form submission handling
+            orderForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                console.log('Form submission started');
+
+                // Check if user is signed in
+                if (!auth.currentUser) {
+                    alert('অনুগ্রহ করে প্রথমে সাইন ইন করুন।');
+                    return;
+                }
+
+                // Show loading state
+                const submitButton = orderForm.querySelector('.submit-button');
+                const originalButtonText = submitButton.textContent;
+                submitButton.textContent = 'অর্ডার সাবমিট হচ্ছে...';
+                submitButton.disabled = true;
+
+                try {
+                    console.log('Getting form data...');
+                    // Get form data
+                    const formData = {
+                        recipientName: document.getElementById('recipientName').value,
+                        recipientPhone: document.getElementById('recipientPhone').value,
+                        recipientGender: document.getElementById('recipientGender').value,
+                        relationship: document.getElementById('relationship').value,
+                        recipientAge: document.getElementById('recipientAge').value,
+                        budget: document.getElementById('budget').value,
+                        preferences: document.getElementById('preferences').value,
+                        senderName: document.getElementById('senderName').value,
+                        senderPhone: document.getElementById('senderPhone').value,
+                        deliveryAddress: document.getElementById('deliveryAddress').value,
+                        deliveryPhone: document.getElementById('deliveryPhone').value,
+                        orderDate: new Date().toISOString(),
+                        status: 'pending',
+                        userId: auth.currentUser.uid,
+                        userEmail: auth.currentUser.email
+                    };
+
+                    console.log('Form data collected:', formData);
+
+                    // Create a new order reference
+                    const ordersRef = ref(database, 'orders');
+                    console.log('Database reference created');
+
+                    const newOrderRef = push(ordersRef);
+                    console.log('New order reference created:', newOrderRef.key);
+                    
+                    // Save the order data
+                    await set(newOrderRef, formData);
+                    console.log('Data saved successfully');
+
+                    // Show success message
+                    alert('আপনার অর্ডার সফলভাবে গ্রহণ করা হয়েছে। আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।');
+                    
+                    // Reset form
+                    orderForm.reset();
+                    console.log('Form reset completed');
+
+                } catch (error) {
+                    console.error('Error details:', error);
+                    console.error('Error code:', error.code);
+                    console.error('Error message:', error.message);
+                    alert('দুঃখিত, একটি ত্রুটি ঘটেছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+                } finally {
+                    // Reset button state
+                    submitButton.textContent = originalButtonText;
+                    submitButton.disabled = false;
+                    console.log('Button state reset');
+                }
+            });
+
+            // Phone number validation
+            document.getElementById('senderPhone').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 11) {
+                    value = value.slice(0, 11);
+                }
+                e.target.value = value;
+            });
+
+            // Budget validation
+            document.getElementById('budget').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 6) {
+                    value = value.slice(0, 6);
+                }
+                e.target.value = value;
+            });
+
+            // Age validation
+            document.getElementById('recipientAge').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 3) {
+                    value = value.slice(0, 3);
+                }
+                e.target.value = value;
+            });
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Add loading animation to submit button
+            const submitButton = document.querySelector('.submit-button');
+            submitButton.addEventListener('click', function() {
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> প্রসেসিং...';
+                setTimeout(() => {
+                    this.innerHTML = 'অর্ডার কনফার্ম করুন';
+                }, 2000);
+            });
+
+            // Add input validation
+            const budgetInput = document.getElementById('budget');
+            budgetInput.addEventListener('input', function() {
+                if (this.value < 500) {
+                    this.setCustomValidity('দয়া করে কমপক্ষে ৳500 বাজেট নির্ধারণ করুন');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+
+            // Add phone number validation
+            const phoneInput = document.getElementById('phone');
+            phoneInput.addEventListener('input', function() {
+                const phoneRegex = /^(\+88|88)?(01[3-9]\d{8})$/;
+                if (!phoneRegex.test(this.value)) {
+                    this.setCustomValidity('দয়া করে সঠিক মোবাইল নম্বর দিন');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+
+            // Function to convert Bengali numerals to English numerals
+            function convertBengaliToEnglish(input) {
+                const bengaliToEnglish = {
+                    '০': '0', '১': '1', '২': '2', '৩': '3', '৪': '4',
+                    '৫': '5', '৬': '6', '৭': '7', '৮': '8', '৯': '9'
                 };
                 
-                await db.collection('orders').add(formData);
-                
-                loadingSpinner.style.display = 'none';
-                successMessage.style.display = 'block';
-                this.reset();
-                
-                // Reset cost display
-                updateCostDisplay();
-                
-            } catch (error) {
-                console.error('Error submitting form:', error);
-                loadingSpinner.style.display = 'none';
-                errorMessage.style.display = 'block';
-                submitBtn.disabled = false;
-            }
-        });
-
-        // Function to calculate delivery charge
-        function calculateDeliveryCharge(area) {
-            if (!area) return 0;
-            return area === 'inside' ? 59 : 99;
-        }
-    </script>
-
-    <!-- Payment Method Script -->
-    <script>
-        // Wait for the page to load
-        window.onload = function() {
-            // Get all required elements
-            const paymentMethod = document.getElementById('paymentMethod');
-            const paymentDescription = document.getElementById('paymentDescription');
-            const paymentNumberDisplay = document.getElementById('paymentNumberDisplay');
-            const paymentNumber = document.getElementById('paymentNumber');
-            const budgetAmount = document.getElementById('budgetAmount');
-            const deliveryAmount = document.getElementById('deliveryAmount');
-            const totalAmount = document.getElementById('totalAmount');
-            const budgetInput = document.getElementById('budget');
-            const deliveryArea = document.getElementById('deliveryArea');
-
-            // Payment information
-            const paymentInfo = {
-                'cod': {
-                    description: 'গিফট হাতে পেয়ে তারপর টাকা দিবেন',
-                    number: ''
-                },
-                'bkash': {
-                    description: 'অর্ডার কনফার্ম করার পর 01745897322 এই বিকাশ নাম্বারে টাকা পাঠাবেন',
-                    number: '01745897322'
-                },
-                'rocket': {
-                    description: 'অর্ডার কনফার্ম করার পর এই রকেট নাম্বারে টাকা পাঠাবেন',
-                    number: '017458973220'
-                },
-                'nagad': {
-                    description: 'অর্ডার কনফার্ম করার পর এই নগদ নাম্বারে টাকা পাঠাবেন',
-                    number: '01745897322'
-                }
-            };
-
-            // Function to calculate delivery charge
-            function calculateDeliveryCharge(area) {
-                if (!area) return 0;
-                return area === 'inside' ? 59 : 99;
+                return input.split('').map(char => bengaliToEnglish[char] || char).join('');
             }
 
-            // Function to update cost display
-            function updateCostDisplay() {
-                const budget = parseInt(budgetInput.value) || 0;
-                const deliveryCharge = calculateDeliveryCharge(deliveryArea.value);
-                const total = budget + deliveryCharge;
-
-                budgetAmount.textContent = budget + ' টাকা';
-                deliveryAmount.textContent = deliveryCharge + ' টাকা';
-                totalAmount.textContent = total + ' টাকা';
-                }
-
-            // Function to update payment display
-            function updatePaymentDisplay(method) {
-                const info = paymentInfo[method];
-                paymentDescription.textContent = info.description;
-                
-                if (method === 'cod') {
-                    paymentNumberDisplay.style.display = 'none';
-                } else {
-                    paymentNumber.textContent = info.number;
-                    paymentNumberDisplay.style.display = 'block';
-                }
-            }
-
-            // Set initial display
-            updateCostDisplay();
-            updatePaymentDisplay(paymentMethod.value);
-
-            // Handle payment method change
-            paymentMethod.addEventListener('change', function() {
-                updatePaymentDisplay(this.value);
-            });
-
-            // Update when budget or delivery area changes
-            budgetInput.addEventListener('input', function() {
-                // Ensure value is not negative
-                if (this.value < 0) {
-                    this.value = 0;
-                }
-                updateCostDisplay();
-            });
-
-            deliveryArea.addEventListener('change', function() {
-                updateCostDisplay();
-            });
-        };
-
-            // Copy payment number function
-            function copyPaymentNumber() {
-                const paymentNumber = document.getElementById('paymentNumber').textContent;
-                navigator.clipboard.writeText(paymentNumber).then(() => {
-                    const copyBtn = document.querySelector('.copy-number-btn');
-                    const originalText = copyBtn.innerHTML;
-                    copyBtn.innerHTML = '<i class="fas fa-check"></i> কপি করা হয়েছে';
-                    setTimeout(() => {
-                        copyBtn.innerHTML = originalText;
-                    }, 2000);
+            // Add input event listeners to all input and textarea elements
+            document.querySelectorAll('input, textarea').forEach(element => {
+                element.addEventListener('input', function(e) {
+                    const cursorPosition = this.selectionStart;
+                    const oldValue = this.value;
+                    const newValue = convertBengaliToEnglish(oldValue);
+                    
+                    if (oldValue !== newValue) {
+                        this.value = newValue;
+                        // Restore cursor position
+                        this.setSelectionRange(cursorPosition, cursorPosition);
+                    }
                 });
-            }
+            });
+        });
     </script>
 </body>
 </html> 
