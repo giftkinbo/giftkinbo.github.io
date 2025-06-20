@@ -1781,6 +1781,7 @@
                         recipientAge: document.getElementById('recipientAge').value,
                         occasion: document.getElementById('occasion').value,
                         preferences: document.getElementById('preferences').value,
+                        budget: document.getElementById('budget').value,
                         senderName: document.getElementById('senderName').value,
                         senderPhone: document.getElementById('senderPhone').value,
                         deliveryAddress: document.getElementById('deliveryAddress').value,
@@ -1794,7 +1795,7 @@
 
                     // Validate required fields
                     const requiredFields = ['recipientName', 'recipientPhone', 'recipientGender', 'relationship', 
-                                         'recipientAge', 'occasion', 'preferences', 'senderName', 'senderPhone', 
+                                         'recipientAge', 'occasion', 'preferences', 'budget', 'senderName', 'senderPhone', 
                                          'deliveryAddress', 'deliveryArea'];
                     
                     for (const field of requiredFields) {
@@ -1814,8 +1815,8 @@
 
                     // Validate budget
                     const budget = parseInt(formData.budget);
-                    if (isNaN(budget) || budget < 99) {
-                        throw new Error('দয়া করে কমপক্ষে ৳99 বাজেট নির্ধারণ করুন');
+                    if (isNaN(budget)) {
+                        throw new Error('বাজেট ফিল্ডটি সঠিকভাবে পূরণ করুন');
                     }
 
                     console.log('Form data collected:', formData);
@@ -1907,13 +1908,7 @@
                     value = value.slice(0, 6);
                 }
                 e.target.value = value;
-                
-                // Update validation message
-                if (parseInt(value) < 499) {
-                    this.setCustomValidity('দয়া করে কমপক্ষে ৳499 বাজেট নির্ধারণ করুন');
-                } else {
-                    this.setCustomValidity('');
-                }
+                this.setCustomValidity('');
             });
 
             // Age validation
@@ -1947,8 +1942,8 @@
             // Add input validation
             const budgetInput = document.getElementById('budget');
             budgetInput.addEventListener('input', function() {
-                if (this.value < 99) {
-                    this.setCustomValidity('দয়া করে কমপক্ষে 99 বাজেট নির্ধারণ করুন');
+                if (this.value < 499) {
+                    this.setCustomValidity('দয়া করে কমপক্ষে ৳499 বাজেট নির্ধারণ করুন');
                 } else {
                     this.setCustomValidity('');
                 }
