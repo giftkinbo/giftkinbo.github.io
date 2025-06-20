@@ -878,6 +878,110 @@
         .section-tooltip.show {
             opacity: 1;
         }
+
+        /* Custom Modal Styles */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .custom-modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .custom-modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            position: relative;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .custom-modal-close {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .custom-modal-close:hover,
+        .custom-modal-close:focus {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .custom-modal-content p {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        .custom-modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 20px;
+        }
+
+        .custom-modal-ok-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .custom-modal-ok-btn:hover {
+            background-color: #45a049;
+        }
+
+        .custom-modal-cancel-btn {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .custom-modal-cancel-btn:hover {
+            background-color: #5a6268;
+        }
     </style>
 </head>
 <body>
@@ -1085,6 +1189,27 @@
         </div>
     </div>
 
+    <!-- Custom Alert Modal -->
+    <div id="customAlert" class="custom-modal">
+        <div class="custom-modal-content">
+            <span class="custom-modal-close alert">&times;</span>
+            <p id="customAlertMessage"></p>
+            <button id="customAlertOkBtn" class="custom-modal-ok-btn">ঠিক আছে</button>
+        </div>
+    </div>
+
+    <!-- Custom Confirm Modal -->
+    <div id="customConfirm" class="custom-modal">
+        <div class="custom-modal-content">
+            <span class="custom-modal-close confirm">&times;</span>
+            <p id="customConfirmMessage"></p>
+            <div class="custom-modal-buttons">
+                <button id="customConfirmOkBtn" class="custom-modal-ok-btn">হ্যাঁ</button>
+                <button id="customConfirmCancelBtn" class="custom-modal-cancel-btn">না</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Status Update Modal -->
     <div id="statusUpdateModal" class="modal">
         <div class="modal-content">
@@ -1150,6 +1275,67 @@
         const database = getDatabase(app);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
+
+        // Custom Alert
+        const customAlert = document.getElementById('customAlert');
+        const customAlertMessage = document.getElementById('customAlertMessage');
+        const customAlertOkBtn = document.getElementById('customAlertOkBtn');
+        const customAlertClose = customAlert.querySelector('.custom-modal-close.alert');
+
+        function showCustomAlert(message) {
+            if(customAlertMessage) customAlertMessage.innerHTML = message;
+            if(customAlert) customAlert.classList.add('show');
+        }
+
+        function closeCustomAlert() {
+            if(customAlert) customAlert.classList.remove('show');
+        }
+
+        if(customAlertOkBtn) customAlertOkBtn.addEventListener('click', closeCustomAlert);
+        if(customAlertClose) customAlertClose.addEventListener('click', closeCustomAlert);
+        
+        // Custom Confirm
+        let confirmCallback = null;
+        const customConfirm = document.getElementById('customConfirm');
+        const customConfirmMessage = document.getElementById('customConfirmMessage');
+        const customConfirmOkBtn = document.getElementById('customConfirmOkBtn');
+        const customConfirmCancelBtn = document.getElementById('customConfirmCancelBtn');
+        const customConfirmClose = customConfirm.querySelector('.custom-modal-close.confirm');
+
+        function showCustomConfirm(message, callback) {
+            if(customConfirmMessage) customConfirmMessage.textContent = message;
+            confirmCallback = callback;
+            if(customConfirm) customConfirm.classList.add('show');
+        }
+
+        function closeConfirm() {
+            if(customConfirm) customConfirm.classList.remove('show');
+        }
+
+        if(customConfirmOkBtn) customConfirmOkBtn.addEventListener('click', () => {
+            closeConfirm();
+            if (confirmCallback) confirmCallback(true);
+        });
+
+        if(customConfirmCancelBtn) customConfirmCancelBtn.addEventListener('click', () => {
+            closeConfirm();
+            if (confirmCallback) confirmCallback(false);
+        });
+
+        if(customConfirmClose) customConfirmClose.addEventListener('click', () => {
+            closeConfirm();
+            if (confirmCallback) confirmCallback(false);
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == customAlert) {
+                closeCustomAlert();
+            }
+            if (event.target == customConfirm) {
+                closeConfirm();
+                if (confirmCallback) confirmCallback(false);
+            }
+        });
 
         // Show loading state
         document.getElementById('loadingState').style.display = 'block';
@@ -1266,26 +1452,28 @@
                     status: newStatus,
                     lastUpdated: new Date().toISOString()
                 }).then(() => {
-                    alert('স্ট্যাটাস সফলভাবে আপডেট করা হয়েছে!');
+                    showCustomAlert('স্ট্যাটাস সফলভাবে আপডেট করা হয়েছে!');
                     closeStatusUpdateModal();
                 }).catch((error) => {
                     console.error('Error updating status:', error);
-                    alert('স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে।');
+                    showCustomAlert('স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে।');
                 });
             }
         };
 
         // Delete order
         window.deleteOrder = function(orderId) {
-            if (confirm('আপনি কি নিশ্চিত যে আপনি এই অর্ডারটি ডিলিট করতে চান?')) {
-                const orderRef = ref(database, `orders/${orderId}`);
-                remove(orderRef).then(() => {
-                    alert('অর্ডার সফলভাবে ডিলিট করা হয়েছে!');
-                }).catch((error) => {
-                    console.error('Error deleting order:', error);
-                    alert('অর্ডার ডিলিট করতে সমস্যা হয়েছে।');
-                });
-            }
+            showCustomConfirm('আপনি কি নিশ্চিত যে আপনি এই অর্ডারটি ডিলিট করতে চান?', (isConfirmed) => {
+                if (isConfirmed) {
+                    const orderRef = ref(database, `orders/${orderId}`);
+                    remove(orderRef).then(() => {
+                        showCustomAlert('অর্ডার সফলভাবে ডিলিট করা হয়েছে!');
+                    }).catch((error) => {
+                        console.error('Error deleting order:', error);
+                        showCustomAlert('অর্ডার ডিলিট করতে সমস্যা হয়েছে।');
+                    });
+                }
+            });
         };
 
         // Status filter change
@@ -1350,7 +1538,7 @@
 
         window.copyText = function(text) {
             navigator.clipboard.writeText(text).then(() => {
-                alert('কপি করা হয়েছে!');
+                showCustomAlert('তথ্য কপি করা হয়েছে!');
             }).catch(err => {
                 console.error('Failed to copy text: ', err);
             });
@@ -1381,10 +1569,10 @@
                     break;
             }
             navigator.clipboard.writeText(text).then(() => {
-                alert('তথ্য কপি করা হয়েছে!');
+                showCustomAlert('তথ্য কপি করা হয়েছে!');
             }).catch(err => {
                 console.error('কপি করতে সমস্যা হয়েছে:', err);
-                alert('কপি করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                showCustomAlert('কপি করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
             });
         }
     </script>
