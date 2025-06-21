@@ -284,6 +284,117 @@
             white-space: nowrap;
         }
 
+        /* User Profile Dropdown */
+        .user-profile-dropdown {
+            position: relative;
+        }
+
+        .user-profile-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 75, 139, 0.1);
+            margin-top: 0.5rem;
+        }
+
+        .user-profile-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .user-profile-menu::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid var(--white);
+        }
+
+        .user-profile-header {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 75, 139, 0.1);
+            text-align: center;
+        }
+
+        .user-profile-header h4 {
+            color: var(--text-color);
+            font-size: 1rem;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .user-profile-header p {
+            color: var(--light-text);
+            font-size: 0.9rem;
+            margin: 0.5rem 0 0 0;
+        }
+
+        .user-profile-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .user-profile-menu li {
+            border-bottom: 1px solid rgba(255, 75, 139, 0.05);
+        }
+
+        .user-profile-menu li:last-child {
+            border-bottom: none;
+        }
+
+        .user-profile-menu a,
+        .user-profile-menu button {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .user-profile-menu a:hover,
+        .user-profile-menu button:hover {
+            background-color: var(--light-bg);
+            color: var(--primary-color);
+        }
+
+        .user-profile-menu i {
+            font-size: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .user-profile-menu .signout-btn {
+            color: #e74c3c;
+        }
+
+        .user-profile-menu .signout-btn:hover {
+            background-color: #fdf2f2;
+            color: #c0392b;
+        }
+
         /* Mobile Menu Button */
         .mobile-menu-btn {
             display: none;
@@ -1412,6 +1523,432 @@
         .custom-modal-cancel-btn:hover {
             background-color: #5a6268;
         }
+
+        /* Chatbot Styles */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+
+        .chatbot-toggle {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255, 75, 139, 0.3);
+            transition: all 0.3s ease;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(255, 75, 139, 0.4);
+        }
+
+        .chatbot-toggle i {
+            color: white;
+            font-size: 24px;
+        }
+
+        .chatbot-window {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 9998;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, #ff6b9d, #ff8fab);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(255, 107, 157, 0.3);
+        }
+
+        .chatbot-header h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .chatbot-header h3 i {
+            color: #fff;
+            margin-right: 8px;
+            animation: heartbeat 2s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .chatbot-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: linear-gradient(135deg, #fff5f7, #ffeef2);
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            animation: messageSlideIn 0.3s ease-out;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+
+        .message.user .message-avatar {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .message.bot .message-avatar {
+            background: linear-gradient(135deg, #ff6b9d, #ff8fab);
+            animation: gentlePulse 3s infinite;
+        }
+
+        @keyframes gentlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            position: relative;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-bottom-right-radius: 5px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.bot .message-content {
+            background: linear-gradient(135deg, #ffffff, #fff5f7);
+            color: #333;
+            border: 1px solid #ffe0e8;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message.bot .message-content:hover {
+            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Message timestamp */
+        .message-time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+            opacity: 0.8;
+        }
+
+        .message.user .message-time {
+            text-align: right;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Read indicator for user messages */
+        .message-status {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin-top: 4px;
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        .message.user .message-status {
+            justify-content: flex-end;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .status-icon {
+            font-size: 10px;
+        }
+
+        /* Message animations */
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Typing indicator enhancements */
+        .typing-indicator {
+            display: none;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #ffffff, #fff5f7);
+            border: 1px solid #ffe0e8;
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+            margin-bottom: 15px;
+            max-width: 70%;
+            box-shadow: 0 3px 12px rgba(255, 107, 157, 0.15);
+            animation: messageSlideIn 0.3s ease-out;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #ff6b9d;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        /* Enhanced typing animation */
+        @keyframes typing {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Message content enhancements */
+        .message-content p {
+            margin: 0 0 8px 0;
+        }
+
+        .message-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Link styling in messages */
+        .message-content a {
+            color: inherit;
+            text-decoration: underline;
+            transition: opacity 0.3s ease;
+        }
+
+        .message-content a:hover {
+            opacity: 0.8;
+        }
+
+        /* Emoji and icon styling */
+        .message-content .emoji {
+            font-size: 16px;
+            margin: 0 2px;
+        }
+
+        /* Quick reply buttons */
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .quick-reply-btn {
+            background: rgba(255, 75, 139, 0.1);
+            border: 1px solid rgba(255, 75, 139, 0.2);
+            color: var(--primary-color);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .quick-reply-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* Message grouping */
+        .message-group {
+            margin-bottom: 20px;
+        }
+
+        .message-group .message {
+            margin-bottom: 8px;
+        }
+
+        .message-group .message:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Scrollbar styling for messages */
+        .chatbot-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chatbot-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .chatbot-messages::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .chatbot-messages::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .chatbot-window {
+                width: calc(100vw - 40px);
+                height: calc(100vh - 120px);
+                bottom: 80px;
+                right: 20px;
+                left: 20px;
+            }
+        }
+
+        .chatbot-messages::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        .chatbot-input {
+            padding: 15px;
+            border-top: 1px solid #e9ecef;
+            background: white;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .chatbot-input input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .chatbot-send {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-send:hover {
+            background: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        .chatbot-send:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .chatbot-notification {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 20px;
+            height: 20px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -1436,9 +1973,37 @@
                     <button id="signInButton" class="auth-button">
                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
                     </button>
-                    <div id="userProfile" class="user-profile" style="display: none;">
+                    <div id="userProfile" class="user-profile-dropdown" style="display: none;">
+                        <div class="user-profile" id="userProfileTrigger">
                         <img id="userPhoto" src="" alt="User Photo">
                         <span id="userName" class="user-name"></span>
+                    </div>
+                        <div class="user-profile-menu" id="userProfileMenu">
+                            <div class="user-profile-header">
+                                <h4 id="profileUserName"></h4>
+                                <p id="profileUserEmail"></p>
+                            </div>
+                            <ul>
+                                <li>
+                                    <a href="orders.html">
+                                        <i class="fas fa-box"></i>
+                                        আমার অর্ডার
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#order">
+                                        <i class="fas fa-plus"></i>
+                                        নতুন অর্ডার
+                                    </a>
+                                </li>
+                                <li>
+                                    <button class="signout-btn" id="signOutButton">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        সাইন আউট
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1949,6 +2514,8 @@
             const userProfile = document.getElementById('userProfile');
             const userPhoto = document.getElementById('userPhoto');
             const userName = document.getElementById('userName');
+            const profileUserName = document.getElementById('profileUserName');
+            const profileUserEmail = document.getElementById('profileUserEmail');
 
             if (user) {
                 console.log('User is signed in:', user.email);
@@ -1956,6 +2523,10 @@
                 userProfile.style.display = 'flex';
                 userPhoto.src = user.photoURL;
                 userName.textContent = user.displayName;
+                
+                // Populate profile dropdown information
+                if (profileUserName) profileUserName.textContent = user.displayName;
+                if (profileUserEmail) profileUserEmail.textContent = user.email;
             } else {
                 console.log('User is signed out');
                 signInButton.style.display = 'flex';
@@ -1990,6 +2561,40 @@
             const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
             const navLinks = document.querySelector('.nav-links');
             const orderForm = document.getElementById('orderForm');
+
+            // User Profile Dropdown Functionality
+            const userProfileTrigger = document.getElementById('userProfileTrigger');
+            const userProfileMenu = document.getElementById('userProfileMenu');
+            const signOutButton = document.getElementById('signOutButton');
+
+            // Toggle dropdown when profile is clicked
+            if (userProfileTrigger) {
+                userProfileTrigger.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    userProfileMenu.classList.toggle('show');
+                });
+            }
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.user-profile-dropdown')) {
+                    userProfileMenu.classList.remove('show');
+                }
+            });
+
+            // Sign out functionality
+            if (signOutButton) {
+                signOutButton.addEventListener('click', async () => {
+                    try {
+                        await signOut(auth);
+                        console.log('Successfully signed out');
+                        userProfileMenu.classList.remove('show');
+                    } catch (error) {
+                        console.error('Error signing out:', error);
+                        showCustomAlert('দুঃখিত, সাইন আউট করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+                    }
+                });
+            }
 
             // Mobile menu functionality
             mobileMenuBtn.addEventListener('click', function() {
@@ -2461,6 +3066,472 @@
                 const parent = item.parentElement;
                 parent.classList.toggle('active');
             });
+        });
+    </script>
+
+    <!-- Gemini AI Chatbot System -->
+    <div class="chatbot-container">
+        <div class="chatbot-toggle" id="chatbotToggle">
+            <i class="fas fa-heart"></i>
+            <div class="chatbot-notification" id="chatbotNotification">1</div>
+        </div>
+        
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <h3><i class="fas fa-heart"></i> মিষ্টি - আপনার গিফট বন্ধু</h3>
+                <button class="chatbot-close" id="chatbotClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="message bot">
+                    <div class="message-avatar">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="message-content">
+                        হ্যালো! আমি মিষ্টি! 😊 আপনার প্রিয়জনদের জন্য সেরা গিফট খুঁজতে আপনাকে সাহায্য করতে এসেছি। কাকে উপহার দিতে চান? বলুন, আমি আপনাকে গাইড করব! 💝
+                    </div>
+                </div>
+            </div>
+            
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+            
+            <div class="chatbot-input">
+                <input type="text" id="chatbotInput" placeholder="আপনার প্রশ্ন লিখুন..." maxlength="500">
+                <button class="chatbot-send" id="chatbotSend">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot JavaScript -->
+    <script>
+        class GiftKinboChatbot {
+            constructor() {
+                this.isOpen = false;
+                this.isTyping = false;
+                this.conversationHistory = [];
+                this.geminiApiKey = 'AIzaSyASu8aUlMBQTY0I3cGa-lY6hLie0Rh-G2Q';
+                this.geminiApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+                
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.showNotification();
+            }
+
+            bindEvents() {
+                const toggle = document.getElementById('chatbotToggle');
+                const close = document.getElementById('chatbotClose');
+                const send = document.getElementById('chatbotSend');
+                const input = document.getElementById('chatbotInput');
+
+                toggle.addEventListener('click', () => this.toggleChat());
+                close.addEventListener('click', () => this.closeChat());
+                send.addEventListener('click', () => this.sendMessage());
+                
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+
+                // Auto-close notification when chat is opened
+                toggle.addEventListener('click', () => {
+                    this.hideNotification();
+                });
+            }
+
+            toggleChat() {
+                this.isOpen = !this.isOpen;
+                const window = document.getElementById('chatbotWindow');
+                
+                if (this.isOpen) {
+                    window.style.display = 'flex';
+                    document.getElementById('chatbotInput').focus();
+                } else {
+                    window.style.display = 'none';
+                }
+            }
+
+            closeChat() {
+                this.isOpen = false;
+                document.getElementById('chatbotWindow').style.display = 'none';
+            }
+
+            async sendMessage() {
+                const input = document.getElementById('chatbotInput');
+                const message = input.value.trim();
+                
+                if (!message || this.isTyping) return;
+
+                // Add user message to chat
+                this.addMessage(message, 'user');
+                input.value = '';
+
+                // Show typing indicator
+                this.showTyping();
+
+                try {
+                    // Get AI response from Gemini
+                    const response = await this.getGeminiResponse(message);
+                    this.hideTyping();
+                    this.addMessage(response, 'bot');
+                } catch (error) {
+                    this.hideTyping();
+                    console.error('Gemini API error:', error);
+                    
+                    // Fallback to simple responses if Gemini fails
+                    const fallbackResponse = this.getFallbackResponse(message);
+                    this.addMessage(fallbackResponse, 'bot');
+                }
+            }
+
+            addMessage(content, sender) {
+                const messagesContainer = document.getElementById('chatbotMessages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                
+                const avatar = document.createElement('div');
+                avatar.className = 'message-avatar';
+                avatar.innerHTML = sender === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-heart"></i>';
+                
+                const messageContent = document.createElement('div');
+                messageContent.className = 'message-content';
+                
+                // Format content with proper line breaks and styling
+                const formattedContent = this.formatMessageContent(content);
+                messageContent.innerHTML = formattedContent;
+                
+                // Add timestamp
+                const timestamp = document.createElement('div');
+                timestamp.className = 'message-time';
+                const now = new Date();
+                timestamp.textContent = now.toLocaleTimeString('bn-BD', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                messageDiv.appendChild(avatar);
+                messageDiv.appendChild(messageContent);
+                messageDiv.appendChild(timestamp);
+                
+                // Add read indicator for user messages
+                if (sender === 'user') {
+                    const statusDiv = document.createElement('div');
+                    statusDiv.className = 'message-status';
+                    statusDiv.innerHTML = '<i class="fas fa-check-double status-icon"></i> পাঠানো';
+                    messageDiv.appendChild(statusDiv);
+                }
+                
+                messagesContainer.appendChild(messageDiv);
+                
+                // Scroll to bottom with smooth animation
+                setTimeout(() => {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, 100);
+                
+                // Add to conversation history
+                this.conversationHistory.push({ role: sender, content });
+            }
+
+            formatMessageContent(content) {
+                // Convert plain text to formatted HTML with better styling
+                let formatted = content
+                    // Convert line breaks to <br> tags
+                    .replace(/\n/g, '<br>')
+                    // Make links clickable
+                    .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>')
+                    // Style phone numbers
+                    .replace(/(\d{11})/g, '<strong>$1</strong>')
+                    // Style prices
+                    .replace(/(\d+)\s*টাকা/g, '<strong>$1 টাকা</strong>')
+                    // Style bullet points
+                    .replace(/\*\s*(.*?)(?=<br>|$)/g, '<li>$1</li>')
+                    // Style questions
+                    .replace(/(তাহলে,.*?\?)/g, '<div class="question">$1</div>')
+                    // Style highlights
+                    .replace(/(যেমন ধরুন:)/g, '<div class="highlight">$1</div>')
+                    // Style call to action
+                    .replace(/(শুরু করা যাক\?.*?)/g, '<div class="cta">$1</div>');
+                
+                // Wrap bullet points in ul
+                if (formatted.includes('<li>')) {
+                    formatted = formatted.replace(/(<li>.*?<\/li>)/g, '<ul>$1</ul>');
+                }
+                
+                // Wrap in paragraph if it's a single line
+                if (!formatted.includes('<br>') && !formatted.includes('<a href=') && !formatted.includes('<ul>') && !formatted.includes('<div class=')) {
+                    formatted = `<p>${formatted}</p>`;
+                } else {
+                    // Split by <br> and wrap each line in <p> tags
+                    formatted = formatted.split('<br>').map(line => {
+                        line = line.trim();
+                        if (line && !line.includes('<ul>') && !line.includes('<div class=')) {
+                            return `<p>${line}</p>`;
+                        }
+                        return line;
+                    }).join('');
+                }
+                
+                return formatted;
+            }
+
+            showTyping() {
+                this.isTyping = true;
+                const indicator = document.getElementById('typingIndicator');
+                indicator.style.display = 'block';
+                
+                const messagesContainer = document.getElementById('chatbotMessages');
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            hideTyping() {
+                this.isTyping = false;
+                document.getElementById('typingIndicator').style.display = 'none';
+            }
+
+            async getGeminiResponse(userMessage) {
+                const systemPrompt = `আপনি "মিষ্টি" — বাংলাদেশের গিফট কিনবো কোম্পানির AI সহকারী।
+আপনি যেন একজন মিষ্টি, আনন্দময়, আবেগী বন্ধু — যার দায়িত্ব হলো:
+✅ কাস্টমারকে গিফট কিনতে আগ্রহী করা
+✅ বিশ্বাস তৈরি করা
+✅ আবেগে কানেক্ট হওয়া
+✅ এবং প্রয়োজনীয় তথ্য বোঝানো
+
+আপনি রোবটের মতো একঘেয়ে কথা বলেন না — আপনি বাংলাদেশি টোন, ঘরোয়া আবেগ আর হালকা হাস্যরস নিয়ে কথা বলেন।
+
+🎀 আপনার কাজের ধরণ:
+কাস্টমারকে স্বাগতম জানান, বারবার "hi" লিখলেও প্রতিবার আলাদা ভঙ্গিতে উত্তর দিন
+
+আপনি কখনোই বলবেন না "আপনি আগেও এটা বলেছিলেন" বা "দুইবার বললেন"
+❌ আগের চ্যাট হিস্টোরি মাথায় রেখে কথা বলবেন না
+
+কাস্টমার যদি "hi" বা "hello" বলেও ৩ বার — ৩ বারই ভিন্ন ভিন্ন উষ্ণ, বন্ধুত্বপূর্ণ, মজার উত্তর দিন
+
+📌 উদাহরণ (বারবার “hi" বললে):
+
+"এই যে! আবার দেখা! আজকে নিশ্চয়ই মন ভালো?” 😄
+"আমি তো ভাবছিলাম আপনি হারিয়ে গেলেন! আবার ফিরে আসলেন দেখি!”
+"hi শুনে মনটা ভালো হয়ে গেল ভাই/আপু! বলেন, কি নিয়ে ভাবছেন?”
+
+❗ অর্ডার প্রসেস ব্যাখ্যা:
+আপনি নিজে কোনোভাবেই অর্ডার নিবেন না
+
+যখন কেউ অর্ডার দিতে চায় বা তথ্য দিতে শুরু করে, আপনি বলবেন:
+
+"ওয়াও! আপনি তো সিরিয়াসলি ভাবছেন দেখি!
+তবে একটা ব্যাপার — অর্ডার নিশ্চিত করতে হলে আমাদের ওয়েবসাইটে একটা ফর্ম পূরণ করতে হয়।
+ওখানেই গিফট রিসিভারের নাম, বয়স, বাজেট, পছন্দ-অপছন্দ সব দিতে হয়।
+আপনি চাইলে আমি এখনই ফর্ম লিঙ্কটা দিতে পারি! 📝"
+
+(👉 এখানে আপনার ফর্ম লিঙ্ক যুক্ত করে দেবেন)
+
+⏳ ডেলিভারি টাইম & নির্দিষ্ট তারিখ:
+আপনি বলবেন:
+
+"আমরা অর্ডার পাওয়ার পর গিফট বক্স তৈরি করি এবং RedX এর মাধ্যমে পাঠিয়ে দিই।
+ঢাকার ভেতরে সাধারণত ৭২ ঘণ্টার মধ্যে পৌঁছায়।
+ঢাকার বাইরে সাধারণত ৩-৫ দিন, কিন্তু সর্বোচ্চ ৭ দিনের মধ্যেই পৌঁছে যায়।
+
+তাই ঠিক ৩ দিন পর বা নির্দিষ্ট তারিখে গিফট লাগবে — এমন হলে আমরা নিশ্চিত করতে পারি না।
+
+তবে যত তাড়াতাড়ি সম্ভব পাঠিয়ে দিই — যেন চমকটা ঠিকঠাক পৌঁছে যায়! 🎁"
+
+💸 পেমেন্ট এবং বিশ্বাস তৈরি:
+আপনি জোর দিয়ে বলবেন:
+
+"অনলাইনে তো অনেকেই ঠকায়… তাই আমরা চাই, আগে আপনি গিফট হাতে নিন, তারপর টাকা দিন — Cash On Delivery!
+
+আমাদের প্রতি আপনার বিশ্বাসটাই আমাদের সবচেয়ে বড় পুরস্কার। 😊
+
+চাইলে বিকাশ, নগদ, রকেটেও পেমেন্ট করতে পারেন।"
+
+🎁 গিফট প্যাকেজ সম্পর্কিত ভুল ধারণা কেটে দেওয়া:
+কেউ যদি ফুলের তোড়া, চকলেট প্যাক বা ভ্যালেন্টাইন বক্সের মতো কিছু জিজ্ঞেস করে — বলবেন:
+
+"আমরা নির্দিষ্ট কোনো কম্বো বা চকলেট বক্স বিক্রি করি না।
+
+আমাদের সার্ভিস একদম ইউনিক — আপনি ফর্মে যেই তথ্য দেন (বয়স, পছন্দ, উপলক্ষ, বাজেট), আমরা সেটা বিশ্লেষণ করে কাস্টমাইজড একটা গিফট বক্স বানাই — যেটা একমাত্র তার জন্যই!"
+
+🧠 "না" বললেও থেমে যাবেন না:
+কেউ "না" বললেই বিদায় দেবেন না — বরং ধীরে, ইমোশন দিয়ে মন বুঝে কথোপকথন চালিয়ে যাবেন
+
+উদাহরণ:
+
+"আচ্ছা, আমি কিছু জিজ্ঞেস করি — এমন কেউ আছে যাকে আপনি অনেক ভালোবাসেন কিন্তু বলার সুযোগ হয়নি?”
+"ভাবছেন এখন দরকার নাই? কিন্তু কখনো হুট করে কাউকে চমকে দিতে ইচ্ছে করে না?”
+"আপনি চাইলে নাম গোপন রেখেও গিফট পাঠাতে পারেন। কেউ জানবে না আপনি পাঠিয়েছেন। 😉"
+
+🎨 মিষ্টির ব্যক্তিত্ব ও ভাষা:
+সহজ, ঘরোয়া, প্রাঞ্জল ভাষা
+
+কখনোই রোবটিক নয়
+
+আবেগ-ভিত্তিক অথচ কখনো বিরক্তিকর নয়
+
+মজার, অনুভব জাগানো কথা
+
+বারবার এক কথা পুনরাবৃত্তি করবেন না
+
+📞 কবে WhatsApp নম্বর দিবেন:
+কাস্টমার যদি বারবার যোগাযোগ চায় অথবা বট যদি হ্যান্ডেল করতে না পারে, তখন বলবেন:
+
+"আপনি চাইলে সরাসরি WhatsApp-এ নক করতে পারেন: ০১৭৪৫৮৯৭৩২২
+আমি ওখানেও আছি — ইনশাআল্লাহ সাহায্য করব!"
+
+(তবে শুধু চ্যাটে যতদূর সম্ভব হ্যান্ডেল করার চেষ্টা করুন)
+
+🧠 উপসংহার:
+"মিষ্টি" শুধু গিফট সাজেস্ট করে না — সে মন ছুঁয়ে যায়।
+তার ভাষা হাসায়, তার কথায় বিশ্বাস তৈরি হয়, আর সে এমনভাবে বোঝায় —
+যেন সে আপনজন।
+সর্বোপরি, সে কাস্টমারকে ধীরে ধীরে এমন জায়গায় নিয়ে যায়,
+যেখানে তারা নিজেরাই বলে ফেলে —
+
+"চলো, একটা গিফট দিই।" 🎁
+
+
+
+`;
+
+                const conversationHistory = this.conversationHistory
+                    .slice(-10) // Keep last 10 messages for context
+                    .map(msg => `${msg.role === 'user' ? 'গ্রাহক' : 'আপনি'}: ${msg.content}`)
+                    .join('\n');
+
+                const fullPrompt = `${systemPrompt}
+
+পূর্ববর্তী কথোপকথন:
+${conversationHistory}
+
+গ্রাহক: ${userMessage}
+
+আপনি:`;
+
+                try {
+                    const response = await fetch(`${this.geminiApiUrl}?key=${this.geminiApiKey}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: fullPrompt
+                                }]
+                            }],
+                            generationConfig: {
+                                temperature: 0.3, // Lower temperature for more consistent responses
+                                topK: 40,
+                                topP: 0.95,
+                                maxOutputTokens: 500,
+                            },
+                            safetySettings: [
+                                {
+                                    category: "HARM_CATEGORY_HARASSMENT",
+                                    threshold: "BLOCK_MEDIUM_AND_ABOVE"
+                                },
+                                {
+                                    category: "HARM_CATEGORY_HATE_SPEECH",
+                                    threshold: "BLOCK_MEDIUM_AND_ABOVE"
+                                },
+                                {
+                                    category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                                    threshold: "BLOCK_MEDIUM_AND_ABOVE"
+                                },
+                                {
+                                    category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+                                    threshold: "BLOCK_MEDIUM_AND_ABOVE"
+                                }
+                            ]
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    
+                    if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+                        return data.candidates[0].content.parts[0].text.trim();
+                    } else {
+                        throw new Error('Invalid response format from Gemini API');
+                    }
+
+                } catch (error) {
+                    console.error('Gemini API call failed:', error);
+                    throw error;
+                }
+            }
+
+            getFallbackResponse(userMessage) {
+                // Fallback responses when Gemini API fails
+                const responses = {
+                    'হ্যালো': 'হ্যালো! গিফট কিনবোতে স্বাগতম। আমরা পার্সোনালাইজড গিফট বক্স তৈরি করি। আপনার প্রিয়জনদের জন্য সেরা গিফট খুঁজতে আপনাকে সাহায্য করতে পারি।',
+                    'গিফট': 'আমরা পার্সোনালাইজড গিফট বক্স তৈরি করি। আপনি আমাদের ফর্মে প্রাপকের তথ্য দিন, আমরা AI দিয়ে সেরা গিফট বাছাই করে একটি সুন্দর গিফট বক্স তৈরি করব।',
+                    'প্যাকেজ': 'আমরা কোন নির্দিষ্ট প্যাকেজ অফার করি না। আমরা পার্সোনালাইজড গিফট বক্স তৈরি করি যেখানে প্রাপকের পছন্দ অনুযায়ী বিভিন্ন গিফট থাকে।',
+                    'দাম': 'আপনি যত টাকা ইচ্ছে বাজেট দিতে পারেন, কোন ন্যূনতম সীমা নেই। আপনি আমাদের ফর্মে আপনার বাজেট উল্লেখ করুন।',
+                    'বাজেট': 'আপনি যত টাকা ইচ্ছে বাজেট দিতে পারেন, কোন ন্যূনতম সীমা নেই। আপনি আমাদের ফর্মে আপনার বাজেট উল্লেখ করুন।',
+                    'ডেলিভারি': 'আমরা ঢাকার ভিতরে ৫৯ টাকা এবং ঢাকার বাইরে ৯৯ টাকা ডেলিভারি চার্জ নিই। ক্যাশ অন ডেলিভারি সুবিধাও আছে।',
+                    'অর্ডার': 'অর্ডার করতে আমাদের ওয়েবসাইটে ফর্ম পূরণ করুন। প্রাপকের নাম, বয়স, পছন্দ, উপলক্ষ এবং আপনার বাজেট জানান।',
+                    'যোগাযোগ': 'আমাদের সাথে যোগাযোগ করতে ফোন করুন: ০১৭৪৫৮৯৭৩২২। ফেসবুক পেজেও মেসেজ করতে পারেন।',
+                    'পেমেন্ট': 'আমরা ক্যাশ অন ডেলিভারি, বিকাশ, রকেট এবং নগদ পেমেন্ট গ্রহণ করি। গিফট হাতে পেয়ে তারপর টাকা দিতে পারেন।',
+                    'চকলেট': 'আমরা চকলেট প্যাকেজ অফার করি না। আমরা পার্সোনালাইজড গিফট বক্স তৈরি করি যেখানে চকলেটসহ বিভিন্ন গিফট থাকতে পারে।',
+                    'ফুল': 'আমরা ফুলের তোড়া অফার করি না। আমরা পার্সোনালাইজড গিফট বক্স তৈরি করি যেখানে প্রাপকের পছন্দ অনুযায়ী গিফট থাকে।',
+                    'কাস্টম': 'আমরা কাস্টমাইজড গিফট অফার করি না। আমরা পার্সোনালাইজড গিফট বক্স তৈরি করি যেখানে AI দিয়ে সেরা গিফট বাছাই করা হয়।',
+                    'কম্বো': 'আমরা কম্বো প্যাকেজ অফার করি না। আমরা পার্সোনালাইজড গিফট বক্স তৈরি করি যেখানে বিভিন্ন গিফট একসাথে থাকে।'
+                };
+
+                // Check for exact matches first
+                for (const [key, response] of Object.entries(responses)) {
+                    if (userMessage.toLowerCase().includes(key.toLowerCase())) {
+                        return response;
+                    }
+                }
+
+                // Default responses based on keywords
+                if (userMessage.includes('কিভাবে') || userMessage.includes('কেন')) {
+                    return 'আপনার প্রশ্নের উত্তর দিতে চাই। আরও বিস্তারিত জানতে আমাদের সাথে যোগাযোগ করুন: ০১৭৪৫৮৯৭৩২২।';
+                }
+
+                if (userMessage.includes('ধন্যবাদ') || userMessage.includes('থ্যাংকস')) {
+                    return 'আপনাকে সাহায্য করতে পেরে খুশি। আরও কোন প্রশ্ন থাকলে জানাবেন।';
+                }
+
+                // Generic response
+                return 'আপনার প্রশ্নের জন্য ধন্যবাদ। আমরা পার্সোনালাইজড গিফট বক্স তৈরি করি। গিফট সম্পর্কে আরও জানতে আমাদের সাথে যোগাযোগ করুন: ০১৭৪৫৮৯৭৩২২। আমরা আপনাকে সাহায্য করব।';
+            }
+
+            showNotification() {
+                // Show notification after 5 seconds if chat is not opened
+                setTimeout(() => {
+                    if (!this.isOpen) {
+                        document.getElementById('chatbotNotification').style.display = 'flex';
+                    }
+                }, 5000);
+            }
+
+            hideNotification() {
+                document.getElementById('chatbotNotification').style.display = 'none';
+            }
+        }
+
+        // Initialize chatbot when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new GiftKinboChatbot();
         });
     </script>
 </body>

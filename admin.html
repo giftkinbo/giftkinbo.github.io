@@ -1545,8 +1545,8 @@
                                 <button class="update-btn" onclick="openStatusUpdateModal('${order.id}')">
                                     <i class="fas fa-edit"></i> স্ট্যাটাস
                                 </button>
-                                <button class="delete-btn" onclick="deleteOrder('${order.id}')">
-                                    <i class="fas fa-trash"></i> ডিলিট
+                                <button class="delete-btn" onclick="cancelOrder('${order.id}')">
+                                    <i class="fas fa-times-circle"></i> বাতিল
                                 </button>
                             </div>
                         </td>
@@ -1610,16 +1610,19 @@
             }
         };
 
-        // Delete order
-        window.deleteOrder = function(orderId) {
-            showCustomConfirm('আপনি কি নিশ্চিত যে আপনি এই অর্ডারটি ডিলিট করতে চান?', (isConfirmed) => {
+        // Cancel order
+        window.cancelOrder = function(orderId) {
+            showCustomConfirm('আপনি কি নিশ্চিত যে আপনি এই অর্ডারটি বাতিল করতে চান?', (isConfirmed) => {
                 if (isConfirmed) {
                     const orderRef = ref(database, `orders/${orderId}`);
-                    remove(orderRef).then(() => {
-                        showCustomAlert('অর্ডার সফলভাবে ডিলিট করা হয়েছে!');
+                    update(orderRef, {
+                        status: 'cancelled',
+                        cancelledAt: new Date().toISOString()
+                    }).then(() => {
+                        showCustomAlert('অর্ডার সফলভাবে বাতিল করা হয়েছে!');
                     }).catch((error) => {
-                        console.error('Error deleting order:', error);
-                        showCustomAlert('অর্ডার ডিলিট করতে সমস্যা হয়েছে।');
+                        console.error('Error cancelling order:', error);
+                        showCustomAlert('অর্ডার বাতিল করতে সমস্যা হয়েছে।');
                     });
                 }
             });

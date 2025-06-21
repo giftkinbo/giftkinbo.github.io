@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>মাস্টার শীট - Gift Kinbo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap" rel="stylesheet">
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+  </script>
+  <style>
+    body { font-family: 'Hind Siliguri', sans-serif; background: #f8f9fa; margin: 0; color: #222; }
+    .header { background: #2e8b57; color: #fff; padding: 1.5rem 0; text-align: center; }
+    .header h1 { margin: 0; font-size: 2rem; }
+    .tabs { display: flex; justify-content: center; background: #fff; box-shadow: 0 2px 8px #0001; }
+    .tab { padding: 1rem 2rem; cursor: pointer; border: none; background: none; font-size: 1.1rem; color: #2e8b57; transition: background 0.2s; }
+    .tab.active, .tab:hover { background: #e6f2ed; font-weight: bold; }
+    .container { max-width: 1200px; margin: 2rem auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 12px #0002; padding: 2rem; }
+    .summary-cards { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .card { flex: 1 1 200px; background: #f4f8f6; border-radius: 8px; padding: 1.2rem; text-align: center; box-shadow: 0 1px 4px #0001; }
+    .card h2 { margin: 0 0 0.5rem 0; font-size: 1.2rem; color: #2e8b57; }
+    .card .value { font-size: 2rem; font-weight: bold; color: #4682b4; }
+    .section { display: none; }
+    .section.active { display: block; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; background: #fff; }
+    th, td { padding: 0.8rem; border-bottom: 1px solid #eee; text-align: left; }
+    th { background: #e6f2ed; color: #2e8b57; }
+    .loading { text-align: center; padding: 2rem; color: #666; }
+    .error { text-align: center; padding: 2rem; color: #d32f2f; background: #ffebee; border-radius: 8px; }
+    .status-pending { color: #f57c00; font-weight: bold; }
+    .status-delivered { color: #388e3c; font-weight: bold; }
+    .status-cancelled { color: #d32f2f; font-weight: bold; }
+    .export-btn { background: #2e8b57; color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; margin: 1rem 0; }
+    .export-btn:hover { background: #1b5e20; }
+    @media (max-width: 800px) {
+      .summary-cards { flex-direction: column; }
+      .container { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>মাস্টার শীট - Gift Kinbo</h1>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showSection('orders')">অর্ডারসমূহ</button>
+    <button class="tab" onclick="showSection('financials')">আর্থিক হিসাব</button>
+    <button class="tab" onclick="showSection('inventory')">ইনভেন্টরি</button>
+    <button class="tab" onclick="showSection('customers')">গ্রাহক</button>
+  </div>
+  <div class="container">
+    <!-- Orders Section -->
+    <div id="orders" class="section active">
+      <div class="summary-cards">
+        <div class="card"><h2>মোট অর্ডার</h2><div class="value" id="totalOrders">0</div></div>
+        <div class="card"><h2>ডেলিভারি সম্পন্ন</h2><div class="value" id="deliveredOrders">0</div></div>
+        <div class="card"><h2>পেন্ডিং</h2><div class="value" id="pendingOrders">0</div></div>
+        <div class="card"><h2>বাতিল</h2><div class="value" id="cancelledOrders">0</div></div>
+      </div>
+      <button class="export-btn" onclick="exportOrders()">অর্ডার ডেটা এক্সপোর্ট করুন</button>
+      <div id="ordersTable">
+        <div class="loading">ডেটা লোড হচ্ছে...</div>
+      </div>
+    </div>
+    <!-- Financials Section -->
+    <div id="financials" class="section">
+      <div class="summary-cards">
+        <div class="card"><h2>মোট আয়</h2><div class="value" id="totalIncome">৳0</div></div>
+        <div class="card"><h2>মোট খরচ</h2><div class="value" id="totalExpense">৳0</div></div>
+        <div class="card"><h2>নিট লাভ</h2><div class="value" id="netProfit">৳0</div></div>
+      </div>
+      <button class="export-btn" onclick="exportFinancials()">আর্থিক ডেটা এক্সপোর্ট করুন</button>
+      <div id="financialsTable">
+        <div class="loading">ডেটা লোড হচ্ছে...</div>
+      </div>
+    </div>
+    <!-- Inventory Section -->
+    <div id="inventory" class="section">
+      <div class="summary-cards">
+        <div class="card"><h2>মোট আইটেম</h2><div class="value" id="totalItems">0</div></div>
+        <div class="card"><h2>স্টক ভ্যালু</h2><div class="value" id="stockValue">৳0</div></div>
+      </div>
+      <button class="export-btn" onclick="exportInventory()">ইনভেন্টরি ডেটা এক্সপোর্ট করুন</button>
+      <div id="inventoryTable">
+        <div class="loading">ডেটা লোড হচ্ছে...</div>
+      </div>
+    </div>
+    <!-- Customers Section -->
+    <div id="customers" class="section">
+      <div class="summary-cards">
+        <div class="card"><h2>মোট গ্রাহক</h2><div class="value" id="totalCustomers">0</div></div>
+        <div class="card"><h2>শীর্ষ গ্রাহক</h2><div class="value" id="topCustomer">-</div></div>
+      </div>
+      <button class="export-btn" onclick="exportCustomers()">গ্রাহক ডেটা এক্সপোর্ট করুন</button>
+      <div id="customersTable">
+        <div class="loading">ডেটা লোড হচ্ছে...</div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+    // Firebase configuration - using the correct config from your other files
+    const firebaseConfig = {
+      apiKey: "AIzaSyCSyXJeftEfkwQ_FoQlg1sEZ3PZv9xjkLI",
+      authDomain: "gift-kinbo-bd.firebaseapp.com",
+      projectId: "gift-kinbo-bd",
+      storageBucket: "gift-kinbo-bd.firebasestorage.app",
+      messagingSenderId: "896761493540",
+      appId: "1:896761493540:web:21e49df2ca453fb80180b1",
+      measurementId: "G-ZVXSHQT95M",
+      databaseURL: "https://gift-kinbo-bd-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let ordersData = [];
+    let customersData = {};
+
+    // Load all data on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      loadAllData();
+    });
+
+    async function loadAllData() {
+      try {
+        await Promise.all([
+          loadOrders(),
+          loadCustomers()
+        ]);
+      } catch (error) {
+        console.error('Error loading data:', error);
+        showError('ডেটা লোড করতে সমস্যা হয়েছে');
+      }
+    }
+
+    async function loadOrders() {
+      try {
+        console.log('Loading orders...');
+        const ordersRef = collection(db, 'orders');
+        const q = query(ordersRef, orderBy('timestamp', 'desc'));
+        const snapshot = await getDocs(q);
+        
+        ordersData = [];
+        console.log('Orders snapshot size:', snapshot.size);
+        
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          console.log('Order data:', data);
+          ordersData.push({
+            id: doc.id,
+            ...data,
+            timestamp: data.timestamp ? data.timestamp.toDate() : new Date()
+          });
+        });
+
+        console.log('Total orders loaded:', ordersData.length);
+        updateOrdersSection();
+        updateFinancialsSection();
+      } catch (error) {
+        console.error('Error loading orders:', error);
+        showError('অর্ডার ডেটা লোড করতে সমস্যা হয়েছে: ' + error.message);
+      }
+    }
+
+    async function loadCustomers() {
+      try {
+        console.log('Loading customers...');
+        const customersRef = collection(db, 'customers');
+        const snapshot = await getDocs(customersRef);
+        
+        customersData = {};
+        console.log('Customers snapshot size:', snapshot.size);
+        
+        snapshot.forEach(doc => {
+          customersData[doc.id] = doc.data();
+        });
+
+        updateCustomersSection();
+      } catch (error) {
+        console.error('Error loading customers:', error);
+        // Continue without customer data
+      }
+    }
+
+    function updateOrdersSection() {
+      const totalOrders = ordersData.length;
+      const deliveredOrders = ordersData.filter(order => order.status === 'delivered').length;
+      const pendingOrders = ordersData.filter(order => order.status === 'pending').length;
+      const cancelledOrders = ordersData.filter(order => order.status === 'cancelled').length;
+
+      document.getElementById('totalOrders').textContent = totalOrders;
+      document.getElementById('deliveredOrders').textContent = deliveredOrders;
+      document.getElementById('pendingOrders').textContent = pendingOrders;
+      document.getElementById('cancelledOrders').textContent = cancelledOrders;
+
+      const tableHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>অর্ডার আইডি</th>
+              <th>তারিখ</th>
+              <th>গ্রাহক</th>
+              <th>বাজেট</th>
+              <th>স্ট্যাটাস</th>
+              <th>পেমেন্ট মেথড</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${ordersData.map(order => `
+              <tr>
+                <td>${order.id}</td>
+                <td>${formatDate(order.timestamp)}</td>
+                <td>${order.customerName || 'N/A'}</td>
+                <td>৳${order.budget || 0}</td>
+                <td class="status-${order.status}">${getStatusText(order.status)}</td>
+                <td>${order.paymentMethod || 'N/A'}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+      
+      document.getElementById('ordersTable').innerHTML = tableHTML;
+    }
+
+    function updateFinancialsSection() {
+      const totalIncome = ordersData
+        .filter(order => order.status === 'delivered')
+        .reduce((sum, order) => sum + (parseInt(order.budget) || 0), 0);
+      
+      const totalExpense = totalIncome * 0.6; // Assuming 60% cost
+      const netProfit = totalIncome - totalExpense;
+
+      document.getElementById('totalIncome').textContent = `৳${totalIncome.toLocaleString()}`;
+      document.getElementById('totalExpense').textContent = `৳${totalExpense.toLocaleString()}`;
+      document.getElementById('netProfit').textContent = `৳${netProfit.toLocaleString()}`;
+
+      const financialsHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>তারিখ</th>
+              <th>অর্ডার আইডি</th>
+              <th>গ্রাহক</th>
+              <th>আয়</th>
+              <th>খরচ</th>
+              <th>লাভ</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${ordersData
+              .filter(order => order.status === 'delivered')
+              .map(order => {
+                const income = parseInt(order.budget) || 0;
+                const expense = income * 0.6;
+                const profit = income - expense;
+                return `
+                  <tr>
+                    <td>${formatDate(order.timestamp)}</td>
+                    <td>${order.id}</td>
+                    <td>${order.customerName || 'N/A'}</td>
+                    <td>৳${income.toLocaleString()}</td>
+                    <td>৳${expense.toLocaleString()}</td>
+                    <td>৳${profit.toLocaleString()}</td>
+                  </tr>
+                `;
+              }).join('')}
+          </tbody>
+        </table>
+      `;
+      
+      document.getElementById('financialsTable').innerHTML = financialsHTML;
+    }
+
+    function updateCustomersSection() {
+      const customerStats = {};
+      
+      ordersData.forEach(order => {
+        const customerId = order.customerId || order.customerName;
+        if (!customerStats[customerId]) {
+          customerStats[customerId] = {
+            name: order.customerName || customerId,
+            phone: order.customerPhone || 'N/A',
+            orders: 0,
+            totalSpent: 0
+          };
+        }
+        customerStats[customerId].orders++;
+        customerStats[customerId].totalSpent += parseInt(order.budget) || 0;
+      });
+
+      const customers = Object.values(customerStats).sort((a, b) => b.totalSpent - a.totalSpent);
+      const totalCustomers = customers.length;
+      const topCustomer = customers.length > 0 ? customers[0].name : '-';
+
+      document.getElementById('totalCustomers').textContent = totalCustomers;
+      document.getElementById('topCustomer').textContent = topCustomer;
+
+      const customersHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>নাম</th>
+              <th>মোবাইল</th>
+              <th>মোট অর্ডার</th>
+              <th>মোট খরচ</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${customers.map(customer => `
+              <tr>
+                <td>${customer.name}</td>
+                <td>${customer.phone}</td>
+                <td>${customer.orders}</td>
+                <td>৳${customer.totalSpent.toLocaleString()}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+      
+      document.getElementById('customersTable').innerHTML = customersHTML;
+    }
+
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      const idx = ['orders','financials','inventory','customers'].indexOf(id);
+      document.querySelectorAll('.tab')[idx].classList.add('active');
+    }
+
+    function formatDate(date) {
+      if (!date) return 'N/A';
+      return new Date(date).toLocaleDateString('bn-BD');
+    }
+
+    function getStatusText(status) {
+      const statusMap = {
+        'pending': 'পেন্ডিং',
+        'delivered': 'ডেলিভারি সম্পন্ন',
+        'cancelled': 'বাতিল'
+      };
+      return statusMap[status] || status;
+    }
+
+    function showError(message) {
+      const errorHTML = `<div class="error">${message}</div>`;
+      document.querySelectorAll('.section').forEach(section => {
+        const tableDiv = section.querySelector('div[id$="Table"]');
+        if (tableDiv) {
+          tableDiv.innerHTML = errorHTML;
+        }
+      });
+    }
+
+    // Export functions
+    function exportOrders() {
+      const csv = convertToCSV(ordersData, ['id', 'timestamp', 'customerName', 'budget', 'status', 'paymentMethod']);
+      downloadCSV(csv, 'orders.csv');
+    }
+
+    function exportFinancials() {
+      const financialData = ordersData
+        .filter(order => order.status === 'delivered')
+        .map(order => {
+          const income = parseInt(order.budget) || 0;
+          const expense = income * 0.6;
+          const profit = income - expense;
+          return {
+            date: formatDate(order.timestamp),
+            orderId: order.id,
+            customer: order.customerName || 'N/A',
+            income: income,
+            expense: expense,
+            profit: profit
+          };
+        });
+      const csv = convertToCSV(financialData, ['date', 'orderId', 'customer', 'income', 'expense', 'profit']);
+      downloadCSV(csv, 'financials.csv');
+    }
+
+    function exportCustomers() {
+      const customerStats = {};
+      ordersData.forEach(order => {
+        const customerId = order.customerId || order.customerName;
+        if (!customerStats[customerId]) {
+          customerStats[customerId] = {
+            name: order.customerName || customerId,
+            phone: order.customerPhone || 'N/A',
+            orders: 0,
+            totalSpent: 0
+          };
+        }
+        customerStats[customerId].orders++;
+        customerStats[customerId].totalSpent += parseInt(order.budget) || 0;
+      });
+      
+      const customers = Object.values(customerStats);
+      const csv = convertToCSV(customers, ['name', 'phone', 'orders', 'totalSpent']);
+      downloadCSV(csv, 'customers.csv');
+    }
+
+    function exportInventory() {
+      // Placeholder for inventory export
+      alert('ইনভেন্টরি ডেটা এখনও যোগ করা হয়নি');
+    }
+
+    function convertToCSV(data, fields) {
+      const headers = fields.join(',');
+      const rows = data.map(item => 
+        fields.map(field => {
+          const value = item[field];
+          return typeof value === 'string' && value.includes(',') ? `"${value}"` : value;
+        }).join(',')
+      );
+      return [headers, ...rows].join('\n');
+    }
+
+    function downloadCSV(csv, filename) {
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', filename);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Make functions globally available
+    window.showSection = showSection;
+    window.exportOrders = exportOrders;
+    window.exportFinancials = exportFinancials;
+    window.exportCustomers = exportCustomers;
+    window.exportInventory = exportInventory;
+  </script>
+</body>
+</html> 

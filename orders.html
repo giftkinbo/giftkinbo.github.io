@@ -128,6 +128,117 @@
             font-weight: 500;
         }
 
+        /* User Profile Dropdown */
+        .user-profile-dropdown {
+            position: relative;
+        }
+
+        .user-profile-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 75, 139, 0.1);
+            margin-top: 0.5rem;
+        }
+
+        .user-profile-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .user-profile-menu::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid var(--white);
+        }
+
+        .user-profile-header {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 75, 139, 0.1);
+            text-align: center;
+        }
+
+        .user-profile-header h4 {
+            color: var(--text-color);
+            font-size: 1rem;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .user-profile-header p {
+            color: var(--light-text);
+            font-size: 0.9rem;
+            margin: 0.5rem 0 0 0;
+        }
+
+        .user-profile-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .user-profile-menu li {
+            border-bottom: 1px solid rgba(255, 75, 139, 0.05);
+        }
+
+        .user-profile-menu li:last-child {
+            border-bottom: none;
+        }
+
+        .user-profile-menu a,
+        .user-profile-menu button {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .user-profile-menu a:hover,
+        .user-profile-menu button:hover {
+            background-color: var(--light-bg);
+            color: var(--primary-color);
+        }
+
+        .user-profile-menu i {
+            font-size: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .user-profile-menu .signout-btn {
+            color: #e74c3c;
+        }
+
+        .user-profile-menu .signout-btn:hover {
+            background-color: #fdf2f2;
+            color: #c0392b;
+        }
+
         /* Orders Container Styles */
         .orders-container {
             max-width: 1200px;
@@ -360,6 +471,32 @@
             background: #c82333;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+        }
+
+        /* Cancelled Order Message */
+        .cancelled-message {
+            padding: 1rem 1.5rem;
+            background: #f8d7da;
+            color: #721c24;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid #f5c6cb;
+        }
+
+        .cancelled-message i {
+            font-size: 1.2rem;
+            color: #721c24;
+        }
+
+        .cancelled-message small {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            color: #721c24;
         }
 
         /* Status Update Modal */
@@ -920,9 +1057,37 @@
                     <button id="signInButton" class="auth-button">
                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
                     </button>
-                    <div id="userProfile" class="user-profile" style="display: none;">
+                    <div id="userProfile" class="user-profile-dropdown" style="display: none;">
+                        <div class="user-profile" id="userProfileTrigger">
                         <img id="userPhoto" src="" alt="User Photo">
                         <span id="userName" class="user-name"></span>
+                    </div>
+                        <div class="user-profile-menu" id="userProfileMenu">
+                            <div class="user-profile-header">
+                                <h4 id="profileUserName"></h4>
+                                <p id="profileUserEmail"></p>
+                            </div>
+                            <ul>
+                                <li>
+                                    <a href="orders.html">
+                                        <i class="fas fa-box"></i>
+                                        আমার অর্ডার
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="index.html#order">
+                                        <i class="fas fa-plus"></i>
+                                        নতুন অর্ডার
+                                    </a>
+                                </li>
+                                <li>
+                                    <button class="signout-btn" id="signOutButton">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        সাইন আউট
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1148,6 +1313,8 @@
             const userProfile = document.getElementById('userProfile');
             const userPhoto = document.getElementById('userPhoto');
             const userName = document.getElementById('userName');
+            const profileUserName = document.getElementById('profileUserName');
+            const profileUserEmail = document.getElementById('profileUserEmail');
             const ordersContainer = document.getElementById('ordersContainer');
 
             if (user) {
@@ -1156,6 +1323,10 @@
                 userProfile.style.display = 'flex';
                 userPhoto.src = user.photoURL;
                 userName.textContent = user.displayName;
+                
+                // Populate profile dropdown information
+                if (profileUserName) profileUserName.textContent = user.displayName;
+                if (profileUserEmail) profileUserEmail.textContent = user.email;
 
                 // Load orders for the current user
                 loadUserOrders(user.uid);
@@ -1166,6 +1337,40 @@
                 ordersContainer.innerHTML = '<div class="no-orders"><p>অনুগ্রহ করে অর্ডার দেখার জন্য সাইন ইন করুন।</p></div>';
             }
         });
+
+        // User Profile Dropdown Functionality
+        const userProfileTrigger = document.getElementById('userProfileTrigger');
+        const userProfileMenu = document.getElementById('userProfileMenu');
+        const signOutButton = document.getElementById('signOutButton');
+
+        // Toggle dropdown when profile is clicked
+        if (userProfileTrigger) {
+            userProfileTrigger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userProfileMenu.classList.toggle('show');
+            });
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.user-profile-dropdown')) {
+                userProfileMenu.classList.remove('show');
+            }
+        });
+
+        // Sign out functionality
+        if (signOutButton) {
+            signOutButton.addEventListener('click', async () => {
+                try {
+                    await signOut(auth);
+                    console.log('Successfully signed out');
+                    userProfileMenu.classList.remove('show');
+                } catch (error) {
+                    console.error('Error signing out:', error);
+                    showCustomAlert('দুঃখিত, সাইন আউট করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+                }
+            });
+        }
 
         // Function to load user orders
         function loadUserOrders(userId) {
@@ -1252,9 +1457,16 @@
                                 ${getStatusText(order.status)}
                             </div>
                             <div class="order-actions">
-                                <button class="order-action-btn delete" onclick="window.deleteOrder('${order.id}')">
+                                ${order.status !== 'cancelled' ? `
+                                    <button class="order-action-btn delete" onclick="window.deleteOrder('${order.id}')">
                                     <i class="fas fa-times-circle"></i> অর্ডার বাতিল করুন
                                 </button>
+                                ` : `
+                                    <div class="cancelled-message">
+                                        <i class="fas fa-times-circle"></i> অর্ডার বাতিল করা হয়েছে
+                                        ${order.cancelledAt ? `<br><small>বাতিলের তারিখ: ${formatDate(order.cancelledAt)}</small>` : ''}
+                                    </div>
+                                `}
                             </div>
                         </div>
                     `).join('');
@@ -1339,17 +1551,6 @@
             }
         });
 
-        // Sign out
-        document.getElementById('userProfile').addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                console.log('Successfully signed out');
-            } catch (error) {
-                console.error('Error signing out:', error);
-                showCustomAlert('দুঃখিত, সাইন আউট করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
-            }
-        });
-
         // Mobile Menu Toggle
         document.addEventListener('DOMContentLoaded', function() {
             const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
@@ -1427,10 +1628,13 @@
                 if (isConfirmed) {
             try {
                 const orderRef = ref(database, `orders/${orderId}`);
-                await remove(orderRef);
+                        await update(orderRef, { 
+                            status: 'cancelled',
+                            cancelledAt: new Date().toISOString()
+                        });
                         showCustomAlert('অর্ডার সফলভাবে বাতিল করা হয়েছে!');
             } catch (error) {
-                console.error('Error deleting order:', error);
+                        console.error('Error cancelling order:', error);
                 showCustomAlert('অর্ডার বাতিল করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
             }
         }
