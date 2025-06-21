@@ -1264,7 +1264,29 @@
         }
 
         .custom-modal-ok-btn:hover {
-            background-color: var(--secondary-color);
+            background-color: #45a049;
+        }
+
+        .custom-modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 20px;
+        }
+
+        .custom-modal-cancel-btn {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .custom-modal-cancel-btn:hover {
+            background-color: #5a6268;
         }
     </style>
 </head>
@@ -1384,8 +1406,8 @@
                         <label for="recipientGender">জেন্ডার</label>
                         <select id="recipientGender" name="recipientGender" required>
                             <option value="">জেন্ডার বাছাই করুন</option>
-                            <option value="male">পুরুষ</option>
-                            <option value="female">মহিলা</option>
+                            <option value="male">ছেলে</option>
+                            <option value="female">মেয়ে</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -1475,7 +1497,7 @@
                                 <div class="payment-number-box">
                                     <span class="payment-label">পেমেন্ট নাম্বার:</span>
                                     <span class="payment-number" id="paymentNumber"></span>
-                                    <button class="copy-number-btn" onclick="copyPaymentNumber()">
+                                    <button type="button" class="copy-number-btn" onclick="copyPaymentNumber(event)">
                                         <i class="fas fa-copy"></i> কপি করুন
                                     </button>
                                 </div>
@@ -1570,6 +1592,18 @@
             <span class="custom-modal-close">&times;</span>
             <p id="customAlertMessage"></p>
             <button id="customAlertOkBtn" class="custom-modal-ok-btn">ঠিক আছে</button>
+        </div>
+    </div>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="customConfirm" class="custom-modal">
+        <div class="custom-modal-content">
+            <span class="custom-modal-close">&times;</span>
+            <p id="customConfirmMessage"></p>
+            <div class="custom-modal-buttons">
+                <button id="customConfirmYesBtn" class="custom-modal-ok-btn">হ্যাঁ, সাবমিট করুন</button>
+                <button id="customConfirmNoBtn" class="custom-modal-cancel-btn">না, বাতিল করুন</button>
+            </div>
         </div>
     </div>
 
@@ -1688,6 +1722,57 @@
             }
         });
 
+        // Custom Confirmation Modal
+        const customConfirm = document.getElementById('customConfirm');
+        const customConfirmMessage = document.getElementById('customConfirmMessage');
+        const customConfirmYesBtn = document.getElementById('customConfirmYesBtn');
+        const customConfirmNoBtn = document.getElementById('customConfirmNoBtn');
+        const customConfirmClose = customConfirm.querySelector('.custom-modal-close');
+
+        function showCustomConfirm(message) {
+            return new Promise((resolve) => {
+                if (customConfirmMessage) {
+                    customConfirmMessage.innerHTML = message;
+                }
+                if (customConfirm) {
+                    customConfirm.classList.add('show');
+                }
+
+                const handleYes = () => {
+                    closeCustomConfirm();
+                    resolve(true);
+                };
+
+                const handleNo = () => {
+                    closeCustomConfirm();
+                    resolve(false);
+                };
+
+                const handleClose = () => {
+                    closeCustomConfirm();
+                    resolve(false);
+                };
+
+                if (customConfirmYesBtn) customConfirmYesBtn.addEventListener('click', handleYes, { once: true });
+                if (customConfirmNoBtn) customConfirmNoBtn.addEventListener('click', handleNo, { once: true });
+                if (customConfirmClose) customConfirmClose.addEventListener('click', handleClose, { once: true });
+                
+                window.addEventListener('click', function handleOutsideClick(event) {
+                    if (event.target == customConfirm) {
+                        closeCustomConfirm();
+                        resolve(false);
+                        window.removeEventListener('click', handleOutsideClick);
+                    }
+                });
+            });
+        }
+
+        function closeCustomConfirm() {
+            if (customConfirm) {
+                customConfirm.classList.remove('show');
+            }
+        }
+
         // Auth state observer
         onAuthStateChanged(auth, (user) => {
             const signInButton = document.getElementById('signInButton');
@@ -1761,6 +1846,13 @@
                 // Check if user is signed in
                 if (!auth.currentUser) {
                     showCustomAlert('অনুগ্রহ করে প্রথমে সাইন ইন করুন।');
+                    return;
+                }
+
+                // Show confirmation dialog
+                const confirmed = await showCustomConfirm('আপনি কি নিশ্চিত যে আপনি এই অর্ডারটি সাবমিট করতে চান?');
+                if (!confirmed) {
+                    console.log('Order submission cancelled by user');
                     return;
                 }
 
@@ -2065,7 +2157,13 @@
         };
 
         // Copy payment number function
-        function copyPaymentNumber() {
+        function copyPaymentNumber(event) {
+            // Prevent event from bubbling up to form
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
             const paymentNumber = document.getElementById('paymentNumber').textContent;
             navigator.clipboard.writeText(paymentNumber).then(() => {
                 const copyBtn = document.querySelector('.copy-number-btn');
@@ -2074,8 +2172,36 @@
                 setTimeout(() => {
                     copyBtn.innerHTML = originalText;
                 }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy payment number:', err);
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = paymentNumber;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                const copyBtn = document.querySelector('.copy-number-btn');
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> কপি করা হয়েছে';
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                }, 2000);
             });
         }
+
+        // Additional safety: Prevent form submission when copy button is clicked
+        document.addEventListener('DOMContentLoaded', function() {
+            const copyBtn = document.querySelector('.copy-number-btn');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    return false;
+                });
+            }
+        });
     </script>
 
     <script>
