@@ -1265,7 +1265,12 @@
                                     <button class="copy-btn" onclick="copyText(document.getElementById('modalBudget').textContent)"><i class="fas fa-copy"></i></button>
                                     <span class="copy-tooltip">কপি করুন</span>
                                 </div>
-                                
+                                <div class="info-item" id="customerBkashItem" style="display: none;">
+                                    <i class="fab fa-whatsapp"></i>
+                                    <div><strong>গ্রাহকের বিকাশ নাম্বার:</strong> <span id="modalCustomerBkashNumber"></span></div>
+                                    <button class="copy-btn" onclick="copyText(document.getElementById('modalCustomerBkashNumber').textContent)"><i class="fas fa-copy"></i></button>
+                                    <span class="copy-tooltip">কপি করুন</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1678,6 +1683,17 @@
             document.getElementById('modalDeliveryAddress').textContent = order.deliveryAddress || 'N/A';
             document.getElementById('modalRecipientPhone').textContent = order.recipientPhone || 'N/A';
             document.getElementById('modalBudget').textContent = order.budget || 'N/A';
+            
+            // Customer bKash Number (show only if payment method is bKash and number exists)
+            const customerBkashItem = document.getElementById('customerBkashItem');
+            const modalCustomerBkashNumber = document.getElementById('modalCustomerBkashNumber');
+            
+            if (order.paymentMethod === 'bkash' && order.customerBkashNumber) {
+                modalCustomerBkashNumber.textContent = order.customerBkashNumber;
+                customerBkashItem.style.display = 'flex';
+            } else {
+                customerBkashItem.style.display = 'none';
+            }
         }
 
         window.copyText = function(text) {
@@ -1699,6 +1715,12 @@
                            `বয়স: ${document.getElementById('modalRecipientAge').textContent}\n` +
                            `পছন্দ-অপছন্দ: ${document.getElementById('modalRecipientPreferences').textContent}\n` +
                            `বাজেট: ${document.getElementById('modalBudget').textContent} টাকা`;
+                    
+                    // Add customer bKash number if it exists
+                    const customerBkashItem = document.getElementById('customerBkashItem');
+                    if (customerBkashItem.style.display !== 'none') {
+                        text += `\nগ্রাহকের বিকাশ নাম্বার: ${document.getElementById('modalCustomerBkashNumber').textContent}`;
+                    }
                     break;
                 case 'sender':
                     text = `গ্রাহকের তথ্য:\n` +

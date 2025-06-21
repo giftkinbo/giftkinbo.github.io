@@ -731,10 +731,10 @@
 
         footer::before {
             content: '';
-            position: absolute;
+                position: absolute;
             top: 0;
-            left: 0;
-            right: 0;
+                left: 0;
+                right: 0;
             height: 4px;
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
         }
@@ -1617,6 +1617,14 @@
                                 <option value="rocket">রকেট</option>
                                 <option value="nagad">নগদ</option>
                             </select>
+                            
+                            <!-- Customer bKash Number Input (shown only when bKash is selected) -->
+                            <div id="customerBkashInput" class="form-group" style="display: none; margin-top: 1rem;">
+                                <label for="customerBkashNumber">আপনার বিকাশ নাম্বার</label>
+                                <input type="tel" id="customerBkashNumber" name="customerBkashNumber" placeholder="যেমন: 01712345678" pattern="[0-9]+" title="শুধু সংখ্যা দিন">
+                                <small style="color: #666; font-size: 0.9rem;">আপনার বিকাশ নাম্বার দিন যেখান থেকে টাকা পাঠাবেন</small>
+                            </div>
+                            
                             <div id="paymentNumberDisplay" class="payment-number-display" style="display: none;">
                                 <div class="payment-number-box">
                                     <span class="payment-label">পেমেন্ট নাম্বার:</span>
@@ -1687,14 +1695,15 @@
                     <div class="faq-item">
                         <div class="faq-question">ডেলিভারি চার্জ কত?</div>
                         <div class="faq-answer">
-                            <p>ডেলিভারি চার্জ আলাদাভাবে নির্ধারিত হবে এবং আপনার চূড়ান্ত বিলের সাথে যুক্ত করা হবে। আমরা নির্ভরযোগ্য ডেলিভারির জন্য RedX ব্যবহার করি।</p>
+                            <p> ঢাকার ভেতরে 59 টাকা এবং ঢাকার বাইরে 99 টাকা। ডেলিভারি চার্জ আলাদাভাবে নির্ধারিত হবে এবং আপনার চূড়ান্ত বিলের সাথে যুক্ত করা হবে। আমরা নির্ভরযোগ্য ডেলিভারির জন্য RedX ব্যবহার করি।</p>
                         </div>
                     </div>
                     <div class="faq-item">
                         <div class="faq-question">গিফট বক্সে কি কি জিনিস থাকে? </div>
                         <div class="faq-answer">
                             <ul>
-                                <li>৭ বছরের মেয়ের জন্য জন্মদিন উপলক্ষে 399 টাকায় সম্ভাব্য গিফট এর লিস্ট।</li>
+                                <li>গিফট বক্সে নির্দিষ্ট একটি গিফট থাকে না। আমরা আপনার দেওয়া তথ্যের ভিত্তিতে একাধিক গিফট সংগ্রহ করে একটি গিফট বক্স তৈরি করে ডেলিভারি করি।</li>
+                                <li>উদাহরন স্বরূপ ৭ বছরের মেয়ের জন্য জন্মদিন উপলক্ষে 399 টাকায় সম্ভাব্য গিফট বক্সে থাকতে পারে</li>
                                 <li>রঙ পেনসিল (১২ রঙ)</li>
                                 <li>কার্টুন পেনসিল বক্স</li>
                                 <li>স্টিকার শিট (প্রিন্সেস থিম)</li>
@@ -1737,12 +1746,12 @@
             <div class="footer-section">
                 <h3><i class="fas fa-gift"></i> গিফট কিনবো</h3>
                 <p>বাংলাদেশের প্রথম এবং একমাত্র গিফট সার্ভিস যেখানে আপনি আপনার প্রিয়জনদের জন্য পারফেক্ট গিফট অর্ডার করতে পারেন।</p>
-                <div class="social-links">
+            <div class="social-links">
                     <a href="https://facebook.com/giftkinbobd" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
                     <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
                     <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
                     <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                </div>
+            </div>
             </div>
             
             <div class="footer-section">
@@ -2040,6 +2049,7 @@
                         deliveryAddress: document.getElementById('deliveryAddress').value,
                         deliveryArea: document.getElementById('deliveryArea').value,
                         paymentMethod: document.getElementById('paymentMethod').value,
+                        customerBkashNumber: document.getElementById('customerBkashNumber').value,
                         orderDate: new Date().toISOString(),
                         status: 'pending',
                         userId: auth.currentUser.uid,
@@ -2054,6 +2064,17 @@
                     for (const field of requiredFields) {
                         if (!formData[field]) {
                             throw new Error(`দয়া করে ${field} ফিল্ডটি পূরণ করুন`);
+                        }
+                    }
+
+                    // Validate customer bKash number if bKash is selected
+                    if (formData.paymentMethod === 'bkash') {
+                        if (!formData.customerBkashNumber) {
+                            throw new Error('দয়া করে আপনার বিকাশ নাম্বার দিন');
+                        }
+                        const bkashRegex = /^01[3-9]\d{8}$/;
+                        if (!bkashRegex.test(formData.customerBkashNumber)) {
+                            throw new Error('দয়া করে সঠিক বিকাশ নাম্বার দিন');
                         }
                     }
 
@@ -2241,11 +2262,11 @@
             function handleBengaliNumeralConversion(element) {
                 const cursorPosition = element.selectionStart;
                 const oldValue = element.value;
-                const newValue = convertBengaliToEnglish(oldValue);
-                
-                if (oldValue !== newValue) {
+                    const newValue = convertBengaliToEnglish(oldValue);
+                    
+                    if (oldValue !== newValue) {
                     element.value = newValue;
-                    // Restore cursor position
+                        // Restore cursor position
                     element.setSelectionRange(cursorPosition, cursorPosition);
                 }
             }
@@ -2290,6 +2311,8 @@
             const paymentDescription = document.getElementById('paymentDescription');
             const paymentNumberDisplay = document.getElementById('paymentNumberDisplay');
             const paymentNumber = document.getElementById('paymentNumber');
+            const customerBkashInput = document.getElementById('customerBkashInput');
+            const customerBkashNumber = document.getElementById('customerBkashNumber');
             const budgetAmount = document.getElementById('budgetAmount');
             const deliveryAmount = document.getElementById('deliveryAmount');
             const totalAmount = document.getElementById('totalAmount');
@@ -2303,7 +2326,7 @@
                     number: ''
                 },
                 'bkash': {
-                    description: 'অর্ডার কনফার্ম করার পর 01745897322 এই বিকাশ নাম্বারে টাকা পাঠাবেন',
+                    description: 'অর্ডার কনফার্ম করার পর আমাদের বিকাশ নাম্বারে টাকা পাঠাবেন। আপনার বিকাশ নাম্বার দিয়ে অর্ডার করুন।',
                     number: '01745897322'
                 },
                 'rocket': {
@@ -2340,9 +2363,15 @@
                 
                 if (method === 'cod') {
                     paymentNumberDisplay.style.display = 'none';
+                    customerBkashInput.style.display = 'none';
+                } else if (method === 'bkash') {
+                    paymentNumber.textContent = info.number;
+                    paymentNumberDisplay.style.display = 'block';
+                    customerBkashInput.style.display = 'block';
                 } else {
                     paymentNumber.textContent = info.number;
                     paymentNumberDisplay.style.display = 'block';
+                    customerBkashInput.style.display = 'none';
                 }
             }
 
@@ -2353,6 +2382,15 @@
             // Handle payment method change
             paymentMethod.addEventListener('change', function() {
                 updatePaymentDisplay(this.value);
+            });
+
+            // Handle customer bKash number input
+            customerBkashNumber.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/[^\d]/g, '');
+                if (value.length > 11) {
+                    value = value.slice(0, 11);
+                }
+                e.target.value = value;
             });
 
             // Update when budget or delivery area changes

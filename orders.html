@@ -1238,6 +1238,7 @@
                                     <p><strong>বাজেট:</strong> ৳${order.budget || 'N/A'}</p>
                                     <p><strong>পছন্দ-অপছন্দ:</strong> ${order.preferences || 'উল্লেখ করা হয়নি'}</p>
                                     <p><strong>পেমেন্ট মেথড:</strong> ${getPaymentMethodText(order.paymentMethod)}</p>
+                                    ${order.paymentMethod === 'bkash' && order.customerBkashNumber ? `<p><strong>গ্রাহকের বিকাশ নাম্বার:</strong> ${order.customerBkashNumber}</p>` : ''}
                                 </div>
                                 <div class="detail-group">
                                     <h4><i class="fas fa-truck"></i> ডেলিভারি তথ্য</h4>
@@ -1424,15 +1425,15 @@
         window.deleteOrder = async function(orderId) {
             showCustomConfirm('আপনি কি নিশ্চিত যে এই অর্ডারটি বাতিল করতে চান?', async (isConfirmed) => {
                 if (isConfirmed) {
-                    try {
-                        const orderRef = ref(database, `orders/${orderId}`);
-                        await remove(orderRef);
+            try {
+                const orderRef = ref(database, `orders/${orderId}`);
+                await remove(orderRef);
                         showCustomAlert('অর্ডার সফলভাবে বাতিল করা হয়েছে!');
-                    } catch (error) {
-                        console.error('Error deleting order:', error);
-                        showCustomAlert('অর্ডার বাতিল করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
-                    }
-                }
+            } catch (error) {
+                console.error('Error deleting order:', error);
+                showCustomAlert('অর্ডার বাতিল করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+            }
+        }
             });
         };
     </script>
