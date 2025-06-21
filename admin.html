@@ -1116,6 +1116,13 @@
                                     <button class="copy-btn" onclick="copyText(document.getElementById('modalRecipientPreferences').textContent)"><i class="fas fa-copy"></i></button>
                                     <span class="copy-tooltip">কপি করুন</span>
                                 </div>
+                                <div class="info-item">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <div><strong>বাজেট:</strong> <span id="modalBudget"></span> টাকা</div>
+                                    <button class="copy-btn" onclick="copyText(document.getElementById('modalBudget').textContent)"><i class="fas fa-copy"></i></button>
+                                    <span class="copy-tooltip">কপি করুন</span>
+                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -1170,12 +1177,6 @@
                                     <i class="fas fa-phone"></i>
                                     <div><strong>রিসিভারের মোবাইল নম্বর:</strong> <span id="modalRecipientPhone"></span></div>
                                     <button class="copy-btn" onclick="copyText(document.getElementById('modalRecipientPhone').textContent)"><i class="fas fa-copy"></i></button>
-                                    <span class="copy-tooltip">কপি করুন</span>
-                                </div>
-                                <div class="info-item">
-                                    <i class="fas fa-money-bill-wave"></i>
-                                    <div><strong>বাজেট:</strong> <span id="modalBudget"></span> টাকা</div>
-                                    <button class="copy-btn" onclick="copyText(document.getElementById('modalBudget').textContent)"><i class="fas fa-copy"></i></button>
                                     <span class="copy-tooltip">কপি করুন</span>
                                 </div>
                             </div>
@@ -1553,7 +1554,8 @@
                            `জেন্ডার: ${document.getElementById('modalRecipientGender').textContent}\n` +
                            `সম্পর্ক: ${document.getElementById('modalRecipientRelation').textContent}\n` +
                            `বয়স: ${document.getElementById('modalRecipientAge').textContent}\n` +
-                           `পছন্দ-অপছন্দ: ${document.getElementById('modalRecipientPreferences').textContent}`;
+                           `পছন্দ-অপছন্দ: ${document.getElementById('modalRecipientPreferences').textContent}\n` +
+                           `বাজেট: ${document.getElementById('modalBudget').textContent} টাকা`;
                     break;
                 case 'sender':
                     text = `গ্রাহকের তথ্য:\n` +
@@ -1564,8 +1566,7 @@
                 case 'delivery':
                     text = `ডেলিভারি তথ্য:\n` +
                            `ডেলিভারি ঠিকানা: ${document.getElementById('modalDeliveryAddress').textContent}\n` +
-                           `রিসিভারের মোবাইল নম্বর: ${document.getElementById('modalRecipientPhone').textContent}\n` +
-                           `বাজেট: ${document.getElementById('modalBudget').textContent}`;
+                           `রিসিভারের মোবাইল নম্বর: ${document.getElementById('modalRecipientPhone').textContent}`;
                     break;
             }
             navigator.clipboard.writeText(text).then(() => {

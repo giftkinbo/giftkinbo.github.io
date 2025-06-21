@@ -1416,7 +1416,7 @@
                     </div>
                     <div class="form-group">
                         <label for="recipientAge">বয়স</label>
-                        <input type="number" id="recipientAge" name="recipientAge" min="1" max="120" placeholder="যেমন: 12" required>
+                        <input type="text" id="recipientAge" name="recipientAge" placeholder="যেমন: 12" required pattern="[0-9]+" title="শুধু সংখ্যা দিন">
                     </div>
                     <div class="form-group">
                         <label for="occasion">উপলক্ষ</label>
@@ -1428,7 +1428,7 @@
                     </div>
                     <div class="form-group">
                         <label for="budget">বাজেট</label>
-                        <input type="number" id="budget" name="budget" min="499" step="1" placeholder="যেমন: 499" required>
+                        <input type="text" id="budget" name="budget" placeholder="যেমন: 499" required pattern="[0-9]+" title="শুধু সংখ্যা দিন">
                     </div>
                 </div>
 
@@ -1907,7 +1907,7 @@
 
                     // Validate budget
                     const budget = parseInt(formData.budget);
-                    if (isNaN(budget)) {
+                    if (isNaN(budget) || budget <= 0) {
                         throw new Error('বাজেট ফিল্ডটি সঠিকভাবে পূরণ করুন');
                     }
 
@@ -1993,23 +1993,58 @@
                 });
             });
 
-            // Budget validation
+            // Budget validation - Remove limits and add Bengali conversion
             document.getElementById('budget').addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
+                let value = e.target.value;
+                
+                // Convert Bengali numerals to English
+                const bengaliToEnglish = {
+                    '০': '0', '১': '1', '২': '2', '৩': '3', '৪': '4',
+                    '৫': '5', '৬': '6', '৭': '7', '৮': '8', '৯': '9'
+                };
+                
+                value = value.split('').map(char => bengaliToEnglish[char] || char).join('');
+                
+                // Remove non-numeric characters except digits
+                value = value.replace(/\D/g, '');
+                
+                // Limit to 6 digits
                 if (value.length > 6) {
                     value = value.slice(0, 6);
                 }
+                
                 e.target.value = value;
-                this.setCustomValidity('');
             });
 
-            // Age validation
+            // Age validation - Add Bengali conversion
             document.getElementById('recipientAge').addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
+                let value = e.target.value;
+                
+                // Convert Bengali numerals to English
+                const bengaliToEnglish = {
+                    '০': '0', '১': '1', '২': '2', '৩': '3', '৪': '4',
+                    '৫': '5', '৬': '6', '৭': '7', '৮': '8', '৯': '9'
+                };
+                
+                value = value.split('').map(char => bengaliToEnglish[char] || char).join('');
+                
+                // Remove non-numeric characters
+                value = value.replace(/\D/g, '');
+                
+                // Limit to 3 digits
                 if (value.length > 3) {
                     value = value.slice(0, 3);
                 }
+                
                 e.target.value = value;
+                
+                // Validate age range
+                const numericValue = parseInt(value) || 0;
+                if (numericValue < 1 || numericValue > 120) {
+                    this.setCustomValidity('বয়স ১ থেকে ১২০ এর মধ্যে হতে হবে');
+                } else {
+                    this.setCustomValidity('');
+                }
             });
 
             // Smooth scrolling for navigation links
@@ -2031,16 +2066,6 @@
                 }, 2000);
             });
 
-            // Add input validation
-            const budgetInput = document.getElementById('budget');
-            budgetInput.addEventListener('input', function() {
-                if (this.value < 499) {
-                    this.setCustomValidity('দয়া করে কমপক্ষে ৳499 বাজেট নির্ধারণ করুন');
-                } else {
-                    this.setCustomValidity('');
-                }
-            });
-
             // Function to convert Bengali numerals to English numerals
             function convertBengaliToEnglish(input) {
                 const bengaliToEnglish = {
@@ -2051,17 +2076,44 @@
                 return input.split('').map(char => bengaliToEnglish[char] || char).join('');
             }
 
-            // Add input event listeners to all input and textarea elements
-            document.querySelectorAll('input, textarea').forEach(element => {
+            // Function to handle Bengali numeral conversion for any input
+            function handleBengaliNumeralConversion(element) {
+                const cursorPosition = element.selectionStart;
+                const oldValue = element.value;
+                const newValue = convertBengaliToEnglish(oldValue);
+                
+                if (oldValue !== newValue) {
+                    element.value = newValue;
+                    // Restore cursor position
+                    element.setSelectionRange(cursorPosition, cursorPosition);
+                }
+            }
+
+            // Add Bengali numeral conversion to all text inputs and textareas
+            document.querySelectorAll('input[type="text"], input[type="tel"], textarea').forEach(element => {
+                // Skip budget and age inputs as they have their own conversion
+                if (element.id === 'budget' || element.id === 'recipientAge') {
+                    return;
+                }
+                
                 element.addEventListener('input', function(e) {
-                    const cursorPosition = this.selectionStart;
-                    const oldValue = this.value;
-                    const newValue = convertBengaliToEnglish(oldValue);
-                    
-                    if (oldValue !== newValue) {
-                        this.value = newValue;
-                        // Restore cursor position
-                        this.setSelectionRange(cursorPosition, cursorPosition);
+                    handleBengaliNumeralConversion(this);
+                });
+
+                // Handle paste events
+                element.addEventListener('paste', function(e) {
+                    setTimeout(() => {
+                        handleBengaliNumeralConversion(this);
+                    }, 0);
+                });
+
+                // Handle keydown events for immediate conversion
+                element.addEventListener('keydown', function(e) {
+                    // Allow backspace, delete, arrow keys, etc.
+                    if (e.key.length === 1) {
+                        setTimeout(() => {
+                            handleBengaliNumeralConversion(this);
+                        }, 0);
                     }
                 });
             });
