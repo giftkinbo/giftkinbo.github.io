@@ -1536,25 +1536,26 @@
         .chatbot-toggle {
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, #ff6b9d, #ff8fab);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(255, 75, 139, 0.3);
+            box-shadow: 0 4px 20px rgba(255, 107, 157, 0.4);
             transition: all 0.3s ease;
             animation: float 3s ease-in-out infinite;
         }
 
         .chatbot-toggle:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(255, 75, 139, 0.4);
+            box-shadow: 0 6px 25px rgba(255, 107, 157, 0.5);
         }
 
         .chatbot-toggle i {
             color: white;
             font-size: 24px;
+            animation: gentlePulse 2s infinite;
         }
 
         .chatbot-window {
@@ -1940,7 +1941,7 @@
             right: -5px;
             width: 20px;
             height: 20px;
-            background: #e74c3c;
+            background: #ff6b9d;
             color: white;
             border-radius: 50%;
             display: none;
@@ -1948,6 +1949,13 @@
             justify-content: center;
             font-size: 12px;
             font-weight: bold;
+            box-shadow: 0 2px 8px rgba(255, 107, 157, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
     </style>
 </head>
@@ -3072,7 +3080,7 @@
     <!-- Gemini AI Chatbot System -->
     <div class="chatbot-container">
         <div class="chatbot-toggle" id="chatbotToggle">
-            <i class="fas fa-heart"></i>
+            <i class="fas fa-comments"></i>
             <div class="chatbot-notification" id="chatbotNotification">1</div>
         </div>
         
