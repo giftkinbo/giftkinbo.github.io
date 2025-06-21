@@ -543,6 +543,113 @@
             .status-options {
                 grid-template-columns: 1fr;
             }
+
+            /* Mobile Menu Styles */
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                color: var(--primary-color);
+                font-size: 1.5rem;
+                cursor: pointer;
+                padding: 0.5rem;
+                transition: var(--transition);
+            }
+
+            .mobile-menu-btn:hover {
+                transform: scale(1.1);
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--white);
+                padding: 1rem;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+                border-radius: 0 0 15px 15px;
+                border-top: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            .nav-links.active {
+                display: flex;
+                animation: slideDown 0.3s ease-out;
+            }
+
+            .nav-links a {
+                width: 100%;
+                text-align: center;
+                padding: 0.8rem;
+                border-radius: 8px;
+            }
+
+            .nav-links a:hover {
+                background-color: var(--light-bg);
+            }
+
+            .auth-container {
+                margin: 1rem 0;
+            }
+
+            .user-profile {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media screen and (min-width: 769px) {
+            .mobile-menu-btn {
+                display: none;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading and Error States */
+        .loading, .error, .no-orders {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin: 2rem 0;
+        }
+
+        .loading i, .error i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        .loading p, .error p, .no-orders p {
+            color: var(--text-color);
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .no-orders {
+            background: var(--light-bg);
+            border: 2px dashed var(--primary-color);
+        }
+
+        .no-orders p {
+            color: var(--primary-color);
+            font-weight: 500;
         }
 
         /* Custom Modal Styles */
@@ -626,6 +733,28 @@
         .custom-modal-ok-btn:hover {
             background-color: var(--secondary-color);
         }
+
+        .custom-modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 20px;
+        }
+
+        .custom-modal-cancel-btn {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .custom-modal-cancel-btn:hover {
+            background-color: #5a6268;
+        }
     </style>
 </head>
 <body>
@@ -674,6 +803,55 @@
             <span class="custom-modal-close">&times;</span>
             <p id="customAlertMessage"></p>
             <button id="customAlertOkBtn" class="custom-modal-ok-btn">ঠিক আছে</button>
+        </div>
+    </div>
+
+    <!-- Status Update Modal -->
+    <div id="statusModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>স্ট্যাটাস আপডেট করুন</h3>
+            </div>
+            <div class="modal-body">
+                <div class="status-options">
+                    <div class="status-option" data-status="pending">
+                        <i class="fas fa-clock"></i>
+                        <span>অপেক্ষমান</span>
+                    </div>
+                    <div class="status-option" data-status="processing">
+                        <i class="fas fa-cog"></i>
+                        <span>প্রক্রিয়াধীন</span>
+                    </div>
+                    <div class="status-option" data-status="shipped">
+                        <i class="fas fa-truck"></i>
+                        <span>পাঠানো হয়েছে</span>
+                    </div>
+                    <div class="status-option" data-status="delivered">
+                        <i class="fas fa-check-circle"></i>
+                        <span>ডেলিভারি সম্পন্ন</span>
+                    </div>
+                    <div class="status-option" data-status="cancelled">
+                        <i class="fas fa-times-circle"></i>
+                        <span>বাতিল</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeStatusModal()">বাতিল</button>
+                <button class="modal-btn save" onclick="updateOrderStatus()">সংরক্ষণ করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Confirm Modal -->
+    <div id="customConfirm" class="custom-modal">
+        <div class="custom-modal-content">
+            <span class="custom-modal-close confirm">&times;</span>
+            <p id="customConfirmMessage"></p>
+            <div class="custom-modal-buttons">
+                <button id="customConfirmOkBtn" class="custom-modal-ok-btn">হ্যাঁ</button>
+                <button id="customConfirmCancelBtn" class="custom-modal-cancel-btn">না</button>
+            </div>
         </div>
     </div>
 
@@ -737,6 +915,46 @@
             }
         });
 
+        // Custom Confirm Modal
+        let confirmCallback = null;
+        const customConfirm = document.getElementById('customConfirm');
+        const customConfirmMessage = document.getElementById('customConfirmMessage');
+        const customConfirmOkBtn = document.getElementById('customConfirmOkBtn');
+        const customConfirmCancelBtn = document.getElementById('customConfirmCancelBtn');
+        const customConfirmClose = customConfirm.querySelector('.custom-modal-close.confirm');
+
+        function showCustomConfirm(message, callback) {
+            if(customConfirmMessage) customConfirmMessage.textContent = message;
+            confirmCallback = callback;
+            if(customConfirm) customConfirm.classList.add('show');
+        }
+
+        function closeConfirm() {
+            if(customConfirm) customConfirm.classList.remove('show');
+        }
+
+        if(customConfirmOkBtn) customConfirmOkBtn.addEventListener('click', () => {
+            closeConfirm();
+            if (confirmCallback) confirmCallback(true);
+        });
+
+        if(customConfirmCancelBtn) customConfirmCancelBtn.addEventListener('click', () => {
+            closeConfirm();
+            if (confirmCallback) confirmCallback(false);
+        });
+
+        if(customConfirmClose) customConfirmClose.addEventListener('click', () => {
+            closeConfirm();
+            if (confirmCallback) confirmCallback(false);
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == customConfirm) {
+                closeConfirm();
+                if (confirmCallback) confirmCallback(false);
+            }
+        });
+
         // Auth state observer
         onAuthStateChanged(auth, (user) => {
             const signInButton = document.getElementById('signInButton');
@@ -758,14 +976,14 @@
                 console.log('User is signed out');
                 signInButton.style.display = 'flex';
                 userProfile.style.display = 'none';
-                ordersContainer.innerHTML = '<p class="no-orders">অনুগ্রহ করে অর্ডার দেখার জন্য সাইন ইন করুন।</p>';
+                ordersContainer.innerHTML = '<div class="no-orders"><p>অনুগ্রহ করে অর্ডার দেখার জন্য সাইন ইন করুন।</p></div>';
             }
         });
 
         // Function to load user orders
         function loadUserOrders(userId) {
             const ordersContainer = document.getElementById('ordersContainer');
-            ordersContainer.innerHTML = '<div class="loading">অর্ডার লোড হচ্ছে...</div>';
+            ordersContainer.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i><p>অর্ডার লোড হচ্ছে...</p></div>';
 
             console.log('Loading orders for user:', userId);
 
@@ -779,7 +997,7 @@
                     
                     if (!snapshot.exists()) {
                         console.log('No orders found in database');
-                        ordersContainer.innerHTML = '<p class="no-orders">আপনার কোন অর্ডার নেই।</p>';
+                        ordersContainer.innerHTML = '<div class="no-orders"><p>আপনার কোন অর্ডার নেই।</p></div>';
                         return;
                     }
 
@@ -804,7 +1022,7 @@
 
                     if (orders.length === 0) {
                         console.log('No orders found for current user');
-                        ordersContainer.innerHTML = '<p class="no-orders">আপনার কোন অর্ডার নেই।</p>';
+                        ordersContainer.innerHTML = '<div class="no-orders"><p>আপনার কোন অর্ডার নেই।</p></div>';
                         return;
                     }
 
@@ -821,21 +1039,24 @@
                             <div class="order-details">
                                 <div class="detail-group">
                                     <h4><i class="fas fa-user"></i> প্রাপকের তথ্য</h4>
-                                    <p><strong>নাম:</strong> ${order.recipientName}</p>
-                                    <p><strong>ফোন:</strong> ${order.recipientPhone}</p>
-                                    <p><strong>বয়স:</strong> ${order.recipientAge}</p>
-                                    <p><strong>লিঙ্গ:</strong> ${order.recipientGender === 'male' ? 'পুরুষ' : 'মহিলা'}</p>
-                                    <p><strong>সম্পর্ক:</strong> ${order.relationship}</p>
+                                    <p><strong>নাম:</strong> ${order.recipientName || 'N/A'}</p>
+                                    <p><strong>ফোন:</strong> ${order.recipientPhone || 'N/A'}</p>
+                                    <p><strong>বয়স:</strong> ${order.recipientAge || 'N/A'}</p>
+                                    <p><strong>লিঙ্গ:</strong> ${order.recipientGender === 'male' ? 'পুরুষ' : order.recipientGender === 'female' ? 'মহিলা' : 'N/A'}</p>
+                                    <p><strong>সম্পর্ক:</strong> ${order.relationship || 'N/A'}</p>
+                                    <p><strong>উপলক্ষ:</strong> ${order.occasion || 'N/A'}</p>
                                 </div>
                                 <div class="detail-group">
                                     <h4><i class="fas fa-shopping-bag"></i> অর্ডার তথ্য</h4>
-                                    <p><strong>বাজেট:</strong> ৳${order.budget}</p>
+                                    <p><strong>বাজেট:</strong> ৳${order.budget || 'N/A'}</p>
                                     <p><strong>পছন্দ-অপছন্দ:</strong> ${order.preferences || 'উল্লেখ করা হয়নি'}</p>
+                                    <p><strong>পেমেন্ট মেথড:</strong> ${getPaymentMethodText(order.paymentMethod)}</p>
                                 </div>
                                 <div class="detail-group">
                                     <h4><i class="fas fa-truck"></i> ডেলিভারি তথ্য</h4>
-                                    <p><strong>ঠিকানা:</strong> ${order.deliveryAddress}</p>
-                                    <p><strong>কন্টাক্ট:</strong> ${order.deliveryPhone}</p>
+                                    <p><strong>ঠিকানা:</strong> ${order.deliveryAddress || 'N/A'}</p>
+                                    <p><strong>ডেলিভারি এরিয়া:</strong> ${order.deliveryArea === 'inside' ? 'ঢাকার ভিতরে' : order.deliveryArea === 'outside' ? 'ঢাকার বাইরে' : 'N/A'}</p>
+                                    <p><strong>কন্টাক্ট:</strong> ${order.recipientPhone || 'N/A'}</p>
                                 </div>
                             </div>
                             <div class="order-status ${order.status}">
@@ -843,7 +1064,7 @@
                                 ${getStatusText(order.status)}
                             </div>
                             <div class="order-actions">
-                                <button class="order-action-btn delete" onclick="deleteOrder('${order.id}')">
+                                <button class="order-action-btn delete" onclick="window.deleteOrder('${order.id}')">
                                     <i class="fas fa-times-circle"></i> অর্ডার বাতিল করুন
                                 </button>
                             </div>
@@ -856,12 +1077,12 @@
 
                 }, (error) => {
                     console.error('Error in onValue callback:', error);
-                    ordersContainer.innerHTML = '<p class="error">অর্ডার লোড করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।</p>';
+                    ordersContainer.innerHTML = '<div class="error"><i class="fas fa-exclamation-triangle"></i><p>অর্ডার লোড করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।</p></div>';
                 });
 
             } catch (error) {
                 console.error('Error in loadUserOrders:', error);
-                ordersContainer.innerHTML = '<p class="error">অর্ডার লোড করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।</p>';
+                ordersContainer.innerHTML = '<div class="error"><i class="fas fa-exclamation-triangle"></i><p>অর্ডার লোড করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।</p></div>';
             }
         }
 
@@ -886,6 +1107,7 @@
         function getStatusText(status) {
             const statusMap = {
                 'pending': 'অপেক্ষমান',
+                'confirmed': 'অর্ডার কনফার্মড',
                 'processing': 'প্রক্রিয়াধীন',
                 'shipped': 'পাঠানো হয়েছে',
                 'delivered': 'ডেলিভারি সম্পন্ন',
@@ -898,12 +1120,24 @@
         function getStatusIcon(status) {
             const iconMap = {
                 'pending': 'fa-clock',
+                'confirmed': 'fa-check',
                 'processing': 'fa-cog',
                 'shipped': 'fa-truck',
                 'delivered': 'fa-check-circle',
                 'cancelled': 'fa-times-circle'
             };
             return iconMap[status] || 'fa-question-circle';
+        }
+
+        // Helper function to get payment method text
+        function getPaymentMethodText(method) {
+            const methodMap = {
+                'cod': 'ক্যাশ অন ডেলিভারি (COD)',
+                'bkash': 'বিকাশ',
+                'rocket': 'রকেট',
+                'nagad': 'নগদ'
+            };
+            return methodMap[method] || method || 'N/A';
         }
 
         // Sign in with Google
@@ -999,17 +1233,21 @@
             }
         }
 
-        async function deleteOrder(orderId) {
-            if (!confirm('আপনি কি নিশ্চিত যে এই অর্ডারটি বাতিল করতে চান?')) return;
-
-            try {
-                const orderRef = ref(database, `orders/${orderId}`);
-                await remove(orderRef);
-            } catch (error) {
-                console.error('Error deleting order:', error);
-                showCustomAlert('অর্ডার বাতিল করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
-            }
-        }
+        // Make deleteOrder globally accessible
+        window.deleteOrder = async function(orderId) {
+            showCustomConfirm('আপনি কি নিশ্চিত যে এই অর্ডারটি বাতিল করতে চান?', async (isConfirmed) => {
+                if (isConfirmed) {
+                    try {
+                        const orderRef = ref(database, `orders/${orderId}`);
+                        await remove(orderRef);
+                        showCustomAlert('অর্ডার সফলভাবে বাতিল করা হয়েছে!');
+                    } catch (error) {
+                        console.error('Error deleting order:', error);
+                        showCustomAlert('অর্ডার বাতিল করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+                    }
+                }
+            });
+        };
     </script>
 </body>
 </html> 
