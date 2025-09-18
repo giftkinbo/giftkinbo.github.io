@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>অর্ডার উইজার্ড</title>
+  <meta name="description" content="গিফট কিনবো - মাল্টি-স্টেপ অর্ডার উইজার্ড">
+  <style>
+    :root {
+      --primary-color:#ff4b8b; /* Pink gift ribbon */
+      --primary-2:#ff7ab3;
+      --accent:#ffd166; /* Confetti gold */
+      --teal:#3ad1c3;  /* Fun accent */
+      --dark:#1a1a1a; --muted:#666; --light:#f7f7fb; --white:#fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin:0; font-family: 'Hind Siliguri', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:#222;
+      background: linear-gradient(180deg, #fff, #fff 50%, #fff9fc 100%);
+      min-height: 100vh;
+    }
+    .container { max-width: 960px; margin: 0 auto; padding: 24px 16px; }
+    .wizard-card { background: var(--white); border-radius: 16px; box-shadow: 0 10px 26px rgba(0,0,0,.06); padding: 20px; border:1px solid #f1f1f4; }
+    .wizard-header { display:flex; align-items:center; justify-content: space-between; gap:12px; margin-bottom:12px; background: #fafafa; padding:10px 12px; border-radius: 12px; border:1px solid #eee; }
+    .wizard-title { font-size: 1.4rem; margin:0; color:#333; }
+    .progress { background: #f3f3f6; height: 8px; border-radius: 999px; overflow: hidden; margin: 12px 0 16px; border:1px solid #eee; }
+    .progress-bar { height: 100%; width: 0%; background: var(--primary-color); transition: width .28s ease; }
+    .steps { display:grid; grid-template-columns: repeat(4,1fr); gap:8px; margin-bottom: 10px; }
+    .step-chip { text-align:center; padding:8px 10px; border-radius: 10px; background: #f7f7fb; color: #616161; font-weight:600; font-size:.9rem; border:1px solid #ececf1; display:flex; align-items:center; justify-content:center; }
+    .step-chip.active { background: #fff; color: #222; border-color: #dedee6; box-shadow: none; }
+    .step { display:none; }
+    .step.active { display:block; animation: fade .25s ease; }
+    @keyframes fade { from { opacity:0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+    .grid { display:grid; gap:14px; }
+    @media(min-width: 640px){ .grid.two { grid-template-columns: 1fr 1fr; } }
+    label { display:block; font-weight:700; margin-bottom:6px; color:#333; }
+    input[type="text"], input[type="tel"], select, textarea { width:100%; padding:12px 14px; border:2px solid #ffe3ef; border-radius: 12px; font-size: 1rem; transition: .2s border-color, .2s box-shadow, .2s transform; background:#fff; }
+    input:hover, select:hover, textarea:hover { transform: translateY(-1px); }
+    textarea { min-height: 96px; resize: vertical; }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 4px rgba(255,75,139,.12); }
+    .nav { display:flex; justify-content: space-between; gap:12px; margin-top: 16px; }
+    .btn { padding:12px 18px; border:none; border-radius: 999px; cursor:pointer; font-weight:800; letter-spacing:.2px; transition: transform .15s ease, box-shadow .2s ease, background .2s ease; }
+    .btn:active { transform: scale(.98); }
+    .btn-secondary { background:#f4f4f7; color:#333; border:1px solid #e8e8ef; }
+    .btn-secondary:hover { box-shadow: 0 4px 12px rgba(0,0,0,.06); }
+    .btn-primary { background: var(--primary-color); color:#fff; box-shadow: 0 8px 18px rgba(255,75,139,.18); }
+    .btn-primary:hover { box-shadow: 0 10px 22px rgba(255,75,139,.22); }
+    .summary { background: #fafafd; border:1px solid #eee; border-radius: 12px; padding: 12px; }
+    .cost { display:grid; gap:8px; }
+    .cost .row { display:flex; justify-content: space-between; align-items:center; padding: 8px 0; border-bottom: 1px dashed #ececf1; }
+    .cost .row.total { font-size: 1.05rem; font-weight:800; border-bottom:none; color:#222; }
+    .note { display:none; }
+    /* Success confetti dots */
+    #successState { position: relative; }
+    #successState::before, #successState::after {
+      content:""; position:absolute; inset:-10px; pointer-events:none; background:
+        radial-gradient(6px 6px at 10% 20%, var(--accent), transparent 60%),
+        radial-gradient(6px 6px at 90% 30%, #ff9dcb, transparent 60%),
+        radial-gradient(6px 6px at 20% 80%, var(--teal), transparent 60%),
+        radial-gradient(6px 6px at 80% 70%, #ffa3c7, transparent 60%);
+      opacity:.25;
+    }
+    /* Mobile spacing */
+    @media(max-width: 420px){
+      .wizard-card { padding: 14px; }
+      .wizard-title { font-size: 1.25rem; }
+      .step-chip { font-size:.86rem; padding:6px 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="wizard-card">
+      <div class="wizard-header">
+        <img src="logo.png" alt="Gift Kinbo" style="height:28px">
+        <h1 class="wizard-title">অর্ডার উইজার্ড</h1>
+      </div>
+
+      <div class="steps" aria-label="Steps" style="grid-template-columns: repeat(5, 1fr);">
+        <div class="step-chip active" data-step-chip="0">১. রিসিপিয়েন্ট</div>
+        <div class="step-chip" data-step-chip="1">২. আপনার তথ্য</div>
+        <div class="step-chip" data-step-chip="2">৩. ডেলিভারি</div>
+        <div class="step-chip" data-step-chip="3">৪. পেমেন্ট</div>
+        <div class="step-chip" data-step-chip="4">৫. রিভিউ</div>
+      </div>
+      <div class="progress" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
+
+      <form id="wizardForm" novalidate>
+        <div class="step active" data-step="0">
+          <div class="grid two">
+            <div>
+              <label for="recipientName">যার জন্য গিফট তার নাম</label>
+              <input type="text" id="recipientName" name="recipientName" placeholder="যেমন: সাবরিনা আক্তার" required>
+              <div class="note">নাম ঠিকঠাক দিলে সারপ্রাইজে ম্যাজিক লাগবে ✨</div>
+            </div>
+            <div>
+              <label for="recipientGender">জেন্ডার</label>
+              <select id="recipientGender" name="recipientGender" required>
+                <option value="">জেন্ডার বাছাই করুন</option>
+                <option value="male">ছেলে</option>
+                <option value="female">মেয়ে</option>
+              </select>
+              <div class="note">এটা আমাদের গিফট সিলেকশনে সাহায্য করবে 🎁</div>
+            </div>
+            <div>
+              <label for="relationship">আপনার সাথে সম্পর্ক</label>
+              <input type="text" id="relationship" name="relationship" placeholder="যেমন: বাবা, মা, বন্ধু" required>
+              <div class="note">আহা! সম্পর্ক যত সুন্দর, গিফট তত পারফেক্ট 💝</div>
+            </div>
+            <div>
+              <label for="recipientAge">বয়স</label>
+              <input type="text" id="recipientAge" name="recipientAge" placeholder="যেমন: 12" required pattern="[0-9]+" title="শুধু সংখ্যা দিন">
+              <div class="note">বয়স অনুযায়ী গিফট বাছাই করা হয় 🧸</div>
+            </div>
+            <div>
+              <label for="occasion">উপলক্ষ</label>
+              <input type="text" id="occasion" name="occasion" placeholder="যেমন: জন্মদিন, বিবাহ বার্ষিকী" required>
+              <div class="note">উপলক্ষকে কেন্দ্র করে সাজাই কনসেপ্ট 🎉</div>
+            </div>
+            <div>
+              <label for="budget">বাজেট</label>
+              <input type="text" id="budget" name="budget" placeholder="যেমন: 499" required pattern="[0-9]+" title="শুধু সংখ্যা দিন">
+              <div class="note">আপনার বাজেটেই হবে হাসির মুহূর্ত 😄</div>
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <label for="preferences">পছন্দ-অপছন্দ</label>
+              <textarea id="preferences" name="preferences" rows="3" placeholder="যেমন: পছন্দের রঙ, ফুল, খাবার"></textarea>
+              <div class="note">যত বেশি জানবেন, তত স্মার্ট হবে গিফট 📌</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step" data-step="1">
+          <div class="grid two">
+            <div>
+              <label for="senderName">আপনার নাম</label>
+              <input type="text" id="senderName" name="senderName" placeholder="যেমন: হুসাইন আহমেদ" required>
+            </div>
+            <div>
+              <label for="senderPhone">মোবাইল নম্বর</label>
+              <input type="tel" id="senderPhone" name="senderPhone" placeholder="যেমন: 01300000000" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="step" data-step="2">
+          <div class="grid two">
+            <div>
+              <label for="deliveryArea">ডেলিভারি এরিয়া</label>
+              <select id="deliveryArea" name="deliveryArea" required>
+                <option value="">সিলেক্ট করুন</option>
+                <option value="inside">ঢাকার ভিতরে</option>
+                <option value="outside">ঢাকার বাইরে</option>
+              </select>
+            </div>
+            <div>
+              <label for="recipientPhone">রিসিপিয়েন্ট মোবাইল</label>
+              <input type="tel" id="recipientPhone" name="recipientPhone" placeholder="যেমন: 01745897322" required>
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <label for="deliveryAddress">বিস্তারিত ঠিকানা</label>
+              <textarea id="deliveryAddress" name="deliveryAddress" rows="3" placeholder="যেমন: আপনার ঠিকানা বিস্তারিত ভাবে লিখুন" required></textarea>
+            </div>
+            <div style="grid-column: 1 / -1;" class="summary">
+              <div class="cost">
+                <div class="row"><span>বাজেট</span><strong id="budgetAmount">০ টাকা</strong></div>
+                <div class="row"><span>ডেলিভারি চার্জ</span><strong id="deliveryAmount">০ টাকা</strong></div>
+                <div class="row total"><span>মোট</span><strong id="totalAmount">০ টাকা</strong></div>
+              </div>
+              <p class="note">ডেলিভারি চার্জ: ঢাকার ভিতরে 59 টাকা, বাইরে 99 টাকা</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="step" data-step="3">
+          <div class="grid">
+            <div>
+              <label for="paymentMethod">পেমেন্ট মেথড</label>
+              <select id="paymentMethod" name="paymentMethod">
+                <option value="cod" selected>ক্যাশ অন ডেলিভারি (COD)</option>
+                <option value="bkash">বিকাশ</option>
+                <option value="rocket">রকেট</option>
+                <option value="nagad">নগদ</option>
+              </select>
+              <div class="note">কনফার্মেশনের সময় নির্দেশনা দেয়া হবে ✅</div>
+            </div>
+            <div id="customerBkashInput" style="display:none;">
+              <label for="customerBkashNumber">আপনার বিকাশ নাম্বার</label>
+              <input type="tel" id="customerBkashNumber" name="customerBkashNumber" placeholder="যেমন: 01712345678" pattern="[0-9]+" title="শুধু সংখ্যা দিন">
+              <div class="note">আপনার বিকাশ নাম্বার দিন যেখান থেকে টাকা পাঠাবেন</div>
+            </div>
+            <div id="paymentNumberDisplay" style="display:none;">
+              <div class="summary"><strong>পেমেন্ট নাম্বার:</strong> <span id="paymentNumber"></span></div>
+              <button type="button" class="btn btn-secondary" id="copyPaymentNumber">কপি করুন</button>
+              <div id="paymentDescription" class="note"></div>
+            </div>
+            <div class="summary">
+              <div class="cost">
+                <div class="row"><span>বাজেট</span><strong id="budgetAmount2">০ টাকা</strong></div>
+                <div class="row"><span>ডেলিভারি চার্জ</span><strong id="deliveryAmount2">০ টাকা</strong></div>
+                <div class="row total"><span>মোট</span><strong id="totalAmount2">০ টাকা</strong></div>
+              </div>
+              <p class="note"><i>গিফট হাতে নিয়ে তারপরে টাকা দিবেন</i></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="step" data-step="4">
+          <div class="grid">
+            <div class="summary" id="reviewBlock">
+              <h3 style="margin:0 0 8px 0;">রিভিউ করুন</h3>
+              <div id="reviewList" class="grid" style="gap:8px;"></div>
+              <div class="cost" style="margin-top:8px;">
+                <div class="row"><span>বাজেট</span><strong id="budgetAmount3">০ টাকা</strong></div>
+                <div class="row"><span>ডেলিভারি চার্জ</span><strong id="deliveryAmount3">০ টাকা</strong></div>
+                <div class="row total"><span>মোট</span><strong id="totalAmount3">০ টাকা</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav">
+          <button type="button" class="btn btn-secondary" id="prevBtn">পূর্ববর্তী</button>
+          <button type="button" class="btn btn-primary" id="nextBtn">পরবর্তী</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn" style="display:none;">ফাইনাল সাবমিট</button>
+        </div>
+      </form>
+      <div id="successState" style="display:none; text-align:center; padding:24px 8px;">
+        <img src="logo.png" alt="Gift Kinbo" style="height:40px; margin-bottom:8px;">
+        <h2 style="margin:6px 0 4px 0;">অভিনন্দন! 🎉</h2>
+        <p class="note">আপনার অর্ডার সফলভাবে সাবমিট হয়েছে। আমাদের টিম খুব শিগগিরই যোগাযোগ করবে।</p>
+        <div class="summary" style="text-align:left; margin-top:12px;">
+          <h3 style="margin:0 0 8px 0;">অর্ডার সারাংশ</h3>
+          <div id="successSummary"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCSyXJeftEfkwQ_FoQlg1sEZ3PZv9xjkLI",
+      authDomain: "gift-kinbo-bd.firebaseapp.com",
+      projectId: "gift-kinbo-bd",
+      storageBucket: "gift-kinbo-bd.firebasestorage.app",
+      messagingSenderId: "896761493540",
+      appId: "1:896761493540:web:21e49df2ca453fb80180b1",
+      measurementId: "G-ZVXSHQT95M",
+      databaseURL: "https://gift-kinbo-bd-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+
+    let database;
+    try {
+      const app = initializeApp(firebaseConfig);
+      database = getDatabase(app);
+      console.log('Firebase (form.html) initialized');
+    } catch (err) {
+      console.error('Firebase init failed on form.html:', err);
+    }
+
+    (function(){
+      const steps = Array.from(document.querySelectorAll('.step'));
+      const chips = Array.from(document.querySelectorAll('.step-chip'));
+      const progressBar = document.getElementById('progressBar');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const submitBtn = document.getElementById('submitBtn');
+      const form = document.getElementById('wizardForm');
+
+      const budgetInput = document.getElementById('budget');
+      const deliveryArea = document.getElementById('deliveryArea');
+      const budgetAmount = document.getElementById('budgetAmount');
+      const deliveryAmount = document.getElementById('deliveryAmount');
+      const totalAmount = document.getElementById('totalAmount');
+      const budgetAmount2 = document.getElementById('budgetAmount2');
+      const deliveryAmount2 = document.getElementById('deliveryAmount2');
+      const totalAmount2 = document.getElementById('totalAmount2');
+
+      const paymentMethod = document.getElementById('paymentMethod');
+      const customerBkashInput = document.getElementById('customerBkashInput');
+      const paymentNumberDisplay = document.getElementById('paymentNumberDisplay');
+      const paymentNumber = document.getElementById('paymentNumber');
+      const paymentDescription = document.getElementById('paymentDescription');
+      const copyPaymentNumberBtn = document.getElementById('copyPaymentNumber');
+      const budgetAmount3 = document.getElementById('budgetAmount3');
+      const deliveryAmount3 = document.getElementById('deliveryAmount3');
+      const totalAmount3 = document.getElementById('totalAmount3');
+      const reviewList = document.getElementById('reviewList');
+      const successState = document.getElementById('successState');
+      const successSummary = document.getElementById('successSummary');
+
+      let current = 0;
+
+      function formatBDT(n){
+        const v = Math.max(0, Number(n||0) || 0);
+        return new Intl.NumberFormat('bn-BD').format(v) + ' টাকা';
+      }
+
+      function deliveryCharge(){
+        if(deliveryArea.value === 'inside') return 59;
+        if(deliveryArea.value === 'outside') return 99;
+        return 0;
+      }
+
+      function updateCosts(){
+        const b = Math.max(0, parseInt(budgetInput.value || '0', 10) || 0);
+        const d = deliveryCharge();
+        const t = b + d;
+        [budgetAmount, budgetAmount2].forEach(el=> el && (el.textContent = formatBDT(b)));
+        [deliveryAmount, deliveryAmount2].forEach(el=> el && (el.textContent = formatBDT(d)));
+        [totalAmount, totalAmount2].forEach(el=> el && (el.textContent = formatBDT(t)));
+      }
+
+      function showStep(i){
+        steps.forEach((s,idx)=> s.classList.toggle('active', idx===i));
+        chips.forEach((c,idx)=> c.classList.toggle('active', idx===i));
+        const pct = ((i) / (steps.length-1)) * 100;
+        progressBar.style.width = pct + '%';
+        prevBtn.style.display = i===0 ? 'none' : '';
+        nextBtn.style.display = i===steps.length-1 ? 'none' : '';
+        submitBtn.style.display = i===steps.length-1 ? '' : 'none';
+        current = i;
+        if(i===steps.length-1){
+          populateReview();
+        }
+      }
+
+      function stepRequiredFields(i){
+        const fields = steps[i].querySelectorAll('input, select, textarea');
+        return Array.from(fields).filter(f=> f.hasAttribute('required'));
+      }
+
+      function validateStep(i){
+        let ok = true;
+        stepRequiredFields(i).forEach(f=>{
+          if(!f.checkValidity()){
+            ok = false;
+            f.reportValidity();
+          }
+        });
+        return ok;
+      }
+
+      function goNext(){
+        if(!validateStep(current)) return;
+        if(current < steps.length-1) showStep(current+1);
+      }
+      function goPrev(){ if(current>0) showStep(current-1); }
+
+      nextBtn.addEventListener('click', goNext);
+      prevBtn.addEventListener('click', goPrev);
+
+      // Costs update
+      ['input','change'].forEach(evt=>{
+        budgetInput.addEventListener(evt, updateCosts);
+        deliveryArea.addEventListener(evt, updateCosts);
+      });
+      updateCosts();
+
+      // Payment method behavior
+      function updatePaymentUI(){
+        const v = paymentMethod.value;
+        if(v==='bkash'){
+          customerBkashInput.style.display = '';
+          paymentNumberDisplay.style.display = '';
+          paymentNumber.textContent = '01745897322';
+          paymentDescription.textContent = 'বিকাশ মার্চেন্ট নাম্বারে "Send Money" করুন। চার্জ প্রযোজ্য হতে পারে।';
+        } else if(v==='rocket'){
+          customerBkashInput.style.display = 'none';
+          paymentNumberDisplay.style.display = '';
+          paymentNumber.textContent = '01234-567890';
+          paymentDescription.textContent = 'রকেট এজেন্ট নাম্বারে পাঠান, রেফারেন্সে আপনার নাম।';
+        } else if(v==='nagad'){
+          customerBkashInput.style.display = 'none';
+          paymentNumberDisplay.style.display = '';
+          paymentNumber.textContent = '01800-000000';
+          paymentDescription.textContent = 'নগদ পার্সোনাল নাম্বারে পাঠান, রেফারেন্সে মোবাইল নম্বর।';
+        } else {
+          customerBkashInput.style.display = 'none';
+          paymentNumberDisplay.style.display = 'none';
+          paymentNumber.textContent = '';
+          paymentDescription.textContent = '';
+        }
+      }
+      paymentMethod.addEventListener('change', updatePaymentUI);
+      updatePaymentUI();
+
+      // Copy number
+      copyPaymentNumberBtn.addEventListener('click', async ()=>{
+        const text = paymentNumber.textContent.trim();
+        try { await navigator.clipboard.writeText(text); copyPaymentNumberBtn.textContent = 'কপি হয়েছে'; setTimeout(()=> copyPaymentNumberBtn.textContent = 'কপি করুন', 1200); } catch(e){}
+      });
+
+      function populateReview(){
+        updateCosts();
+        const data = new FormData(form);
+        const items = [
+          { label:'যার নাম', name:'recipientName', step:0 },
+          { label:'জেন্ডার', name:'recipientGender', step:0 },
+          { label:'সম্পর্ক', name:'relationship', step:0 },
+          { label:'বয়স', name:'recipientAge', step:0 },
+          { label:'উপলক্ষ', name:'occasion', step:0 },
+          { label:'পছন্দ-অপছন্দ', name:'preferences', step:0 },
+          { label:'আপনার নাম', name:'senderName', step:1 },
+          { label:'আপনার মোবাইল', name:'senderPhone', step:1 },
+          { label:'ডেলিভারি এরিয়া', name:'deliveryArea', step:2 },
+          { label:'রিসিপিয়েন্ট মোবাইল', name:'recipientPhone', step:2 },
+          { label:'ঠিকানা', name:'deliveryAddress', step:2 },
+          { label:'পেমেন্ট মেথড', name:'paymentMethod', step:3 },
+          { label:'বিকাশ নাম্বার', name:'customerBkashNumber', step:3 }
+        ];
+        reviewList.innerHTML = '';
+        items.forEach(it=>{
+          const val = (data.get(it.name) || '').toString();
+          if(!val) return;
+          const row = document.createElement('div');
+          row.className = 'grid two';
+          row.innerHTML = `<div><strong>${it.label}:</strong> <span>${escapeHtml(val)}</span></div><div style="text-align:right;"><button type="button" class="btn btn-secondary" data-edit-step="${it.step}">এডিট</button></div>`;
+          reviewList.appendChild(row);
+        });
+        [budgetAmount3, deliveryAmount3, totalAmount3].forEach(()=>{});
+        budgetAmount3.textContent = budgetAmount.textContent;
+        deliveryAmount3.textContent = deliveryAmount.textContent;
+        totalAmount3.textContent = totalAmount.textContent;
+        reviewList.querySelectorAll('[data-edit-step]').forEach(btn=>{
+          btn.addEventListener('click', (e)=>{
+            const stepIndex = parseInt(e.currentTarget.getAttribute('data-edit-step'), 10);
+            showStep(stepIndex);
+          });
+        });
+      }
+
+      function escapeHtml(s){ return s.replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+
+      // Submit (write to Realtime Database)
+      form.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        for(let i=0;i<steps.length;i++){ if(!validateStep(i)){ showStep(i); return; } }
+        submitBtn.disabled = true; submitBtn.textContent = 'সাবমিট হচ্ছে...';
+
+        try {
+          const data = new FormData(form);
+          const payload = {
+            recipientName: data.get('recipientName')||'',
+            recipientGender: data.get('recipientGender')||'',
+            relationship: data.get('relationship')||'',
+            recipientAge: data.get('recipientAge')||'',
+            occasion: data.get('occasion')||'',
+            preferences: data.get('preferences')||'',
+            budget: parseInt(data.get('budget')||'0', 10)||0,
+            senderName: data.get('senderName')||'',
+            senderPhone: data.get('senderPhone')||'',
+            deliveryArea: data.get('deliveryArea')||'',
+            deliveryAddress: data.get('deliveryAddress')||'',
+            recipientPhone: data.get('recipientPhone')||'',
+            paymentMethod: data.get('paymentMethod')||'cod',
+            customerBkashNumber: data.get('customerBkashNumber')||'',
+            totals: {
+              budgetText: budgetAmount.textContent,
+              deliveryText: deliveryAmount.textContent,
+              totalText: totalAmount.textContent,
+              deliveryCharge: (function(){ if(deliveryArea.value==='inside') return 59; if(deliveryArea.value==='outside') return 99; return 0; })()
+            },
+            meta: {
+              source: 'form.html',
+              userAgent: navigator.userAgent,
+              createdAt: new Date().toISOString(),
+              status: 'pending'
+            }
+          };
+
+          if(!database) throw new Error('Database not initialized');
+          const ordersRef = ref(database, 'orders');
+          await push(ordersRef, payload);
+
+          const lines = [
+            `রিসিপিয়েন্ট: ${payload.recipientName} (${payload.recipientGender}, ${payload.recipientAge})`,
+            `সম্পর্ক: ${payload.relationship}`,
+            `উপলক্ষ: ${payload.occasion}`,
+            `বাজেট: ${payload.totals.budgetText} | ডেলিভারি: ${payload.totals.deliveryText} | মোট: ${payload.totals.totalText}`,
+            `আপনার নাম/মোবাইল: ${payload.senderName} / ${payload.senderPhone}`,
+            `ডেলিভারি: ${payload.deliveryArea}, ঠিকানা: ${payload.deliveryAddress.slice(0,120)}`,
+            `রিসিপিয়েন্ট মোবাইল: ${payload.recipientPhone}`,
+            `পেমেন্ট: ${payload.paymentMethod}`
+          ];
+          successSummary.innerHTML = '<ul style="margin:0; padding-left:18px;">' + lines.map(l=>`<li>${escapeHtml(l)}</li>`).join('') + '</ul>';
+          document.getElementById('wizardForm').style.display = 'none';
+          successState.style.display = '';
+        } catch(err){
+          console.error('Order submit failed:', err);
+          alert('দুঃখিত, সাবমিট করতে সমস্যা হয়েছে। একটু পর আবার চেষ্টা করুন।');
+        } finally {
+          submitBtn.disabled = false; submitBtn.textContent = 'ফাইনাল সাবমিট';
+          form.reset(); updateCosts(); updatePaymentUI(); showStep(0);
+        }
+      });
+
+      // Init
+      showStep(0);
+    })();
+  </script>
+</body>
+</html>
+
+
