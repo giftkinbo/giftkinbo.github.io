@@ -3,31 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>অর্ডার উইজার্ড</title>
-  <meta name="description" content="গিফট কিনবো - মাল্টি-স্টেপ অর্ডার উইজার্ড">
+  <title>অর্ডার ফরম</title>
+  <meta name="description" content="গিফট কিনবো - মাল্টি-স্টেপ অর্ডার ফরম">
   <style>
     :root {
       --primary-color:#ff4b8b; /* Pink gift ribbon */
-      --primary-2:#ff7ab3;
-      --accent:#ffd166; /* Confetti gold */
-      --teal:#3ad1c3;  /* Fun accent */
+      --primary-2:#ff7ab3;     /* Gift gradient partner */
+      --accent:#ffd166;        /* Confetti gold */
+      --teal:#3ad1c3;          /* Fresh accent */
+      --neon:#b084f7;          /* Futuristic glow */
       --dark:#1a1a1a; --muted:#666; --light:#f7f7fb; --white:#fff;
     }
     * { box-sizing: border-box; }
     body {
       margin:0; font-family: 'Hind Siliguri', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:#222;
-      background: linear-gradient(180deg, #fff, #fff 50%, #fff9fc 100%);
+      background:
+        radial-gradient(900px 500px at 110% -10%, rgba(255,122,179,.10), transparent 60%),
+        radial-gradient(700px 420px at -10% 0%, rgba(176,132,247,.10), transparent 55%),
+        linear-gradient(180deg, #ffffff 0%, #fff9fc 100%);
       min-height: 100vh;
     }
     .container { max-width: 960px; margin: 0 auto; padding: 24px 16px; }
-    .wizard-card { background: var(--white); border-radius: 16px; box-shadow: 0 10px 26px rgba(0,0,0,.06); padding: 20px; border:1px solid #f1f1f4; }
-    .wizard-header { display:flex; align-items:center; justify-content: space-between; gap:12px; margin-bottom:12px; background: #fafafa; padding:10px 12px; border-radius: 12px; border:1px solid #eee; }
-    .wizard-title { font-size: 1.4rem; margin:0; color:#333; }
-    .progress { background: #f3f3f6; height: 8px; border-radius: 999px; overflow: hidden; margin: 12px 0 16px; border:1px solid #eee; }
-    .progress-bar { height: 100%; width: 0%; background: var(--primary-color); transition: width .28s ease; }
+    .wizard-card { position:relative; background: rgba(255,255,255,.92); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); border-radius: 16px; box-shadow: 0 14px 40px rgba(176,132,247,.12), 0 6px 18px rgba(0,0,0,.04); padding: 20px; border:1px solid #f1f1f4; }
+    .wizard-card::before { content:""; position:absolute; inset: -1px; border-radius: 16px; padding:1px; background: linear-gradient(135deg, rgba(255,75,139,.5), rgba(176,132,247,.5)); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events:none; }
+    .wizard-header { display:flex; align-items:center; justify-content: space-between; gap:12px; margin-bottom:12px; background: rgba(255,255,255,.6); padding:10px 12px; border-radius: 12px; border:1px solid #eee; }
+    .wizard-title { font-size: 1.45rem; margin:0; background: linear-gradient(90deg, var(--primary-color), var(--primary-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .progress { background: #f3f3f6; height: 9px; border-radius: 999px; overflow: hidden; margin: 12px 0 16px; border:1px solid #eee; }
+    .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--primary-color), var(--accent), var(--primary-2)); transition: width .3s ease; filter: drop-shadow(0 0 6px rgba(176,132,247,.25)); }
     .steps { display:grid; grid-template-columns: repeat(4,1fr); gap:8px; margin-bottom: 10px; }
-    .step-chip { text-align:center; padding:8px 10px; border-radius: 10px; background: #f7f7fb; color: #616161; font-weight:600; font-size:.9rem; border:1px solid #ececf1; display:flex; align-items:center; justify-content:center; }
-    .step-chip.active { background: #fff; color: #222; border-color: #dedee6; box-shadow: none; }
+    .step-chip { position:relative; text-align:center; padding:8px 12px 8px 26px; border-radius: 12px; background: #f8f8fc; color: #4a4a4a; font-weight:700; font-size:.9rem; border:1px solid #e8e8f0; display:flex; align-items:center; justify-content:center; }
+    .step-chip::before { content:""; position:absolute; left:10px; width:10px; height:10px; border-radius:50%; background: linear-gradient(180deg, var(--primary-color), var(--primary-2)); box-shadow: 0 0 0 3px rgba(255,75,139,.12); }
+    .step-chip.active { background: #fff; color: #222; border-color: #dedee6; }
     .step { display:none; }
     .step.active { display:block; animation: fade .25s ease; }
     @keyframes fade { from { opacity:0; transform: translateY(6px);} to { opacity:1; transform:none;} }
@@ -43,8 +49,8 @@
     .btn:active { transform: scale(.98); }
     .btn-secondary { background:#f4f4f7; color:#333; border:1px solid #e8e8ef; }
     .btn-secondary:hover { box-shadow: 0 4px 12px rgba(0,0,0,.06); }
-    .btn-primary { background: var(--primary-color); color:#fff; box-shadow: 0 8px 18px rgba(255,75,139,.18); }
-    .btn-primary:hover { box-shadow: 0 10px 22px rgba(255,75,139,.22); }
+    .btn-primary { background: linear-gradient(90deg, var(--primary-color), var(--primary-2)); color:#fff; box-shadow: 0 10px 22px rgba(255,75,139,.20), 0 2px 10px rgba(176,132,247,.14); }
+    .btn-primary:hover { box-shadow: 0 14px 28px rgba(255,75,139,.25), 0 4px 14px rgba(176,132,247,.20); }
     .summary { background: #fafafd; border:1px solid #eee; border-radius: 12px; padding: 12px; }
     .cost { display:grid; gap:8px; }
     .cost .row { display:flex; justify-content: space-between; align-items:center; padding: 8px 0; border-bottom: 1px dashed #ececf1; }
@@ -73,7 +79,7 @@
     <div class="wizard-card">
       <div class="wizard-header">
         <img src="logo.png" alt="Gift Kinbo" style="height:28px">
-        <h1 class="wizard-title">অর্ডার উইজার্ড</h1>
+        <h1 class="wizard-title">অর্ডার ফরম</h1>
       </div>
 
       <div class="steps" aria-label="Steps" style="grid-template-columns: repeat(5, 1fr);">
@@ -352,6 +358,26 @@
 
       nextBtn.addEventListener('click', goNext);
       prevBtn.addEventListener('click', goPrev);
+
+      // Clickable step chips: backward free, forward validates intermediates
+      chips.forEach((chip, idx)=>{
+        chip.style.cursor = 'pointer';
+        chip.addEventListener('click', ()=>{
+          if(idx === current) return;
+          if(idx < current){
+            showStep(idx);
+            return;
+          }
+          // Validate current up to the target-1
+          for(let i=current; i<idx; i++){
+            if(!validateStep(i)){
+              showStep(i);
+              return;
+            }
+          }
+          showStep(idx);
+        });
+      });
 
       // Costs update
       ['input','change'].forEach(evt=>{
