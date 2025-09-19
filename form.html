@@ -37,6 +37,7 @@
     .step { display:none; }
     .step.active { display:block; animation: fade .25s ease; }
     @keyframes fade { from { opacity:0; transform: translateY(6px);} to { opacity:1; transform:none;} }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
     .grid { display:grid; gap:14px; }
     @media(min-width: 640px){ .grid.two { grid-template-columns: 1fr 1fr; } }
     label { display:block; font-weight:700; margin-bottom:6px; color:#333; }
@@ -80,6 +81,11 @@
       <div class="wizard-header">
         <img src="logo.png" alt="Gift Kinbo" style="height:28px">
         <h1 class="wizard-title">অর্ডার ফরম</h1>
+        <button id="signInBtn" class="btn btn-secondary">Google দিয়ে সাইন ইন</button>
+        <div id="userInfo" style="display:none; font-size:0.9rem; color:#666;">
+          <span id="userEmail"></span>
+          <button id="signOutBtn" class="btn btn-secondary" style="margin-left:8px; padding:4px 8px; font-size:0.8rem;">সাইন আউট</button>
+        </div>
       </div>
 
       <div class="steps" aria-label="Steps" style="grid-template-columns: repeat(5, 1fr);">
@@ -246,6 +252,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
     import { getDatabase, ref, push, set, remove, get } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCSyXJeftEfkwQ_FoQlg1sEZ3PZv9xjkLI",
@@ -259,14 +266,29 @@
     };
 
     let database;
+    let auth;
+    let provider;
     let isFirebaseReady = false;
+    let currentUser = null;
     
     // Initialize Firebase
     try {
       const app = initializeApp(firebaseConfig);
       database = getDatabase(app);
+      auth = getAuth(app);
+      provider = new GoogleAuthProvider();
       isFirebaseReady = true;
       console.log('Firebase (form.html) initialized successfully');
+      
+      // Listen for auth state changes
+      onAuthStateChanged(auth, (user) => {
+        currentUser = user;
+        if (user) {
+          console.log('User signed in:', user.email);
+        } else {
+          console.log('User signed out');
+        }
+      });
     } catch (err) {
       console.error('Firebase init failed on form.html:', err);
       isFirebaseReady = false;
@@ -503,10 +525,20 @@
             }
           };
 
-          // Check Firebase readiness
-          console.log('Firebase status:', { isFirebaseReady, database: !!database });
+          // Check Firebase readiness and authentication
+          console.log('Firebase status:', { isFirebaseReady, database: !!database, user: !!currentUser });
           if(!isFirebaseReady || !database) {
             throw new Error('Firebase is not ready. Please refresh the page and try again.');
+          }
+          if(!currentUser) {
+            // Show sign-in button and scroll to it
+            signInBtn.style.display = 'block';
+            signInBtn.style.background = 'linear-gradient(90deg, #ff4b8b, #ff7ab3)';
+            signInBtn.style.color = 'white';
+            signInBtn.style.animation = 'pulse 1s infinite';
+            signInBtn.scrollIntoView({ behavior: 'smooth' });
+            signInBtn.focus();
+            throw new Error('অর্ডার সাবমিট করতে Google দিয়ে সাইন ইন করুন।');
           }
 
           console.log('Submitting order to Firebase:', payload);
@@ -520,6 +552,9 @@
           await set(newOrderRef, {
             ...payload,
             id: newOrderRef.key,
+            userId: currentUser.uid,
+            userEmail: currentUser.email,
+            status: 'pending',
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
           });
@@ -558,8 +593,53 @@
         }
       });
 
+      // Authentication UI
+      const signInBtn = document.getElementById('signInBtn');
+      const signOutBtn = document.getElementById('signOutBtn');
+      const userInfo = document.getElementById('userInfo');
+      const userEmail = document.getElementById('userEmail');
+
+      function updateAuthUI() {
+        if (currentUser) {
+          signInBtn.style.display = 'none';
+          userInfo.style.display = 'block';
+          userEmail.textContent = currentUser.email;
+        } else {
+          signInBtn.style.display = 'block';
+          userInfo.style.display = 'none';
+        }
+      }
+
+      // Sign in function
+      async function signIn() {
+        try {
+          const result = await signInWithPopup(auth, provider);
+          console.log('Sign in successful:', result.user.email);
+        } catch (error) {
+          console.error('Sign in failed:', error);
+          alert('সাইন ইন করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+        }
+      }
+
+      // Sign out function
+      function signOut() {
+        auth.signOut();
+      }
+
+      // Event listeners
+      signInBtn.addEventListener('click', signIn);
+      signOutBtn.addEventListener('click', signOut);
+
+      // Update UI when auth state changes
+      onAuthStateChanged(auth, (user) => {
+        currentUser = user;
+        console.log('Auth state changed:', user ? 'Signed in as ' + user.email : 'Signed out');
+        updateAuthUI();
+      });
+
       // Init
       showStep(0);
+      updateAuthUI();
     })();
   </script>
 </body>
