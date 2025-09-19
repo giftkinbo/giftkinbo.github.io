@@ -261,24 +261,23 @@
     let database;
     let isFirebaseReady = false;
     
-    try {
-      const app = initializeApp(firebaseConfig);
-      database = getDatabase(app);
-      isFirebaseReady = true;
-      console.log('Firebase (form.html) initialized successfully');
-      
-      // Test database connection
-      const testRef = ref(database, 'test');
-      push(testRef, { test: true, timestamp: new Date().toISOString() }).then(() => {
-        console.log('Database connection test successful');
-      }).catch(err => {
-        console.error('Database connection test failed:', err);
+    // Initialize Firebase
+    async function initFirebase() {
+      try {
+        const app = initializeApp(firebaseConfig);
+        database = getDatabase(app);
+        isFirebaseReady = true;
+        console.log('Firebase (form.html) initialized successfully');
+        return true;
+      } catch (err) {
+        console.error('Firebase init failed on form.html:', err);
         isFirebaseReady = false;
-      });
-    } catch (err) {
-      console.error('Firebase init failed on form.html:', err);
-      isFirebaseReady = false;
+        return false;
+      }
     }
+    
+    // Initialize immediately
+    initFirebase();
 
     (function(){
       const steps = Array.from(document.querySelectorAll('.step'));
@@ -511,9 +510,14 @@
             }
           };
 
-          // Check Firebase readiness
+          // Check Firebase readiness and retry if needed
+          console.log('Firebase status:', { isFirebaseReady, database: !!database });
           if(!isFirebaseReady || !database) {
-            throw new Error('Firebase is not ready. Please refresh the page and try again.');
+            console.log('Firebase not ready, attempting to reinitialize...');
+            const retrySuccess = await initFirebase();
+            if(!retrySuccess) {
+              throw new Error('Firebase is not ready. Please refresh the page and try again.');
+            }
           }
 
           console.log('Submitting order to Firebase:', payload);
