@@ -259,12 +259,25 @@
     };
 
     let database;
+    let isFirebaseReady = false;
+    
     try {
       const app = initializeApp(firebaseConfig);
       database = getDatabase(app);
-      console.log('Firebase (form.html) initialized');
+      isFirebaseReady = true;
+      console.log('Firebase (form.html) initialized successfully');
+      
+      // Test database connection
+      const testRef = ref(database, 'test');
+      push(testRef, { test: true, timestamp: new Date().toISOString() }).then(() => {
+        console.log('Database connection test successful');
+      }).catch(err => {
+        console.error('Database connection test failed:', err);
+        isFirebaseReady = false;
+      });
     } catch (err) {
       console.error('Firebase init failed on form.html:', err);
+      isFirebaseReady = false;
     }
 
     (function(){
@@ -498,9 +511,15 @@
             }
           };
 
-          if(!database) throw new Error('Database not initialized');
+          // Check Firebase readiness
+          if(!isFirebaseReady || !database) {
+            throw new Error('Firebase is not ready. Please refresh the page and try again.');
+          }
+
+          console.log('Submitting order to Firebase:', payload);
           const ordersRef = ref(database, 'orders');
-          await push(ordersRef, payload);
+          const result = await push(ordersRef, payload);
+          console.log('Order submitted successfully with key:', result.key);
 
           const lines = [
             `রিসিপিয়েন্ট: ${payload.recipientName} (${payload.recipientGender}, ${payload.recipientAge})`,
@@ -517,7 +536,10 @@
           successState.style.display = '';
         } catch(err){
           console.error('Order submit failed:', err);
-          alert('দুঃখিত, সাবমিট করতে সমস্যা হয়েছে। একটু পর আবার চেষ্টা করুন।');
+          const errorMsg = err.message.includes('Firebase is not ready') 
+            ? 'পেজ রিফ্রেশ করে আবার চেষ্টা করুন।' 
+            : 'দুঃখিত, সাবমিট করতে সমস্যা হয়েছে। একটু পর আবার চেষ্টা করুন।';
+          alert(errorMsg);
         } finally {
           submitBtn.disabled = false; submitBtn.textContent = 'ফাইনাল সাবমিট';
           form.reset(); updateCosts(); updatePaymentUI(); showStep(0);
