@@ -245,7 +245,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+    import { getDatabase, ref, push, set, remove, get } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCSyXJeftEfkwQ_FoQlg1sEZ3PZv9xjkLI",
@@ -510,9 +510,34 @@
           }
 
           console.log('Submitting order to Firebase:', payload);
+          
+          // Test database connection first (like homepage)
+          const testRef = ref(database, 'test');
+          await set(testRef, { timestamp: new Date().toISOString() });
+          await remove(testRef);
+          console.log('Database connection verified');
+          
+          // Create order reference and save data
           const ordersRef = ref(database, 'orders');
-          const result = await push(ordersRef, payload);
-          console.log('Order submitted successfully with key:', result.key);
+          const newOrderRef = push(ordersRef);
+          console.log('New order reference created:', newOrderRef.key);
+          
+          // Save the order data with additional fields
+          await set(newOrderRef, {
+            ...payload,
+            id: newOrderRef.key,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          });
+          console.log('Data saved successfully with ID:', newOrderRef.key);
+          
+          // Verify the data was saved
+          const savedOrderRef = ref(database, `orders/${newOrderRef.key}`);
+          const snapshot = await get(savedOrderRef);
+          if (!snapshot.exists()) {
+            throw new Error('অর্ডার সেভ করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।');
+          }
+          console.log('Data verification successful');
 
           const lines = [
             `রিসিপিয়েন্ট: ${payload.recipientName} (${payload.recipientGender}, ${payload.recipientAge})`,
