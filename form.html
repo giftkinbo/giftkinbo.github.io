@@ -511,13 +511,7 @@
 
           console.log('Submitting order to Firebase:', payload);
           
-          // Test database connection first (like homepage)
-          const testRef = ref(database, 'test');
-          await set(testRef, { timestamp: new Date().toISOString() });
-          await remove(testRef);
-          console.log('Database connection verified');
-          
-          // Create order reference and save data
+          // Create order reference and save data directly
           const ordersRef = ref(database, 'orders');
           const newOrderRef = push(ordersRef);
           console.log('New order reference created:', newOrderRef.key);
