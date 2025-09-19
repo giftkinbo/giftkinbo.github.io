@@ -262,22 +262,15 @@
     let isFirebaseReady = false;
     
     // Initialize Firebase
-    async function initFirebase() {
-      try {
-        const app = initializeApp(firebaseConfig);
-        database = getDatabase(app);
-        isFirebaseReady = true;
-        console.log('Firebase (form.html) initialized successfully');
-        return true;
-      } catch (err) {
-        console.error('Firebase init failed on form.html:', err);
-        isFirebaseReady = false;
-        return false;
-      }
+    try {
+      const app = initializeApp(firebaseConfig);
+      database = getDatabase(app);
+      isFirebaseReady = true;
+      console.log('Firebase (form.html) initialized successfully');
+    } catch (err) {
+      console.error('Firebase init failed on form.html:', err);
+      isFirebaseReady = false;
     }
-    
-    // Initialize immediately
-    initFirebase();
 
     (function(){
       const steps = Array.from(document.querySelectorAll('.step'));
@@ -510,14 +503,10 @@
             }
           };
 
-          // Check Firebase readiness and retry if needed
+          // Check Firebase readiness
           console.log('Firebase status:', { isFirebaseReady, database: !!database });
           if(!isFirebaseReady || !database) {
-            console.log('Firebase not ready, attempting to reinitialize...');
-            const retrySuccess = await initFirebase();
-            if(!retrySuccess) {
-              throw new Error('Firebase is not ready. Please refresh the page and try again.');
-            }
+            throw new Error('Firebase is not ready. Please refresh the page and try again.');
           }
 
           console.log('Submitting order to Firebase:', payload);
